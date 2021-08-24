@@ -11,8 +11,10 @@ const app = express();
 app.use(cors());
 app.use(helmet());
 
+app.get('/', (_req, res) => {
+    res.send('Hello World!');
+});
+
 app.listen(PORT, function () {
     console.log(`Listening on port ${PORT}...`);
 });
-
-

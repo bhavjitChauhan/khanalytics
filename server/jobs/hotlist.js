@@ -7,13 +7,12 @@ const { insertMany } = require('../lib/mongo');
 const sleep = require('../util/sleep');
 
 
-const RECURRENCE_RULE = '*/10 * * * *';
+const RECURRENCE_RULE = '0 * * * *';
 
 scheduleJob(RECURRENCE_RULE, async () => {
     await sleep(60e3);
     const startTime = performance.now();
     console.log('Inserting hotlist programs...');
-
     const programs = Array.from(await getHotlist())
         .map((program, index) => ({
             program_id: program.url.split('/')[5],

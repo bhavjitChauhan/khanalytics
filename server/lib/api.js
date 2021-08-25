@@ -9,7 +9,7 @@ const instance = axios.create({
  * Gets data from the Khan Academy API.
  * 
  * @param {string} path 
- * @param {Object} [params={}]
+ * @param {Object} [params]
  * @returns {Promise}
  * 
  * @example
@@ -19,21 +19,23 @@ const instance = axios.create({
  *     projection: ['scratchpads']
  * });
  */
-const get = async (path, params = {}) => {
+const get = async (path, params) => {
     let url = path;
-    const searchParams = new URLSearchParams();
-    for (const param in params) {
-        if (param == 'projection') {
-            const obj = {};
-            for (const element of params[param]) {
-                obj[element] = 1;
+    if (params) {
+        const searchParams = new URLSearchParams();
+        for (const param in params) {
+            if (param == 'projection') {
+                const obj = {};
+                for (const element of params[param]) {
+                    obj[element] = 1;
+                }
+                searchParams.append('projection', JSON.stringify(obj));
+            } else {
+                searchParams.append(param, params[param]);
             }
-            searchParams.append('projection', JSON.stringify(obj));
-        } else {
-            searchParams.append(param, params[param]);
         }
+        url += `?${searchParams}`;
     }
-    url += `?${searchParams}`;
     const response = await instance.get(url);
     return response.data;
 };

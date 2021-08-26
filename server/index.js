@@ -3,7 +3,7 @@ const cors = require('cors');
 const helmet = require("helmet");
 const express = require('express');
 
-require('./jobs/insertHotlist');
+// require('./jobs/insertHotlist');
 const khan = require('./routes/khan');
 const hotlist = require('./routes/hotlist');
 
@@ -19,6 +19,15 @@ app.use('/khan', khan);
 
 app.get('/', (_req, res) => {
     res.send('Hello World!');
+});
+
+app.get('/status', (req, res) => {
+    res.json({
+        message: 'OK',
+        timestamp: new Date().toISOString(),
+        IP: req.ip,
+        URL: req.originalUrl,
+    });
 });
 
 app.listen(PORT, function () {

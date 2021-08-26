@@ -3,7 +3,6 @@ const cors = require('cors');
 const helmet = require("helmet");
 const express = require('express');
 
-// require('./jobs/insertHotlist');
 const khan = require('./routes/khan');
 const hotlist = require('./routes/hotlist');
 

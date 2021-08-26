@@ -16,7 +16,7 @@ scheduleJob(RECURRENCE_RULE, async () => {
     const programs = Array.from(await getHotlist())
         .map((program, index) => ({
             program_id: program.url.split('/')[5],
-            timestamp: Date.parse(program.created),
+            timestamp: Date.now(),
             rank: index + 1,
             votes: program.sumVotesIncremented,
             forks: program.spinoffCount

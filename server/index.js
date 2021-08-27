@@ -10,6 +10,7 @@ const hotlist = require('./routes/hotlist');
 const PORT = process.env.PORT || 3000;
 
 const app = express();
+
 app.use(cors());
 app.use(helmet());
 
@@ -19,7 +20,6 @@ app.use('/khan', khan);
 app.get('/', (_req, res) => {
     res.send('Hello World!');
 });
-
 app.get('/status', (req, res) => {
     res.json({
         message: 'OK',

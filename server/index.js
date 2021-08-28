@@ -17,9 +17,6 @@ app.use(helmet());
 app.use('/hotlist', hotlist);
 app.use('/khan', khan);
 
-app.get('/', (_req, res) => {
-    res.send('Hello World!');
-});
 app.get('/status', (req, res) => {
     res.json({
         message: 'OK',

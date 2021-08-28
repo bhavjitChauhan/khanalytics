@@ -1,82 +1,84 @@
 const { Router } = require('express');
 
+require('module-alias/register');
+const cache = require('@middlewares/cache');
 const { find } = require('../lib/mongo');
 
 
 const router = Router();
 
-router.get('/snapshot', async (_req, res) => {
+router.get('/snapshot', cache, async (_req, res) => {
     const data = await find('hotlist', {});
     res.send(data);
 });
 
-router.get('/max', async (_req, res) => {
+router.get('/max', cache, async (_req, res) => {
     const data = await find('hotlist', {});
     res.send(data);
 });
 
-router.get('/before/:latest', async (req, res) => {
+router.get('/before/:latest', cache, async (req, res) => {
     const { earliest } = req.params;
     const data = await find('hotlist', { $lt: earliest });
     res.send(data);
 });
 
-router.get('/after/:earliest', async (req, res) => {
+router.get('/after/:earliest', cache, async (req, res) => {
     const { earliest } = req.params;
     const data = await find('hotlist', { $gt: earliest });
     res.send(data);
 });
 
-router.get('/year', async (_req, res) => {
+router.get('/year', cache, async (_req, res) => {
     const data = await find('hotlist', { timestamp: { $gt: Date.now() - 1000 * 60 * 60 * 24 * 365 } });
     res.send(data);
 });
 
-router.get('/years/:years', async (req, res) => {
+router.get('/years/:years', cache, async (req, res) => {
     const { years } = req.params;
     const data = await find('hotlist', { timestamp: { $gt: Date.now() - 1000 * 60 * 60 * 24 * 365 * years } });
     res.send(data);
 });
 
-router.get('/month', async (_req, res) => {
+router.get('/month', cache, async (_req, res) => {
     const data = await find('hotlist', { timestamp: { $gt: Date.now() - 1000 * 60 * 60 * 24 * 30 } });
     res.send(data);
 });
 
-router.get('/months/:months', async (req, res) => {
+router.get('/months/:months', cache, async (req, res) => {
     const { months } = req.params;
     const data = await find('hotlist', { timestamp: { $gt: Date.now() - 1000 * 60 * 60 * 24 * 30 * months } });
     res.send(data);
 });
 
-router.get('/week', async (_req, res) => {
+router.get('/week', cache, async (_req, res) => {
     const data = await find('hotlist', { timestamp: { $gt: Date.now() - 1000 * 60 * 60 * 24 * 7 } });
     res.send(data);
 });
 
-router.get('/weeks/:weeks', async (req, res) => {
+router.get('/weeks/:weeks', cache, async (req, res) => {
     const { weeks } = req.params;
     const data = await find('hotlist', { timestamp: { $gt: Date.now() - 1000 * 60 * 60 * 24 * 7 * weeks } });
     res.send(data);
 });
 
-router.get('/day', async (_req, res) => {
+router.get('/day', cache, async (_req, res) => {
     const data = await find('hotlist', { timestamp: { $gt: Date.now() - 1000 * 60 * 60 * 24 } });
     res.send(data);
 });
 
-router.get('/days/:days', async (req, res) => {
+router.get('/days/:days', cache, async (req, res) => {
     const { days } = req.params;
     const data = await find('hotlist', { timestamp: { $gt: Date.now() - 1000 * 60 * 60 * 24 * days } });
     res.send(data);
 });
 
-router.get('/hour', async (_req, res) => {
+router.get('/hour', cache, async (_req, res) => {
     const data = await find('hotlist', { timestamp: { $gt: Date.now() - 1000 * 60 * 60 } });
     res.send(data);
 });
 
-router.get('/hours/:hours', async (req, res) => {
+router.get('/hours/:hours', cache, async (req, res) => {
     const { hours } = req.params;
     const data = await find('hotlist', { timestamp: { $gt: Date.now() - 1000 * 60 * 60 * hours } });
     res.send(data);

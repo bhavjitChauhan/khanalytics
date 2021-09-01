@@ -14,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(helmet());
 
+app.use(express.static('dist'));
 app.use('/hotlist', hotlist);
 app.use('/khan', khan);
 

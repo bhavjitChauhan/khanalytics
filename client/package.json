@@ -9,6 +9,8 @@
     "dependencies": {
         "apexcharts": "^3.28.1",
         "axios": "^0.21.1",
+        "mitt": "^3.0.0",
+        "module-alias": "^2.2.2",
         "vue": "^3.0.0",
         "vue3-apexcharts": "^1.4.1"
     },
@@ -17,7 +19,11 @@
         "@vue/cli-service": "~4.5.0",
         "@vue/compiler-sfc": "^3.0.0",
         "autoprefixer": "^9.8.6",
+        "daisyui": "^1.14.0",
         "postcss": "^7.0.36",
         "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7"
+    },
+    "_moduleAliases": {
+        "@root": ".."
     }
 }

@@ -18,8 +18,11 @@ export default {
         hotlistData: []
     }),
     async created() {
-        const response = await api.fetchHotlistData();
+        const response = await api.fetchHotlistData('week');
         this.hotlistData = response.data;
+    },
+    mounted() {
+        Apex.colors = ['#570df8', '#00E396', '#FEB019', '#FF4560', '#008FFB'];
     }
 };
 </script>

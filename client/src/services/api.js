@@ -5,7 +5,7 @@ const instance = axios.create({
 });
 
 export default {
-    fetchHotlistData() {
-        return instance.get('hotlist/day');
+    fetchHotlistData(period = 'day') {
+        return instance.get(`hotlist/${period}`);
     }
 }

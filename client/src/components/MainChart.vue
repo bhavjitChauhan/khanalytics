@@ -49,7 +49,7 @@ export default {
             const data = this.$parent.hotlistData;
             const topProgramIDs = new Set(
                 data
-                    .filter((program) => program.rank <= 3)
+                    .filter((program) => program.rank <= 1)
                     .map((program) => program.program_id)
             );
             const programs = data

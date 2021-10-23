@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="p-5 rounded shadow">
         <div class="btn-group">
             <button
                 class="btn btn-outline"
@@ -30,6 +30,9 @@ export default {
     data: () => ({
         chartOptions: {
             chart: {
+                animations: {
+                    enabled: false
+                },
                 id: 'main-chart',
                 zoom: {
                     // autoScaleYaxis: true
@@ -81,8 +84,8 @@ export default {
         }
     },
     mounted() {
-        this.emitter.on('hotlist-data', (data) => {
-            this.prepareData(data);
+        this.emitter.on('hotlist-data', () => {
+            this.prepareData();
         });
         document
             .getElementById('twelve-hours')

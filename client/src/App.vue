@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Navbar />
         <Dashboard :hotlistData="hotlistData" />
     </div>
 </template>
@@ -7,11 +8,13 @@
 <script>
 import api from '@/services/api';
 
+import Navbar from '@/components/Navbar.vue';
 import Dashboard from '@/components/Dashboard.vue';
 
 export default {
     name: 'App',
     components: {
+        Navbar,
         Dashboard
     },
     data: () => ({

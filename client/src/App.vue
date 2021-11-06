@@ -1,7 +1,12 @@
 <template>
     <div>
         <Navbar />
-        <Dashboard :hotlistData="hotlistData" />
+        <Dashboard
+            :hotlistData="hotlistData"
+            :uniquePrograms="uniquePrograms"
+            :votesVolume="votesVolume"
+            :forksVolume="forksVolume"
+        />
     </div>
 </template>
 
@@ -18,11 +23,29 @@ export default {
         Dashboard
     },
     data: () => ({
-        hotlistData: []
+        hotlistData: [],
+        uniquePrograms: null,
+        votesVolume: null,
+        forksVolume: null
     }),
     async created() {
-        const response = await api.fetchHotlistData('week');
-        this.hotlistData = response.data;
+        await api.fetchHotlistData((chunk) => {
+            chunk = JSON.parse(chunk);
+            switch (Object.keys(chunk)[0]) {
+                case 'data':
+                    this.hotlistData = chunk.data;
+                    break;
+                case 'uniquePrograms':
+                    this.uniquePrograms = new Number(chunk.uniquePrograms);
+                    break;
+                case 'votesVolume':
+                    this.votesVolume = new Number(chunk.votesVolume);
+                    break;
+                case 'forksVolume':
+                    this.forksVolume = new Number(chunk.forksVolume);
+                    break;
+            }
+        }, 'week');
     },
     mounted() {
         Apex.colors = ['#570df8', '#00E396', '#FEB019', '#FF4560', '#008FFB'];

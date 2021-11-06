@@ -17,12 +17,30 @@ export default {
         MainChart
     },
     props: {
-        hotlistData: Array
+        hotlistData: Array,
+        uniquePrograms: Number,
+        votesVolume: Number,
+        forksVolume: Number
     },
     watch: {
         hotlistData: {
             handler: function () {
                 this.emitter.emit('hotlist-data');
+            }
+        },
+        uniquePrograms: {
+            handler: function () {
+                this.emitter.emit('unique-programs');
+            }
+        },
+        votesVolume: {
+            handler: function () {
+                this.emitter.emit('votes-volume');
+            }
+        },
+        forksVolume: {
+            handler: function () {
+                this.emitter.emit('forks-volume');
             }
         }
     }

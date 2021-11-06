@@ -1,6 +1,6 @@
 <template>
     <div class="p-5 rounded shadow">
-        <div class="btn-group">
+        <!-- <div class="btn-group">
             <button
                 class="btn btn-outline"
                 id="twelve-hours"
@@ -13,7 +13,7 @@
                 class="btn btn-outline btn-active"
                 id="one-week"
             >1W</button>
-        </div>
+        </div> -->
         <apexchart
             width="100%"
             height="500px"
@@ -87,35 +87,35 @@ export default {
         this.emitter.on('hotlist-data', () => {
             this.prepareData();
         });
-        document
-            .getElementById('twelve-hours')
-            .addEventListener('click', (e) => {
-                ApexCharts.exec(
-                    'main-chart',
-                    'zoomX',
-                    Date.now() - 1000 * 60 * 60 * 12,
-                    Date.now()
-                );
-                this.activateRangeButton('twelve-hours');
-            });
-        document.getElementById('one-day').addEventListener('click', (e) => {
-            ApexCharts.exec(
-                'main-chart',
-                'zoomX',
-                Date.now() - 1000 * 60 * 60 * 24,
-                Date.now()
-            );
-            this.activateRangeButton('one-day');
-        });
-        document.getElementById('one-week').addEventListener('click', (e) => {
-            ApexCharts.exec(
-                'main-chart',
-                'zoomX',
-                Date.now() - 1000 * 60 * 60 * 24 * 7,
-                Date.now()
-            );
-            this.activateRangeButton('one-week');
-        });
+        // document
+        //     .getElementById('twelve-hours')
+        //     .addEventListener('click', (e) => {
+        //         ApexCharts.exec(
+        //             'main-chart',
+        //             'zoomX',
+        //             Date.now() - 1000 * 60 * 60 * 12,
+        //             Date.now()
+        //         );
+        //         this.activateRangeButton('twelve-hours');
+        //     });
+        // document.getElementById('one-day').addEventListener('click', (e) => {
+        //     ApexCharts.exec(
+        //         'main-chart',
+        //         'zoomX',
+        //         Date.now() - 1000 * 60 * 60 * 24,
+        //         Date.now()
+        //     );
+        //     this.activateRangeButton('one-day');
+        // });
+        // document.getElementById('one-week').addEventListener('click', (e) => {
+        //     ApexCharts.exec(
+        //         'main-chart',
+        //         'zoomX',
+        //         Date.now() - 1000 * 60 * 60 * 24 * 7,
+        //         Date.now()
+        //     );
+        //     this.activateRangeButton('one-week');
+        // });
     }
 };
 </script>

@@ -45,9 +45,33 @@ const find = async (name, filter = {}) => {
     return data;
 };
 
+/**
+ * Alias for `connection.aggregate`.
+ * 
+ * @param {string} name collection name
+ * @param {Array.<Object>} agg aggregation pipeline
+ * @returns 
+ */
+const aggregate = async (name, agg) => {
+    const connection = await client.connect();
+    const db = await connection.db(process.env.MONGODB_DATABASE);
+    let data;
+    try {
+        const collection = await db.collection(name);
+        const cursor = await collection.aggregate(agg);
+        data = await cursor.toArray();
+        data = data.sort((a, b) => a.timestamp - b.timestamp);
+    } catch (err) {
+        data = err;
+    }
+    await client.close();
+    return data;
+};
+
 
 module.exports = {
-    client: client,
-    insertMany: insertMany,
-    find: find
+    client,
+    insertMany,
+    find,
+    aggregate
 };

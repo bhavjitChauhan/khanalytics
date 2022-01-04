@@ -2,21 +2,14 @@ const { Router } = require('express');
 
 require('module-alias/register');
 const cache = require('@middlewares/cache');
-const { find } = require('@lib/mongo');
+const { aggregate, find } = require('@lib/mongo');
 const { calculateVotesVolume, calculateForksVolume, calculateUniquePrograms } = require('@lib/statistics');
 const createWorker = require('@util/createWorker');
-const { HOUR, DAY, WEEK, MONTH, YEAR } = require('@util/durations');
+const periods = require('@util/periods');
 
+const COLLECTION_NAME = 'hotlist';
 
 const router = Router();
-
-const periods = {
-    'hour': HOUR,
-    'day': DAY,
-    'week': WEEK,
-    'month': MONTH,
-    'year': YEAR
-}
 
 const handleRequest = async (res, data) => {
     res.write(JSON.stringify({ data }) + '\n');
@@ -42,14 +35,55 @@ const handleRequest = async (res, data) => {
 };
 
 for (const period in periods) {
+    const pipeline = [];
+    if (periods[period].granularity) {
+        const field = periods[period].granularity.field;
+        const values = periods[period].granularity.values.length == 1
+            ? { [field]: periods[period].granularity.values[0] }
+            : { '$or': periods[period].granularity.values.map(value => ({ [field]: value })) }
+        pipeline.push(
+            {
+                '$addFields': {
+                    'date': {
+                        '$toDate': '$timestamp'
+                    }
+                }
+            },
+            {
+                '$addFields': {
+                    [field]: {
+                        ['$' + field]: '$date'
+                    }
+                }
+            },
+            {
+                '$match': values
+            }
+        );
+    }
     router.get(`/${period}`, cache, async (_req, res) => {
-        let data = await find('hotlist', { timestamp: { $gt: Date.now() - periods[period] } });
-        console.log(data)
+        const agg = pipeline.slice();
+        agg.unshift({
+            '$match': {
+                'timestamp': {
+                    '$gt': Date.now() - periods[period].duration
+                }
+            }
+        });
+        let data = await aggregate(COLLECTION_NAME, agg);
         await handleRequest(res, data);
     });
     router.get(`/${period}s/:quantity`, cache, async (req, res) => {
         const { quantity } = req.params;
-        let data = await find('hotlist', { timestamp: { $gt: Date.now() - periods[period] * quantity } });
+        const agg = pipeline.slice();
+        agg.unshift({
+            '$match': {
+                'timestamp': {
+                    '$gt': Date.now() - periods[period].duration * quantity
+                }
+            }
+        });
+        let data = await aggregate(COLLECTION_NAME, agg);
         await handleRequest(res, data);
     });
 }

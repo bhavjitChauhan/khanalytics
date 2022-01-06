@@ -3,40 +3,13 @@ const { Router } = require('express');
 require('module-alias/register');
 const cache = require('@middlewares/cache');
 const { aggregate, find } = require('@lib/mongo');
-const { calculateVotesVolume, calculateForksVolume, calculateUniquePrograms } = require('@lib/statistics');
-const createWorker = require('@util/createWorker');
 const periods = require('@util/periods');
+
 
 const COLLECTION_NAME = 'hotlist';
 const MINIMUM_PEAK = 1;
 
 const router = Router();
-
-const handleRequest = async (res, data) => {
-    res.write(JSON.stringify({ data }) + '\n');
-    data = JSON.stringify(data);
-    // const uniqueProgramsWorker = createWorker(calculateUniquePrograms, data),
-    //     votesVolumeWorker = createWorker(calculateVotesVolume, data),
-    //     forksVolumeWorker = createWorker(calculateForksVolume, data);
-    // await Promise.all([
-    //     new Promise(resolve => uniqueProgramsWorker.on('exit', () => {
-    //         res.write(JSON.stringify({ uniquePrograms: process.env.calculateUniquePrograms }) + '\n');
-    //         resolve();
-    //     })),
-    //     new Promise(resolve => votesVolumeWorker.on('exit', () => {
-    //         res.write(JSON.stringify({ votesVolume: process.env.calculateVotesVolume }) + '\n');
-    //         resolve();
-    //     })),
-    //     new Promise(resolve => forksVolumeWorker.on('exit', () => {
-    //         res.write(JSON.stringify({ forksVolume: process.env.calculateForksVolume }) + '\n');
-    //         resolve();
-    //     }))
-    // ]);
-    res.write(JSON.stringify({ uniquePrograms: 0 }) + '\n');
-    res.write(JSON.stringify({ votesVolume: 0 }) + '\n');
-    res.write(JSON.stringify({ forksVolume: 0 }) + '\n');
-    res.end();
-};
 
 for (const period in periods) {
     const pipeline = [];

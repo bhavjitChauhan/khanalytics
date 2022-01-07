@@ -104,9 +104,7 @@ export default {
         }
     },
     mounted() {
-        this.emitter.on('hotlist-data', () => {
-            this.prepareData();
-        });
+        this.emitter.on('hotlist-data', this.prepareData);
         // document
         //     .getElementById('twelve-hours')
         //     .addEventListener('click', (e) => {

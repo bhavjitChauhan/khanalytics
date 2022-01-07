@@ -5,6 +5,7 @@ const express = require('express');
 
 const khan = require('./routes/khan');
 const hotlist = require('./routes/hotlist');
+const statistics = require('./routes/statistics');
 
 
 const PORT = process.env.PORT || 3000;
@@ -15,8 +16,9 @@ app.use(cors());
 app.use(helmet());
 
 app.use(express.static('dist'));
-app.use('/hotlist', hotlist);
 app.use('/khan', khan);
+app.use('/hotlist', hotlist);
+app.use('/statistics', statistics);
 
 app.get('/status', (req, res) => {
     res.json({

@@ -1,5 +1,6 @@
 const NodeCache = require("node-cache");
 
+const { HOUR, DAY } = require('../util/durations');
 
 const Cache = new NodeCache();
 
@@ -12,7 +13,22 @@ const handler = (req, res, next) => {
     } else {
         res.sendResponse = res.send;
         res.send = body => {
-            Cache.set(key, body, (60 - (new Date()).getMinutes()) * 60 * 1000);
+            let ttl;
+            switch (req.baseUrl) {
+                case '/khan':
+                    ttl = (MINUTE * 10) - (Date.now() % (MINUTE * 10));
+                    break;
+                case '/hotlist':
+                    ttl = HOUR - (Date.now() % HOUR);
+                    break;
+                case '/statistics':
+                    ttl = DAY - (Date.now() % DAY);
+                    break;
+                default:
+                    ttl = HOUR;
+                    break;
+            }
+            Cache.set(key, body, ttl);
             res.sendResponse(body);
         }
         next();

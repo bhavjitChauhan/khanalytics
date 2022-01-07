@@ -1,7 +1,7 @@
 const { Router } = require('express');
 
 const cache = require('../middlewares/cache');
-const { aggregate, find } = require('../lib/mongo');
+const { aggregate } = require('../lib/mongo');
 const periods = require('../util/periods');
 
 

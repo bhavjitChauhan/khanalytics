@@ -18,9 +18,7 @@ export default {
     },
     props: {
         hotlistData: Array,
-        uniquePrograms: Number,
-        votesVolume: Number,
-        forksVolume: Number
+        statisticsData: Array
     },
     watch: {
         hotlistData: {
@@ -28,19 +26,9 @@ export default {
                 this.emitter.emit('hotlist-data');
             }
         },
-        uniquePrograms: {
+        statisticsData: {
             handler: function () {
-                this.emitter.emit('unique-programs');
-            }
-        },
-        votesVolume: {
-            handler: function () {
-                this.emitter.emit('votes-volume');
-            }
-        },
-        forksVolume: {
-            handler: function () {
-                this.emitter.emit('forks-volume');
+                this.emitter.emit('statistics-data');
             }
         }
     }

@@ -11,5 +11,9 @@ export default {
     async fetchHotlistData(period = 'day') {
         const response = await instance.get(`hotlist/${period}`);
         return response.data;
+    },
+    async fetchStatisticsData() {
+        const response = await instance.get('statistics');
+        return response.data;
     }
 }

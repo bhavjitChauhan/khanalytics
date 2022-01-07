@@ -3,15 +3,19 @@
         <div class="w-full shadow stats">
             <Metric
                 title="Unique Programs"
+                tooltip="Number of programs that were on the Hotlist within the last {{ period }}"
                 :value="uniquePrograms"
+                :diff="uniqueProgramsDiff"
             />
             <Metric
                 title="Votes Volyme"
                 :value="votesVolume"
+                :diff="votesVolumeDiff"
             />
             <Metric
                 title="Forks Volume"
                 :value="forksVolume"
+                :diff="forksVolumeDiff"
             />
         </div>
     </div>
@@ -27,33 +31,39 @@ export default {
     },
     data: () => ({
         uniquePrograms: null,
+        uniqueProgramsDiff: null,
         votesVolume: null,
+        votesVolumeDiff: null,
         forksVolume: null,
-        period: null
+        forksVolumeDiff: null,
+        period: 'hour'
     }),
     methods: {
-        calculatePeriod() {
-            const options = { month: 'short' };
-            const startDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 7);
-            const endDate = new Date();
-            this.period = `${new Intl.DateTimeFormat('en-US', options).format(
-                startDate
-            )} ${startDate.getDate()} - ${new Intl.DateTimeFormat(
-                'en-US',
-                options
-            ).format(endDate)} ${endDate.getDate()}`;
+        calculatePercentDiff(a, b) {
+            console.log(Math.round(((a - b) / b) * 100));
+            return Math.round(((a - b) / b) * 100);
+        },
+        prepareData() {
+            const statisticsData = this.$parent.statisticsData;
+            this.uniquePrograms = statisticsData[1].programs;
+            this.votesVolume = statisticsData[1].votes;
+            this.forksVolume = statisticsData[1].forks;
+            this.uniqueProgramsDiff = this.calculatePercentDiff(
+                statisticsData[1].programs,
+                statisticsData[0].programs
+            );
+            this.votesVolumeDiff = this.calculatePercentDiff(
+                statisticsData[1].votes,
+                statisticsData[0].votes
+            );
+            this.forksVolumeDiff = this.calculatePercentDiff(
+                statisticsData[1].forks,
+                statisticsData[0].forks
+            );
         }
     },
     mounted() {
-        this.emitter.on('unique-programs', () => {
-            this.uniquePrograms = this.$parent.uniquePrograms;
-        });
-        this.emitter.on('votes-volume', () => {
-            this.votesVolume = this.$parent.votesVolume;
-        });
-        this.emitter.on('forks-volume', () => {
-            this.forksVolume = this.$parent.forksVolume;
-        });
+        this.emitter.on('statistics-data', this.prepareData);
     }
 };
 </script>

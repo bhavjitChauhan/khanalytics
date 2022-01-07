@@ -3,19 +3,18 @@
         <div class="w-full shadow stats">
             <Metric
                 title="Unique Programs"
-                tooltip="Number of programs that were on the Hotlist within the last {{ period }}"
-                :value="uniquePrograms"
-                :diff="uniqueProgramsDiff"
+                tooltip="Number of programs that were on the Hotlist"
+                :data="uniquePrograms"
             />
             <Metric
-                title="Votes Volyme"
-                :value="votesVolume"
-                :diff="votesVolumeDiff"
+                title="Votes Volume"
+                tooltip="Number of votes that were cast"
+                :data="votesVolume"
             />
             <Metric
                 title="Forks Volume"
-                :value="forksVolume"
-                :diff="forksVolumeDiff"
+                tooltip="Number of forks that were created"
+                :data="forksVolume"
             />
         </div>
     </div>
@@ -31,34 +30,24 @@ export default {
     },
     data: () => ({
         uniquePrograms: null,
-        uniqueProgramsDiff: null,
         votesVolume: null,
-        votesVolumeDiff: null,
         forksVolume: null,
-        forksVolumeDiff: null,
         period: 'hour'
     }),
     methods: {
         calculatePercentDiff(a, b) {
-            console.log(Math.round(((a - b) / b) * 100));
             return Math.round(((a - b) / b) * 100);
         },
         prepareData() {
             const statisticsData = this.$parent.statisticsData;
-            this.uniquePrograms = statisticsData[1].programs;
-            this.votesVolume = statisticsData[1].votes;
-            this.forksVolume = statisticsData[1].forks;
-            this.uniqueProgramsDiff = this.calculatePercentDiff(
-                statisticsData[1].programs,
-                statisticsData[0].programs
+            this.uniquePrograms = statisticsData.map(
+                (statistic) => statistic.programs
             );
-            this.votesVolumeDiff = this.calculatePercentDiff(
-                statisticsData[1].votes,
-                statisticsData[0].votes
+            this.votesVolume = statisticsData.map(
+                (statistic) => statistic.votes
             );
-            this.forksVolumeDiff = this.calculatePercentDiff(
-                statisticsData[1].forks,
-                statisticsData[0].forks
+            this.forksVolume = statisticsData.map(
+                (statistic) => statistic.forks
             );
         }
     },

@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 const BASE_URL = process.env.VUE_APP_BASE_URL;
 
 const instance = axios.create({
@@ -16,4 +15,4 @@ export default {
         const response = await instance.get('statistics');
         return response.data;
     }
-}
+};

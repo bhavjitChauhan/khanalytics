@@ -9,6 +9,8 @@
 </template>
 
 <script>
+/* global Apex */
+
 import api from '@/services/api';
 
 import Navbar from '@/components/Navbar.vue';

@@ -16,7 +16,8 @@ const handler = (req, res, next) => {
             let ttl;
             switch (req.baseUrl) {
                 case '/khan':
-                    ttl = (MINUTE * 10) - (Date.now() % (MINUTE * 10));
+                    // ttl = (MINUTE * 10) - (Date.now() % (MINUTE * 10));
+                    ttl = DAY;
                     break;
                 case '/hotlist':
                     ttl = HOUR - (Date.now() % HOUR);

@@ -3,6 +3,15 @@
         class="stat"
         id="programs-stat"
     >
+        <div class="stat-figure">
+            <apexchart
+                type="bar"
+                height="35"
+                width="100"
+                :options="chartOptions"
+                :series="chartSeries"
+            ></apexchart>
+        </div>
         <div class="stat-title">
             {{ title }}
             <span
@@ -72,7 +81,51 @@ export default {
     data: () => ({
         value: null,
         diff: null,
-        percentDiff: null
+        percentDiff: null,
+        chartOptions: {
+            chart: {
+                type: 'bar',
+                width: 100,
+                height: 35,
+                sparkline: {
+                    enabled: true
+                }
+            },
+            plotOptions: {
+                bar: {
+                    columnWidth: '80%'
+                }
+            },
+            // labels: [1, 2, 3, 4, 5, 6, 7],
+            xaxis: {
+                crosshairs: {
+                    width: 1
+                }
+            },
+            tooltip: {
+                fixed: {
+                    enabled: false
+                },
+                x: {
+                    show: false
+                },
+                y: {
+                    title: {
+                        formatter: function (seriesName) {
+                            return '';
+                        }
+                    }
+                },
+                marker: {
+                    show: false
+                }
+            }
+        },
+        chartSeries: [
+            {
+                data: null
+            }
+        ]
     }),
     methods: {
         isNumber(value) {
@@ -82,12 +135,14 @@ export default {
             return Math.round(((a - b) / b) * 100);
         },
         prepareData() {
-            this.value = this.data[1];
-            this.diff = this.data[1] - this.data[0];
+            const lastIndex = this.data.length - 1;
+            this.value = this.data[lastIndex];
+            this.diff = this.data[lastIndex] - this.data[lastIndex - 1];
             this.percentDiff = this.calculatePercentDiff(
-                this.data[1],
-                this.data[0]
+                this.data[lastIndex],
+                this.data[lastIndex - 1]
             );
+            this.chartSeries[0].data = this.data;
         }
     },
     watch: {

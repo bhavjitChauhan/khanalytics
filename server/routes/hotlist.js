@@ -1,9 +1,8 @@
 const { Router } = require('express');
 
-require('module-alias/register');
-const cache = require('@middlewares/cache');
-const { aggregate, find } = require('@lib/mongo');
-const periods = require('@util/periods');
+const cache = require('../middlewares/cache');
+const { aggregate, find } = require('../lib/mongo');
+const periods = require('../util/periods');
 
 
 const COLLECTION_NAME = 'hotlist';

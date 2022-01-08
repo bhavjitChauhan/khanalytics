@@ -1,5 +1,8 @@
 <template>
-    <div class="stat" id="programs-stat">
+    <div
+        class="stat"
+        id="programs-stat"
+    >
         <div class="stat-figure">
             <apexchart
                 type="bar"
@@ -20,13 +23,19 @@
             </span>
         </div>
         <div class="stat-value">
-            <div v-if="!value" class="flex space-x-4 animate-pulse">
+            <div
+                v-if="!value"
+                class="flex space-x-4 animate-pulse"
+            >
                 <div class="w-1/3 h-8 bg-gray-300 rounded"></div>
             </div>
             <span v-if="value">{{ value }}</span>
         </div>
         <div class="stat-desc">
-            <div v-if="!isNumber(value)" class="flex space-x-4 animate-pulse">
+            <div
+                v-if="!isNumber(value)"
+                class="flex space-x-4 animate-pulse"
+            >
                 <div class="w-1/2 h-4 bg-gray-300 rounded"></div>
             </div>
             <span
@@ -43,7 +52,10 @@
                     v-else-if="percentDiff > 0"
                     icon="angle-up"
                 />
-                <font-awesome-icon v-else-if="percentDiff == 0" icon="equals" />
+                <font-awesome-icon
+                    v-else-if="percentDiff == 0"
+                    icon="equals"
+                />
                 <font-awesome-icon
                     v-else-if="percentDiff <= -10"
                     icon="angle-double-down"
@@ -53,13 +65,9 @@
                     icon="angle-down"
                 />
                 &hairsp;
-                <span v-if="percentDiff !== 0"
-                    >{{ Math.abs(percentDiff) }}% ({{ diff > 0 ? '+' : ''
-                    }}{{ diff }})</span
-                >
-                <span v-else
-                    >No change ({{ diff > 0 ? '+' : '' }}{{ diff }})</span
-                >
+                <span v-if="percentDiff !== 0">{{ Math.abs(percentDiff) }}% ({{ diff > 0 ? '+' : ''
+                    }}{{ diff }})</span>
+                <span v-else>No change ({{ diff > 0 ? '+' : '' }}{{ diff }})</span>
             </span>
         </div>
     </div>
@@ -91,7 +99,6 @@ export default {
                     columnWidth: '80%'
                 }
             },
-            // labels: [1, 2, 3, 4, 5, 6, 7],
             xaxis: {
                 crosshairs: {
                     width: 1

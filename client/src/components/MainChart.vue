@@ -1,5 +1,19 @@
 <template>
-    <div class="p-5 rounded shadow">
+    <div class="p-5 rounded shadow-lg">
+        <div class="tabs tabs-boxed">
+            <a
+                class="tab"
+                id="rank-tab"
+            >Rank</a>
+            <a
+                class="tab tab-active"
+                id="votes-tab"
+            >Votes</a>
+            <a
+                class="tab"
+                id="forks-tab"
+            >Forks</a>
+        </div>
         <!-- <div class="btn-group">
             <button
                 class="btn btn-outline"
@@ -44,49 +58,28 @@ export default {
                     datetimeUTC: false
                 }
             },
+            yaxis: {
+                reversed: false
+            },
             tooltip: {
                 x: {
-                    format: 'dd MMM HH:00'
+                    show: false
+                    // format: 'dd MMM HH:00'
                 }
             }
         },
         chartSeries: []
     }),
     methods: {
-        prepareData() {
+        prepareData(values = 'votes') {
             const hotlistData = this.$parent.hotlistData;
-
-            // const topProgramIDs = new Set(
-            //     data
-            //         .filter((program) => program.rank <= 1)
-            //         .map((program) => program.program_id)
-            // );
-            // const programs = data
-            //     .filter((program) => topProgramIDs.has(program.program_id))
-            //     .map((program) => {
-            //         program.timestamp = new Date(program.timestamp);
-            //         return program;
-            //     });
-            // const series = [];
-            // topProgramIDs.forEach((id) => {
-            //     const data = [];
-            //     for (const program of programs.filter(
-            //         (program) => program.program_id == id
-            //     )) {
-            //         data.push([program.timestamp, program.votes]);
-            //     }
-            //     series.push({
-            //         name: id,
-            //         data: data
-            //     });
-            // });
 
             const series = [];
             for (const entry of hotlistData) {
                 const data = entry.programs.map((program) => {
                     const date = new Date(program.timestamp);
-                    const votes = program.votes;
-                    return [date, votes];
+                    const value = program[values];
+                    return [date, value];
                 });
                 series.push({
                     name: entry._id,
@@ -105,35 +98,25 @@ export default {
     },
     mounted() {
         this.emitter.on('hotlist-data', this.prepareData);
-        // document
-        //     .getElementById('twelve-hours')
-        //     .addEventListener('click', (e) => {
-        //         ApexCharts.exec(
-        //             'main-chart',
-        //             'zoomX',
-        //             Date.now() - 1000 * 60 * 60 * 12,
-        //             Date.now()
-        //         );
-        //         this.activateRangeButton('twelve-hours');
-        //     });
-        // document.getElementById('one-day').addEventListener('click', (e) => {
-        //     ApexCharts.exec(
-        //         'main-chart',
-        //         'zoomX',
-        //         Date.now() - 1000 * 60 * 60 * 24,
-        //         Date.now()
-        //     );
-        //     this.activateRangeButton('one-day');
-        // });
-        // document.getElementById('one-week').addEventListener('click', (e) => {
-        //     ApexCharts.exec(
-        //         'main-chart',
-        //         'zoomX',
-        //         Date.now() - 1000 * 60 * 60 * 24 * 7,
-        //         Date.now()
-        //     );
-        //     this.activateRangeButton('one-week');
-        // });
+        const rankTab = document.getElementById('rank-tab');
+        const votesTab = document.getElementById('votes-tab');
+        const forksTab = document.getElementById('forks-tab');
+        const tabs = [rankTab, votesTab, forksTab];
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', (e) => {
+                tabs.forEach((tab) => tab.classList.remove('tab-active'));
+                e.target.classList.add('tab-active');
+                this.prepareData(e.target.id.split('-')[0]);
+                this.chartOptions = {
+                    ...this.chartOptions,
+                    ...{
+                        yaxis: {
+                            reversed: e.target.id == 'rank-tab'
+                        }
+                    }
+                };
+            });
+        });
     }
 };
 </script>

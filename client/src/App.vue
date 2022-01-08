@@ -4,6 +4,8 @@
         <Dashboard
             :hotlistData="hotlistData"
             :statisticsData="statisticsData"
+            :topData="topData"
+            :hotlistSnapshot="hotlistSnapshot"
         />
     </div>
 </template>
@@ -24,15 +26,21 @@ export default {
     },
     data: () => ({
         hotlistData: [],
-        statisticsData: []
+        statisticsData: [],
+        topData: [],
+        hotlistSnapshot: []
     }),
     async created() {
         await Promise.all([
             api.fetchHotlistData('week'),
-            api.fetchStatisticsData()
-        ]).then(([hotlistData, statisticsData]) => {
+            api.fetchStatisticsData(),
+            api.fetchStatisticsData('top'),
+            api.fetchHotlistData('snapshot')
+        ]).then(([hotlistData, statisticsData, topData, hotlistSnapshot]) => {
             this.hotlistData = hotlistData;
             this.statisticsData = statisticsData;
+            this.topData = topData;
+            this.hotlistSnapshot = hotlistSnapshot;
         });
     },
     mounted() {

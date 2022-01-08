@@ -1,6 +1,6 @@
 <template>
     <div class="p-5">
-        <div class="w-full shadow stats">
+        <div class="w-full shadow-lg stats">
             <Metric
                 title="Unique Programs"
                 tooltip="Number of programs that were on the Hotlist"

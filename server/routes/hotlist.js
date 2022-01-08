@@ -1,8 +1,9 @@
 const { Router } = require('express');
 
 const cache = require('../middlewares/cache');
-const { aggregate } = require('../lib/mongo');
+const { aggregate, find } = require('../lib/mongo');
 const periods = require('../util/periods');
+const { HOUR } = require('../util/durations');
 
 
 const COLLECTION_NAME = 'hotlist';
@@ -66,7 +67,7 @@ for (const period in periods) {
                 }
             }
         });
-        let data = await aggregate(COLLECTION_NAME, agg);
+        const data = await aggregate(COLLECTION_NAME, agg);
         res.send(data);
     });
     router.get(`/${period}s/:quantity`, cache, async (req, res) => {
@@ -79,10 +80,19 @@ for (const period in periods) {
                 }
             }
         });
-        let data = await aggregate(COLLECTION_NAME, agg);
+        const data = await aggregate(COLLECTION_NAME, agg);
         res.send(data);
     });
 }
+
+router.get('/snapshot', cache, async (_req, res) => {
+    const data = await find(COLLECTION_NAME, {
+        timestamp: {
+            $gt: Date.now() - HOUR
+        }
+    });
+    res.send(data);
+});
 
 // router.get('/before/:latest', cache, async (req, res) => {
 //     const { latest } = req.params;

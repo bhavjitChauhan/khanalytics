@@ -7,12 +7,12 @@ const instance = axios.create({
 });
 
 export default {
-    async fetchHotlistData(period = 'day') {
-        const response = await instance.get(`hotlist/${period}`);
+    async fetchHotlistData(param = 'day') {
+        const response = await instance.get(`hotlist/${param}`);
         return response.data;
     },
-    async fetchStatisticsData() {
-        const response = await instance.get('statistics');
+    async fetchStatisticsData(param = '') {
+        const response = await instance.get(`statistics/${param}`);
         return response.data;
     }
 };

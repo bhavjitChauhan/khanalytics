@@ -16,6 +16,7 @@
     "axios": "^0.21.1",
     "mitt": "^3.0.0",
     "vue": "^3.0.0",
+    "vue-gtag": "^2.0.1",
     "vue3-apexcharts": "^1.4.1"
   },
   "devDependencies": {

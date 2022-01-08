@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+import VueGtag from "vue-gtag";
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
@@ -33,4 +34,8 @@ const app = createApp(App);
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.config.globalProperties.emitter = emitter;
 app.use(VueApexCharts);
+app.use(VueGtag, {
+    config: { id: 'G-Y69Y4D9FQD' },
+    enabled: process.env.NODE_ENV == 'production'
+});
 app.mount('#app');

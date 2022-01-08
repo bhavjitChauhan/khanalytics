@@ -34,11 +34,14 @@
             type="line"
             :options="chartOptions"
             :series="chartSeries"
+            @legendClick=handleLegendClick
         ></apexchart>
     </div>
 </template>
 
 <script>
+import api from '@/services/api';
+
 export default {
     name: 'MainChart',
     data: () => ({
@@ -48,8 +51,16 @@ export default {
                     enabled: false
                 },
                 id: 'main-chart',
+                toolbar: {
+                    autoSelected: 'pan'
+                },
                 zoom: {
                     // autoScaleYaxis: true
+                }
+            },
+            legend: {
+                onItemClick: {
+                    toggleDataSeries: false
                 }
             },
             xaxis: {
@@ -68,7 +79,8 @@ export default {
                 }
             }
         },
-        chartSeries: []
+        chartSeries: [],
+        mappings: {}
     }),
     methods: {
         prepareData(values = 'votes') {
@@ -88,12 +100,55 @@ export default {
             }
 
             this.chartSeries = series;
+            if (Object.keys(this.mappings).length == 0)
+                this.fetchProgramsData();
+            else {
+                const series = this.chartSeries;
+                series.map((series) => {
+                    series.name = this.mappings[series.name];
+                    return series;
+                });
+                this.chartSeries = series;
+            }
         },
-        activateRangeButton(id) {
-            document
-                .querySelectorAll('button')
-                .forEach((el) => el.classList.remove('btn-active'));
-            document.getElementById(id).classList.add('btn-active');
+        async fetchProgramsData() {
+            const MAX_TITLE_LENGTH = 32;
+
+            const ids = this.chartSeries.map((series) => series.name);
+            const titles = [];
+
+            for (const id of ids) {
+                await api
+                    .fetchProgramData(
+                        `scratchpads/${id}?projection={"title":1}`
+                    )
+                    .then((program) => {
+                        let title = program.title;
+                        if (title.length > MAX_TITLE_LENGTH) {
+                            title =
+                                title.substring(0, MAX_TITLE_LENGTH - 3) +
+                                '...';
+                        }
+                        titles.push(title);
+                    });
+            }
+
+            const series = this.chartSeries;
+            series.map((series, i) => {
+                series.name = titles[i];
+                return series;
+            });
+            this.chartSeries = series;
+
+            this.mappings = titles.reduce(
+                (obj, k, i) => ({ ...obj, [k]: ids[i] }),
+                {}
+            );
+        },
+        handleLegendClick(_chartContext, seriesIndex) {
+            const BASE_URL = 'https://khanacademy.org/cs/-/';
+            const url = BASE_URL + Object.values(this.mappings)[seriesIndex];
+            window.open(url, '_blank');
         }
     },
     mounted() {

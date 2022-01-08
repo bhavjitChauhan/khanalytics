@@ -79,7 +79,8 @@ export default {
     props: {
         title: String,
         tooltip: String,
-        data: Array
+        data: Array,
+        chartColor: String
     },
     data: () => ({
         value: null,
@@ -87,6 +88,9 @@ export default {
         percentDiff: null,
         chartOptions: {
             chart: {
+                animations: {
+                    enabled: false
+                },
                 type: 'bar',
                 width: 100,
                 height: 35,
@@ -146,6 +150,12 @@ export default {
             );
             this.chartSeries[0].data = this.data;
         }
+    },
+    mounted() {
+        this.chartOptions = {
+            ...this.chartOptions,
+            colors: [this.chartColor]
+        };
     },
     watch: {
         data: {

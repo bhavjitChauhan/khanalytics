@@ -29,7 +29,7 @@ const handler = (req, res, next) => {
                     ttl = HOUR;
                     break;
             }
-            Cache.set(key, body, ttl);
+            if (Object.keys(body).length != 0) Cache.set(key, body, ttl);
             res.sendResponse(body);
         }
         next();

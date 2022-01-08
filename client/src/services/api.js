@@ -7,6 +7,10 @@ const instance = axios.create({
 });
 
 export default {
+    async fetchProgramData(params) {
+        const response = await instance.get(`khan/${params}`);
+        return response.data;
+    },
     async fetchHotlistData(param = 'day') {
         const response = await instance.get(`hotlist/${param}`);
         return response.data;

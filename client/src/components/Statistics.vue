@@ -5,16 +5,19 @@
                 title="Unique Programs"
                 tooltip="Number of programs that were on the Hotlist"
                 :data="uniquePrograms"
+                chartColor="#570DF8"
             />
             <Metric
                 title="Votes Volume"
                 tooltip="Number of votes that were cast"
                 :data="votesVolume"
+                chartColor="#008FFB"
             />
             <Metric
                 title="Forks Volume"
                 tooltip="Number of forks that were created"
                 :data="forksVolume"
+                chartColor="#00E396"
             />
         </div>
     </div>

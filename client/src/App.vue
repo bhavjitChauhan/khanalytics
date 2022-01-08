@@ -44,7 +44,7 @@ export default {
         });
     },
     mounted() {
-        Apex.colors = ['#570df8', '#00E396', '#FEB019', '#FF4560', '#008FFB'];
+        Apex.colors = ['#570DF8', '#00E396', '#FEB019', '#FF4560', '#008FFB'];
     }
 };
 </script>

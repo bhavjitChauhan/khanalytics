@@ -8,11 +8,14 @@
             width="100%"
             :options="chartOptions"
             :series="chartSeries"
+            @legendClick=handleLegendClick
         ></apexchart>
     </div>
 </template>
 
 <script>
+import api from '@/services/api';
+
 export default {
     name: 'TopChart',
     data: () => ({
@@ -21,12 +24,12 @@ export default {
                 animations: {
                     enabled: false
                 },
-                // width: 380,
                 type: 'pie'
             },
             labels: []
         },
-        chartSeries: []
+        chartSeries: [],
+        mappings: []
     }),
     methods: {
         prepareData() {
@@ -37,8 +40,45 @@ export default {
                 counts[program] = (counts[program] || 0) + 1;
             });
             counts = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+
             this.chartOptions.labels = counts.map((count) => count[0]);
             this.chartSeries = counts.map((count) => count[1]);
+
+            this.fetchProgramsData();
+        },
+        async fetchProgramsData() {
+            const MAX_TITLE_LENGTH = 32;
+
+            const ids = this.chartOptions.labels;
+            const titles = [];
+
+            for (const id of ids) {
+                await api
+                    .fetchProgramData(
+                        `scratchpads/${id}?projection={"title":1}`
+                    )
+                    .then((program) => {
+                        let title = program.title;
+                        if (title.length > MAX_TITLE_LENGTH) {
+                            title =
+                                title.substring(0, MAX_TITLE_LENGTH - 3) +
+                                '...';
+                        }
+                        titles.push(title);
+                    });
+            }
+
+            this.chartOptions = {
+                ...this.chartOptions,
+                labels: titles
+            };
+            this.mappings = ids;
+        },
+        handleLegendClick(_chartContext, seriesIndex) {
+            const BASE_URL = 'https://khanacademy.org/cs/-/';
+            const url = BASE_URL + this.mappings[seriesIndex];
+
+            window.open(url, '_blank');
         }
     },
     mounted() {

@@ -33,6 +33,7 @@ const emitter = mitt();
 const app = createApp(App);
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.config.globalProperties.emitter = emitter;
+app.config.globalProperties.$mappings = {};
 app.use(VueApexCharts);
 app.use(VueGtag, {
     config: { id: 'G-Y69Y4D9FQD' },

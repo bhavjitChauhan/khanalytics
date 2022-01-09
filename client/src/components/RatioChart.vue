@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col p-5 space-y-4 rounded shadow-lg">
+    <div class="flex flex-col p-5 space-y-4 rounded shadow-lg h-full">
         <h1 class="text-2xl font-bold text-center uppercase">Ratio Chart</h1>
         <p class="text-center text-slate-500">Relation between votes and forks over the past hour</p>
         <apexchart

@@ -9,7 +9,7 @@ const { HOUR } = require('../util/durations');
 const COLLECTION_NAME = 'hotlist';
 const MINIMUM_PEAK = 1;
 
-const router = Router();
+const router = Router({ strict: true });
 
 for (const period in periods) {
     const pipeline = [];

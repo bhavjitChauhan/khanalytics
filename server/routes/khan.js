@@ -3,7 +3,7 @@ const { Router } = require('express');
 const { get } = require('../lib/api');
 
 
-const router = Router();
+const router = Router({ strict: true });
 
 router.get('/*', async (req, res) => {
     try {

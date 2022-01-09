@@ -8,7 +8,7 @@ const { DAY, WEEK } = require('../util/durations');
 const HOTLIST_COLLECTION_NAME = 'hotlist';
 const STATISTICS_COLLECTION_NAME = 'statistics';
 
-const router = Router();
+const router = Router({ strict: true });
 
 router.get('/', cache, async (_req, res) => {
     const data = await find(STATISTICS_COLLECTION_NAME, {

@@ -16,7 +16,8 @@ export default {
         return response.data;
     },
     async fetchStatisticsData(param = '') {
-        const response = await instance.get(`statistics/${param}`);
+        if (param.slice(1) != '/' && param != '') param = '/' + param;
+        const response = await instance.get(`statistics${param}`);
         return response.data;
     }
 };

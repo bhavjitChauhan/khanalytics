@@ -52,7 +52,7 @@ export default {
             this.fetchProgramsData();
         },
         async fetchProgramsData() {
-            const MAX_TITLE_LENGTH = 32;
+            const MAX_TITLE_LENGTH = 24;
 
             const ids = this.programs.map((program) => program.program_id);
             const titles = [];

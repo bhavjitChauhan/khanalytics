@@ -9,6 +9,7 @@
             :options="chartOptions"
             :series="chartSeries"
             @legendClick=handleLegendClick
+            @dataPointSelection=handleDataPointSelection
         ></apexchart>
     </div>
 </template>
@@ -92,6 +93,14 @@ export default {
             this.mappings = mappings;
         },
         handleLegendClick(_chartContext, seriesIndex) {
+            const BASE_URL = 'https://khanacademy.org/cs/-/';
+            const url = BASE_URL + this.mappings[seriesIndex];
+
+            window.open(url, '_blank');
+        },
+        handleDataPointSelection(_event, _chartContext, config) {
+            const seriesIndex = config.seriesIndex;
+
             const BASE_URL = 'https://khanacademy.org/cs/-/';
             const url = BASE_URL + this.mappings[seriesIndex];
 

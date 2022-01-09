@@ -1,33 +1,27 @@
 <template>
     <div class="p-5 rounded shadow-lg">
-        <div class="tabs tabs-boxed">
-            <a
-                class="tab"
-                id="rank-tab"
-            >Rank</a>
-            <a
-                class="tab tab-active"
-                id="votes-tab"
-            >Votes</a>
-            <a
-                class="tab"
-                id="forks-tab"
-            >Forks</a>
+        <div class="grid grid-cols-2">
+            <div class="justify-start w-full tabs tabs-boxed">
+                <a
+                    class="tab"
+                    id="rank-tab"
+                >Rank</a>
+                <a
+                    class="tab tab-active"
+                    id="votes-tab"
+                >Votes</a>
+                <a
+                    class="tab"
+                    id="forks-tab"
+                >Forks</a>
+            </div>
+            <div class="justify-end w-full tabs tabs-boxed">
+                <!-- <a class="tab">Month</a> -->
+                <a class="tab tab-active">Week</a>
+                <!-- <a class="tab">Day</a> -->
+                <!-- <a class="tab">Hour</a> -->
+            </div>
         </div>
-        <!-- <div class="btn-group">
-            <button
-                class="btn btn-outline"
-                id="twelve-hours"
-            >12H</button>
-            <button
-                class="btn btn-outline"
-                id="one-day"
-            >1D</button>
-            <button
-                class="btn btn-outline btn-active"
-                id="one-week"
-            >1W</button>
-        </div> -->
         <apexchart
             width="100%"
             height="500px"
@@ -55,7 +49,7 @@ export default {
                     autoSelected: 'pan'
                 },
                 zoom: {
-                    // autoScaleYaxis: true
+                    autoScaleYaxis: true
                 }
             },
             legend: {
@@ -63,14 +57,23 @@ export default {
                     toggleDataSeries: false
                 }
             },
+            stroke: {
+                curve: 'smooth'
+            },
             xaxis: {
                 type: 'datetime',
                 labels: {
                     datetimeUTC: false
+                },
+                title: {
+                    text: 'Time'
                 }
             },
             yaxis: {
-                reversed: false
+                reversed: false,
+                title: {
+                    text: 'Votes'
+                }
             },
             tooltip: {
                 x: {
@@ -162,11 +165,22 @@ export default {
                 tabs.forEach((tab) => tab.classList.remove('tab-active'));
                 e.target.classList.add('tab-active');
                 this.prepareData(e.target.id.split('-')[0]);
+                let title = e.target.id.split('-')[0];
+                title = title.charAt(0).toUpperCase() + title.slice(1);
                 this.chartOptions = {
                     ...this.chartOptions,
                     ...{
+                        stroke: {
+                            curve:
+                                e.target.id == 'rank-tab'
+                                    ? 'stepline'
+                                    : 'smooth'
+                        },
                         yaxis: {
-                            reversed: e.target.id == 'rank-tab'
+                            reversed: e.target.id == 'rank-tab',
+                            title: {
+                                text: title
+                            }
                         }
                     }
                 };

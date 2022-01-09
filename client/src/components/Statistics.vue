@@ -17,7 +17,7 @@
                 title="Forks Volume"
                 tooltip="Number of forks that were created"
                 :data="forksVolume"
-                chartColor="#00E396"
+                chartColor="#14BF95"
             />
         </div>
     </div>

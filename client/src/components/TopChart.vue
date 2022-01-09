@@ -26,7 +26,12 @@ export default {
                 },
                 type: 'pie'
             },
-            labels: []
+            labels: [],
+            legend: {
+                onItemClick: {
+                    toggleDataSeries: false
+                }
+            }
         },
         chartSeries: [],
         mappings: []

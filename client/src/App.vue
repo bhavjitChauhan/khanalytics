@@ -13,7 +13,7 @@
 
 <script>
 import api from '@/services/api';
-import sleep from '@/lib/sleep';
+import sleep from '@/util/sleep';
 
 import Navbar from '@/components/Navbar.vue';
 import Dashboard from '@/components/Dashboard.vue';

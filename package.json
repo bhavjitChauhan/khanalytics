@@ -1,0 +1,14 @@
+{
+    "name": "khan_academy_trends",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./server/index.js",
+    "scripts": {
+        "build": "npm ci --only=prod --prefix server && npm ci --only=prod --prefix client && npm run build --prefix client"
+    },
+    "author": "Bhavjit Chauhan",
+    "license": "MIT",
+    "engines": {
+        "node": "16.x"
+    }
+}

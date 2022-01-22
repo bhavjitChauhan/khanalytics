@@ -1,6 +1,6 @@
 <template>
     <div class="p-5 mx-32">
-        <div class="alert alert-warning mb-4">
+        <div class="mb-4 alert alert-warning">
             <div class="flex-1">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -86,10 +86,10 @@ export default {
 
 <style>
 .apexcharts-zoom-icon.apexcharts-selected svg {
-    fill: #570df8 !important;
+    fill: #14bf95 !important;
 }
 
 .apexcharts-pan-icon.apexcharts-selected svg {
-    stroke: #570df8 !important;
+    stroke: #14bf95 !important;
 }
 </style>

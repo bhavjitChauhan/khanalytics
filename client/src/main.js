@@ -36,7 +36,7 @@ app.config.globalProperties.emitter = emitter;
 app.config.globalProperties.$mappings = {};
 app.use(VueApexCharts);
 app.use(VueGtag, {
-    config: { id: 'G-Y69Y4D9FQD' },
+    config: { id: 'G-NSE87WJS3R' },
     enabled: process.env.NODE_ENV == 'production'
 });
 app.mount('#app');

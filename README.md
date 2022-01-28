@@ -1,1 +1,1 @@
-# khan-academy-trends
+# Khanalytics

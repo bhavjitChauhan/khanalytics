@@ -1,5 +1,5 @@
 {
-    "name": "khan_academy_trends",
+    "name": "khanalytics",
     "version": "1.0.0",
     "description": "",
     "main": "./server/index.js",

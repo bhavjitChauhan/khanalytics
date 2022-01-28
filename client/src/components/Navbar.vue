@@ -1,17 +1,24 @@
 <template>
-    <div
-        class="m-2 shadow-lg navbar bg-primary text-neutral-content rounded-box"
-    >
+    <div class="m-2 shadow-lg navbar bg-primary text-neutral-content rounded-box">
         <div class="px-2 mx-2 navbar-start">
-            <span class="text-lg font-bold"> Trends </span>
+            <span class="text-lg font-bold">Khanalytics</span>
         </div>
         <div class="px-2 mx-2 navbar-end">
-            <div data-tip="Next Refresh" class="tooltip tooltip-bottom">
+            <div
+                data-tip="Next Refresh"
+                class="tooltip tooltip-bottom"
+            >
                 <font-awesome-icon icon="history" />
             </div>
             <span class="ml-2 text-lg font-bold countdown">
-                <span id="minutes" style="--value: 0"></span>m
-                <span id="seconds" style="--value: 0"></span>s
+                <span
+                    id="minutes"
+                    style="--value: 0"
+                ></span>m
+                <span
+                    id="seconds"
+                    style="--value: 0"
+                ></span>s
             </span>
         </div>
     </div>

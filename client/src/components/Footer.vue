@@ -9,14 +9,14 @@
             >Contact</a>
             <a
                 class="link link-hover"
-                href="https://github.com/bhavjitChauhan/khan-academy-trends"
+                href="https://github.com/bhavjitChauhan/khanalytics"
                 target="_blank"
             >GitHub</a>
         </div>
         <div>
             <img
                 src="../assets/logo.png"
-                alt="Khan Academy Trends"
+                alt="Khan Academy Khanalytics"
                 width="32"
                 height="auto"
                 class="grayscale"

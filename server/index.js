@@ -2,6 +2,8 @@ require('dotenv').config();
 const cors = require('cors');
 const helmet = require("helmet");
 const express = require('express');
+const expressWinston = require('express-winston');
+const winston = require('winston');
 
 const khan = require('./routes/khan');
 const hotlist = require('./routes/hotlist');
@@ -18,6 +20,14 @@ app.use(
         contentSecurityPolicy: false,
     })
 );
+app.use(expressWinston.logger({
+    transports: [
+        new winston.transports.Console()
+    ],
+    format: winston.format.simple(),
+    meta: false,
+    expressFormat: true
+}));
 
 app.use(express.static('dist'));
 app.use('/khan', khan);

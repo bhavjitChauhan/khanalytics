@@ -3,7 +3,10 @@ module.exports = {
     purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
     darkMode: false, // or 'media' or 'class'
     theme: {
-        extend: {}
+        extend: {
+            'primary': '#14bf95',
+            'primary-focus': '#0e8c6d'
+        }
     },
     variants: {
         extend: {}

@@ -8,6 +8,7 @@ const winston = require('winston');
 const khan = require('./routes/khan');
 const hotlist = require('./routes/hotlist');
 const statistics = require('./routes/statistics');
+const performanceRouter = require('./routes/performance');
 
 
 const PORT = process.env.PORT || 3000;
@@ -26,13 +27,14 @@ app.use(expressWinston.logger({
     ],
     format: winston.format.simple(),
     meta: false,
-    expressFormat: true
+    msg: "{{req.ip}} {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms",
 }));
 
 app.use(express.static('dist'));
 app.use('/khan', khan);
 app.use('/hotlist', hotlist);
 app.use('/statistics', statistics);
+app.use('/performance', performanceRouter);
 
 app.get('/status', (req, res) => {
     res.json({

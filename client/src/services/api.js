@@ -7,6 +7,10 @@ const instance = axios.create({
 });
 
 export default {
+    async fetch(url) {
+        const response = await instance.get(url);
+        return response.data;
+    },
     async fetchProgramData(params) {
         const response = await instance.get(`khan/${params}`);
         return response.data;

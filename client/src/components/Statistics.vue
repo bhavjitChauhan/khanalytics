@@ -19,6 +19,24 @@
                 :data="forksVolume"
                 chartColor="#14BF95"
             />
+            <!-- <Metric
+                title="Comments Volume"
+                tooltip="Number of comments that were posted"
+                :data="comments"
+                chartColor="#FEB019"
+            />
+            <Metric
+                title="Comments Votes Volume"
+                tooltip="Number of comment votes that were cast"
+                :data="commentVotes"
+                chartColor="#FEB019"
+            />
+            <Metric
+                title="Replies Volume"
+                tooltip="Number of replies that were posted"
+                :data="replies"
+                chartColor="#FEB019"
+            /> -->
         </div>
     </div>
 </template>
@@ -35,7 +53,9 @@ export default {
         uniquePrograms: null,
         votesVolume: null,
         forksVolume: null,
-        period: 'hour'
+        comments: null,
+        commentVotes: null,
+        replies: null
     }),
     methods: {
         calculatePercentDiff(a, b) {
@@ -52,6 +72,11 @@ export default {
             this.forksVolume = statisticsData.map(
                 (statistic) => statistic.forks
             );
+            this.comments = statisticsData.map((statistic) => statistic.comments);
+            this.commentVotes = statisticsData.map(
+                (statistic) => statistic.commentVotes
+            );
+            this.replies = statisticsData.map((statistic) => statistic.replies);
         }
     },
     mounted() {

@@ -1,25 +1,67 @@
 <template>
-    <div class="p-5 rounded shadow-lg">
+    <div
+        class="p-5 rounded shadow-lg"
+        id="main-chart"
+    >
         <div class="grid grid-cols-2">
             <div class="justify-start w-full tabs tabs-boxed">
                 <a
-                    class="tab"
+                    class="transition-transform ease-in-out tab hover:scale-110"
                     id="rank-tab"
                 >Rank</a>
                 <a
-                    class="tab tab-active"
+                    class="transition-transform ease-in-out tab hover:scale-110 tab-active"
                     id="votes-tab"
                 >Votes</a>
                 <a
-                    class="tab"
+                    class="transition-transform ease-in-out tab hover:scale-110"
                     id="forks-tab"
                 >Forks</a>
+                <a
+                    class="transition-transform ease-in-out tab hover:scale-110"
+                    id="comments-tab"
+                >Comments</a>
+                <a
+                    class="transition-transform ease-in-out tab hover:scale-110"
+                    id="commentVotes-tab"
+                >Upvotes</a>
+                <a
+                    class="transition-transform ease-in-out tab hover:scale-110"
+                    id="replies-tab"
+                >Replies</a>
             </div>
-            <div class="justify-end w-full tabs tabs-boxed">
-                <!-- <a class="tab">Month</a> -->
-                <a class="tab tab-active">Week</a>
-                <!-- <a class="tab">Day</a> -->
-                <!-- <a class="tab">Hour</a> -->
+            <div class="justify-end w-full">
+                <label
+                    for="main-chart-modal"
+                    class="float-right btn btn-sm btn-circle btn-outline modal-button"
+                >
+                    <font-awesome-icon icon="info" />
+                </label>
+                <input
+                    type="checkbox"
+                    id="main-chart-modal"
+                    class="modal-toggle"
+                >
+                <div class="modal">
+                    <div class="modal-box">
+                        <p>
+                            This chart shows the performance of the current top 10 programs on the Hotlist. To reduce bandwidth, the granularity is reduced to three hour intervals.
+                            <br><br>
+                            <b>Use the tabs</b> at the top-left of the chart to switch between the different metrics.
+                            <br><br>
+                            <b>Use the toolbar</b> at the top-right to manipulate the chart. Hover over the icons for more information.
+                            <br><br>
+                            <b>Save the chart</b> as an image by clicking the &nbsp;
+                            <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data please contact me.
+                        </p>
+                        <div class="modal-action">
+                            <label
+                                for="main-chart-modal"
+                                class="btn btn-sm"
+                            >Close</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <apexchart
@@ -34,7 +76,7 @@
 </template>
 
 <script>
-import api from '@/services/api';
+import colorHash from '../util/colorHash';
 
 export default {
     name: 'MainChart',
@@ -46,10 +88,7 @@ export default {
                 },
                 id: 'main-chart',
                 toolbar: {
-                    autoSelected: 'pan'
-                },
-                zoom: {
-                    autoScaleYaxis: true
+                    autoSelected: 'zoom'
                 }
             },
             legend: {
@@ -71,95 +110,83 @@ export default {
             },
             yaxis: {
                 reversed: false,
+                min: 0,
+                forceNiceScale: true,
                 title: {
                     text: 'Votes'
                 }
             },
             tooltip: {
                 x: {
-                    show: false
-                    // format: 'dd MMM HH:00'
+                    show: false,
+                    format: 'dd MMM HH:00'
                 }
             }
         },
-        chartSeries: [],
-        mappings: {}
+        chartSeries: []
     }),
     methods: {
-        prepareData(values = 'votes') {
-            const hotlistData = this.$parent.hotlistData;
+        prepareData(field = 'votes') {
+            const performanceTopData = this.$parent.performanceTopData;
+            const hotlistSnapshot = this.$parent.hotlistSnapshot;
 
             const series = [];
-            for (const entry of hotlistData) {
+            for (const entry of performanceTopData) {
                 const data = entry.programs.map((program) => {
                     const date = new Date(program.timestamp);
-                    const value = program[values];
+                    const value = program[field];
                     return [date, value];
                 });
                 series.push({
-                    name: entry._id,
+                    name: entry.program_id,
                     data: data
                 });
             }
-
-            this.chartSeries = series;
-            if (Object.keys(this.mappings).length == 0)
-                this.fetchProgramsData();
-            else {
-                const series = this.chartSeries;
-                series.map((series) => {
-                    series.name = this.mappings[series.name];
-                    return series;
-                });
-                this.chartSeries = series;
-            }
-        },
-        async fetchProgramsData() {
-            const MAX_TITLE_LENGTH = 32;
-
-            const ids = this.chartSeries.map((series) => series.name);
-            const titles = [];
-
-            for (const id of ids) {
-                await api
-                    .fetchProgramData(
-                        `scratchpads/${id}?projection={"title":1}`
-                    )
-                    .then((program) => {
-                        let title = program.title;
-                        if (title.length > MAX_TITLE_LENGTH) {
-                            title =
-                                title.substring(0, MAX_TITLE_LENGTH - 3) +
-                                '...';
-                        }
-                        titles.push(title);
-                    });
-            }
-
-            const series = this.chartSeries;
-            series.map((series, i) => {
-                series.name = titles[i];
+            series.map((series) => {
+                if (!hotlistSnapshot[series.name]) return;
+                if (['rank', 'votes', 'forks'].includes(field)) {
+                    series.data.push([
+                        new Date(),
+                        hotlistSnapshot[series.name][field]
+                    ]);
+                }
+                series.name = hotlistSnapshot[series.name].title;
                 return series;
             });
-            this.chartSeries = series;
 
-            this.mappings = titles.reduce(
-                (obj, k, i) => ({ ...obj, [k]: ids[i] }),
-                {}
-            );
+            const colors = series.map((series) => {
+                return colorHash.hex(series.name);
+            });
+
+            this.chartSeries = series;
+            this.chartOptions = {
+                ...this.chartOptions,
+                colors
+            };
         },
         handleLegendClick(_chartContext, seriesIndex) {
             const BASE_URL = 'https://khanacademy.org/cs/-/';
-            const url = BASE_URL + Object.values(this.mappings)[seriesIndex];
+            const url = BASE_URL + Object.keys(hotlistSnapshot)[seriesIndex];
             window.open(url, '_blank');
         }
     },
     mounted() {
-        this.emitter.on('hotlist-data', this.prepareData);
+        this.emitter.on('performance-top-data', this.prepareData);
         const rankTab = document.getElementById('rank-tab');
         const votesTab = document.getElementById('votes-tab');
         const forksTab = document.getElementById('forks-tab');
-        const tabs = [rankTab, votesTab, forksTab];
+        const commentsTab = document.getElementById('comments-tab');
+        const commentVotesTab = document.getElementById('commentVotes-tab');
+        const repliesTab = document.getElementById('replies-tab');
+
+        const tabs = [
+            rankTab,
+            votesTab,
+            forksTab,
+            commentsTab,
+            commentVotesTab,
+            repliesTab
+        ];
         tabs.forEach((tab) => {
             tab.addEventListener('click', (e) => {
                 tabs.forEach((tab) => tab.classList.remove('tab-active'));
@@ -178,6 +205,9 @@ export default {
                         },
                         yaxis: {
                             reversed: e.target.id == 'rank-tab',
+                            min: e.target.id == 'rank-tab' ? 1 : 0,
+                            max: e.target.id == 'rank-tab' ? 25 : (max) => max,
+                            forceNiceScale: e.target.id != 'rank-tab',
                             title: {
                                 text: title
                             }

@@ -25,6 +25,9 @@ const handler = (req, res, next) => {
                 case '/statistics':
                     ttl = DAY - (Date.now() % DAY);
                     break;
+                case '/performance':
+                    ttl = HOUR - (Date.now() % HOUR);
+                    break;
                 default:
                     ttl = HOUR;
                     break;

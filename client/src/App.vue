@@ -2,7 +2,7 @@
     <div>
         <Navbar />
         <Dashboard
-            :hotlistData="hotlistData"
+            :performanceTopData="performanceTopData"
             :statisticsData="statisticsData"
             :topData="topData"
             :hotlistSnapshot="hotlistSnapshot"
@@ -13,7 +13,6 @@
 
 <script>
 import api from '@/services/api';
-import sleep from '@/util/sleep';
 
 import Navbar from '@/components/Navbar.vue';
 import Dashboard from '@/components/Dashboard.vue';
@@ -27,32 +26,47 @@ export default {
         Footer
     },
     data: () => ({
-        hotlistData: [],
+        hotlistSnapshot: {},
+        performanceTopData: [],
         statisticsData: [],
-        topData: [],
-        hotlistSnapshot: []
+        topData: []
     }),
     async created() {
-        // Repl.it doesn't play well with fetching data too fast
-        this.statisticsData = await api.fetchStatisticsData();
-        await sleep(500);
-        this.topData = await api.fetchStatisticsData('top');
-        await sleep(500);
-        this.hotlistData = await api.fetchHotlistData('week');
-        await sleep(500);
-        this.hotlistSnapshot = await api.fetchHotlistData('snapshot');
-
-        // await Promise.all([
-        //     api.fetchHotlistData('week'),
-        //     api.fetchStatisticsData(),
-        //     api.fetchStatisticsData('top'),
-        //     api.fetchHotlistData('snapshot')
-        // ]).then(([hotlistData, statisticsData, topData, hotlistSnapshot]) => {
-        //     this.hotlistData = hotlistData;
-        //     this.statisticsData = statisticsData;
-        //     this.topData = topData;
-        //     this.hotlistSnapshot = hotlistSnapshot;
-        // });
+        await Promise.all([
+            api.fetch(
+                '/khan/scratchpads/top?sort=3&limit=100&projection={"scratchpads":1}'
+            ),
+            api.fetch('/performance/top/10'),
+            api.fetchStatisticsData()
+        ]).then(
+            ([
+                hotlistSnapshot,
+                performanceTopData,
+                statisticsData,
+                topData
+            ]) => {
+                this.prepareHotlistSnapshot(hotlistSnapshot);
+                this.performanceTopData = performanceTopData;
+                this.statisticsData = statisticsData;
+            }
+        );
+    },
+    methods: {
+        prepareHotlistSnapshot(hotlistSnapshot) {
+            const snapshot = {};
+            const scratchpads = hotlistSnapshot.scratchpads;
+            for (const i in scratchpads) {
+                const scratchpad = scratchpads[i];
+                const id = scratchpad.url.split('/')[5];
+                snapshot[id] = {
+                    title: scratchpad.title,
+                    rank: parseInt(i, 10) + 1,
+                    votes: scratchpad.sumVotesIncremented,
+                    forks: scratchpad.spinoffCount
+                };
+            }
+            this.hotlistSnapshot = snapshot;
+        }
     },
     mounted() {
         Apex.colors = ['#14BF95', '#570DF8', '#FEB019', '#FF4560', '#008FFB'];
@@ -62,7 +76,7 @@ export default {
 
 <style>
 ::-webkit-scrollbar {
-    width: 20px;
+    width: 1em;
 }
 
 ::-webkit-scrollbar-track {

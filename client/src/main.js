@@ -9,8 +9,10 @@ import {
     faAngleDoubleDown,
     faAngleDoubleUp,
     faAngleUp,
+    faBars,
     faEquals,
-    faHistory
+    faHistory,    
+    faInfo
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueApexCharts from 'vue3-apexcharts';
@@ -23,8 +25,10 @@ library.add(
     faAngleDoubleDown,
     faAngleDoubleUp,
     faAngleUp,
+    faBars,
+    faEquals,
     faHistory,
-    faEquals
+    faInfo
 );
 library.add(faQuestionCircle);
 

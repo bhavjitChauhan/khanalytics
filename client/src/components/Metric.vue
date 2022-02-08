@@ -5,6 +5,7 @@
     >
         <div class="stat-figure">
             <apexchart
+                v-if="chartSeries[0].data"
                 type="bar"
                 height="35"
                 width="100"
@@ -88,6 +89,8 @@ export default {
         percentDiff: null,
         chartOptions: {
             chart: {
+                id: Math.random().toString().slice(2),
+                group: 'statistics',
                 animations: {
                     enabled: false
                 },

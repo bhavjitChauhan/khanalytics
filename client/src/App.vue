@@ -59,7 +59,7 @@ export default {
                 const scratchpad = scratchpads[i];
                 const id = scratchpad.url.split('/')[5];
                 snapshot[id] = {
-                    title: scratchpad.title,
+                    title: scratchpad.title || 'None',
                     rank: parseInt(i, 10) + 1,
                     votes: scratchpad.sumVotesIncremented,
                     forks: scratchpad.spinoffCount

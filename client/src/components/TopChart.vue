@@ -101,7 +101,6 @@ export default {
                         excludedTotal += program.value;
                         return false;
                     }
-                    console.log(program.value);
                     return true;
                 })
                 .sort((a, b) => b.value - a.value);

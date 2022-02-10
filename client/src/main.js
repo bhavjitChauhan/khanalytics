@@ -11,7 +11,7 @@ import {
     faAngleUp,
     faBars,
     faEquals,
-    faHistory,    
+    faHistory,
     faInfo
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -19,6 +19,7 @@ import VueApexCharts from 'vue3-apexcharts';
 import mitt from 'mitt';
 
 import './index.css';
+import router from './router'
 
 library.add(
     faAngleDown,
@@ -34,13 +35,15 @@ library.add(faQuestionCircle);
 
 const emitter = mitt();
 
-const app = createApp(App);
-app.component('font-awesome-icon', FontAwesomeIcon);
+const app = createApp(App)
 app.config.globalProperties.emitter = emitter;
 app.config.globalProperties.$mappings = {};
-app.use(VueApexCharts);
-app.use(VueGtag, {
-    config: { id: 'G-NSE87WJS3R' },
-    enabled: process.env.NODE_ENV == 'production'
-});
-app.mount('#app');
+app
+    .component('font-awesome-icon', FontAwesomeIcon)
+    .use(router)
+    .use(VueApexCharts)
+    .use(VueGtag, {
+        config: { id: 'G-NSE87WJS3R' },
+        enabled: process.env.NODE_ENV == 'production'
+    })
+    .mount('#app');

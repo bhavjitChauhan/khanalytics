@@ -1,7 +1,10 @@
 <template>
     <footer class="p-10 footer bg-base-200 text-base-content footer-center">
         <div class="grid grid-flow-col gap-4">
-            <a class="link link-hover">About</a>
+            <router-link
+                class="link link-hover"
+                to="/about"
+            >About</router-link>
             <a
                 class="link link-hover"
                 href="mailto://bhavjit_chauhan@cs.sfu.ca"

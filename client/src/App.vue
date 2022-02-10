@@ -1,12 +1,7 @@
 <template>
     <div>
         <Navbar />
-        <Dashboard
-            :performanceTopData="performanceTopData"
-            :statisticsData="statisticsData"
-            :topData="topData"
-            :hotlistSnapshot="hotlistSnapshot"
-        />
+        <router-view />
         <Footer />
     </div>
 </template>
@@ -15,14 +10,12 @@
 import api from '@/services/api';
 
 import Navbar from '@/components/Navbar.vue';
-import Dashboard from '@/components/Dashboard.vue';
 import Footer from '@/components/Footer.vue';
 
 export default {
     name: 'App',
     components: {
         Navbar,
-        Dashboard,
         Footer
     },
     data: () => ({

@@ -3,6 +3,22 @@
         <div class="px-2 mx-2 navbar-start">
             <span class="text-lg font-bold">Khanalytics</span>
         </div>
+        <div class="hidden px-2 mx-2 navbar-center lg:flex">
+            <div class="flex items-stretch">
+                <router-link
+                    class="btn btn-ghost btn-sm rounded-btn"
+                    to="/"
+                >Home</router-link>
+                <router-link
+                    class="btn btn-ghost btn-sm rounded-btn"
+                    to="/dashboard"
+                >Dashboard</router-link>
+                <router-link
+                    class="btn btn-ghost btn-sm rounded-btn"
+                    to="/about"
+                >About</router-link>
+            </div>
+        </div>
         <div class="px-2 mx-2 navbar-end">
             <div
                 data-tip="Next Refresh"

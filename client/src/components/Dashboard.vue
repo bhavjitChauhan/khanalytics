@@ -4,7 +4,7 @@
         <Statistics />
         <div class="grid grid-cols-4 grid-rows-1 gap-4">
             <div class="col-span-1 row-span-1">
-                <HotlistTable />
+                <HotTable />
             </div>
             <div class="col-span-3 row-span-1">
                 <MainChart />
@@ -21,7 +21,7 @@
 
 <script>
 import Statistics from '@/components/Statistics.vue';
-import HotlistTable from '@/components/HotlistTable.vue';
+import HotTable from '@/components/HotTable.vue';
 import MainChart from '@/components/MainChart.vue';
 import TopChart from '@/components/TopChart.vue';
 import RatioChart from '@/components/RatioChart.vue';
@@ -30,7 +30,7 @@ export default {
     name: 'Dashboard',
     components: {
         Statistics,
-        HotlistTable,
+        HotTable,
         MainChart,
         TopChart,
         RatioChart

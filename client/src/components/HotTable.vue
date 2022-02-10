@@ -44,7 +44,7 @@
 
 <script>
 export default {
-    name: 'HotlistTable',
+    name: 'HotTable',
     data: () => ({
         programs: {}
     }),

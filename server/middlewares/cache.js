@@ -16,20 +16,13 @@ const handler = (req, res, next) => {
             let ttl;
             switch (req.baseUrl) {
                 case '/khan':
-                    // ttl = (MINUTE * 10) - (Date.now() % (MINUTE * 10));
-                    ttl = DAY;
-                    break;
-                case '/hotlist':
-                    ttl = HOUR - (Date.now() % HOUR);
+                    ttl = (MINUTE * 10) - (Date.now() % (MINUTE * 10));
                     break;
                 case '/statistics':
                     ttl = DAY - (Date.now() % DAY);
                     break;
-                case '/performance':
-                    ttl = HOUR - (Date.now() % HOUR);
-                    break;
                 default:
-                    ttl = HOUR;
+                    ttl = HOUR - (Date.now() % HOUR);;
                     break;
             }
             if (Object.keys(body).length != 0) Cache.set(key, body, ttl);

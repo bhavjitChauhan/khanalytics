@@ -51,31 +51,52 @@ export default {
     },
     computed: {
         statisticsData() {
+            const data = this.$store.state.statisticsData;
+            if (this.isEmpty(data)) return null;
+
             return this.$store.state.statisticsData;
         },
         uniquePrograms() {
             const statisticsData = this.statisticsData;
+            if (this.isEmpty(statisticsData)) return null;
+
+            console.log('statisticsData', statisticsData);
             return statisticsData.map((statistic) => statistic.programs);
         },
         votesVolume() {
             const statisticsData = this.statisticsData;
+            if (this.isEmpty(statisticsData)) return null;
+
             return statisticsData.map((statistic) => statistic.votes);
         },
         forksVolume() {
             const statisticsData = this.statisticsData;
+            if (this.isEmpty(statisticsData)) return null;
+
             return statisticsData.map((statistic) => statistic.forks);
         },
         comments() {
             const statisticsData = this.statisticsData;
+            if (this.isEmpty(statisticsData)) return null;
+            
             return statisticsData.map((statistic) => statistic.comments);
         },
         commentVotes() {
             const statisticsData = this.statisticsData;
+            if (this.isEmpty(statisticsData)) return null;
+
             return statisticsData.map((statistic) => statistic.commentVotes);
         },
         replies() {
             const statisticsData = this.statisticsData;
+            if (this.isEmpty(statisticsData)) return null;
+            
             return statisticsData.map((statistic) => statistic.replies);
+        }
+    },
+    methods: {
+        isEmpty(obj) {
+            return !obj || Object.keys(obj).length == 0;
         }
     }
 };

@@ -21,3 +21,11 @@
 ::-webkit-scrollbar-thumb:hover {
     background-color: #a8bbbf;
 }
+
+::-moz-selection {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+::selection {
+    background: rgba(0, 0, 0, 0.3);
+}

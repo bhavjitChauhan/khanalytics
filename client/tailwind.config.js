@@ -5,7 +5,9 @@ module.exports = {
     theme: {
         extend: {
             'primary': '#14bf95',
-            'primary-focus': '#0e8c6d'
+            'primary-focus': '#11A681',
+            'secondary': '#0a2a66',
+            'secondary-focus': '#071F4A',
         }
     },
     variants: {
@@ -17,10 +19,10 @@ module.exports = {
             {
                 'khan': {
                     'primary': '#14bf95',
-                    'primary-focus': '#0e8c6d',
+                    'primary-focus': '#11A681',
                     'primary-content': '#ffffff',
-                    'secondary': '#f000b8',
-                    'secondary-focus': '#bd0091',
+                    'secondary': '#0a2a66',
+                    'secondary-focus': '#071F4A',
                     'secondary-content': '#ffffff',
                     'accent': '#570df8',
                     'accent-focus': '#4506cb',

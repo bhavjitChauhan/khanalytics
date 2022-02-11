@@ -60,7 +60,6 @@ export default {
             const statisticsData = this.statisticsData;
             if (this.isEmpty(statisticsData)) return null;
 
-            console.log('statisticsData', statisticsData);
             return statisticsData.map((statistic) => statistic.programs);
         },
         votesVolume() {

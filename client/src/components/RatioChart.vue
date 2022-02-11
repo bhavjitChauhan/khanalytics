@@ -202,8 +202,7 @@ export default {
 
             if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');
         },
-        handleDataPointSelection(_event, _chartContext, config) {
-            const seriesIndex = config.seriesIndex;
+        handleDataPointSelection(_event, _chartContext, { seriesIndex }) {
             const title = this.chartSeries[seriesIndex].name;
             const id = this.$store.getters.getProgramByTitle(title).id;
 

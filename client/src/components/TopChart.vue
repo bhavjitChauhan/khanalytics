@@ -49,6 +49,7 @@
             :options="chartOptions"
             :series="chartSeries"
             @legendClick=handleLegendClick
+            @dataPointSelection=handleDataPointSelection
         ></apexchart>
     </div>
 </template>
@@ -128,8 +129,14 @@ export default {
         }
     },
     methods: {
-        handleLegendClick(chartContext, seriesIndex) {
-            const title = chartContext.w.config.labels[seriesIndex];
+        handleLegendClick(_chartContext, seriesIndex) {
+            const title = this.chartOptions.labels[seriesIndex];
+            const id = this.$store.getters.getProgramByTitle(title).id;
+            
+            if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');
+        },
+        handleDataPointSelection(_event, _chartContext, { dataPointIndex }) {
+            const title = this.chartOptions.labels[dataPointIndex];
             const id = this.$store.getters.getProgramByTitle(title).id;
             
             if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');

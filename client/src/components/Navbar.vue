@@ -1,7 +1,10 @@
 <template>
     <div class="m-2 shadow-lg navbar bg-primary text-neutral-content rounded-box">
+        <!-- todo: replace with filtered logo -->
         <div class="px-2 mx-2 navbar-start">
-            <span class="text-lg font-bold">Khanalytics</span>
+            <router-link to="/">
+                <img alt="Khanaltics Logo" src="../assets/logo_inverted.png" class="h-8" />
+            </router-link>
         </div>
         <div class="hidden px-2 mx-2 navbar-center lg:flex">
             <div class="flex items-stretch">

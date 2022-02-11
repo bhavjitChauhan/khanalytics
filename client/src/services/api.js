@@ -23,5 +23,12 @@ export default {
         if (param.slice(1) != '/' && param != '') param = '/' + param;
         const response = await instance.get(`statistics${param}`);
         return response.data;
+    },
+    async postEmail(name, body) {
+        const response = await instance.post(`email`, {
+            name,
+            body
+        });
+        return response.data;
     }
 };

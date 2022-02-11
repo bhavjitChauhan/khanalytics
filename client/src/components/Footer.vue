@@ -3,13 +3,13 @@
         <div class="grid grid-flow-col gap-4">
             <router-link
                 class="link link-hover"
-                to="/about"
-            >About</router-link>
+                to="/contact"
+            >Contact</router-link>
             <a
                 class="link link-hover"
-                href="mailto://bhavjit_chauhan@cs.sfu.ca"
+                href="https://www.khanacademy.org/profile/bhavjitChauhan/projects"
                 target="_blank"
-            >Contact</a>
+            >Khan Academy</a>
             <a
                 class="link link-hover"
                 href="https://github.com/bhavjitChauhan/khanalytics"
@@ -26,7 +26,7 @@
             />
         </div>
         <div>
-            <p>Copyright © 2021 - Bhavjit Chauhan</p>
+            <p>Copyright © 2022 - <a href="https://github.com/bhavjitChauhan">Bhavjit Chauhan</a></p>
         </div>
     </footer>
 </template>

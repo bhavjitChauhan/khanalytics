@@ -1,5 +1,6 @@
 require('dotenv').config();
 const cors = require('cors');
+const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const express = require('express');
 const expressWinston = require('express-winston');
@@ -9,12 +10,15 @@ const khan = require('./routes/khan');
 const hotlist = require('./routes/hotlist');
 const statistics = require('./routes/statistics');
 const performanceRouter = require('./routes/performance');
+const email = require('./routes/email');
 
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(cors());
 app.use(
     helmet({
@@ -35,6 +39,7 @@ app.use('/khan', khan);
 app.use('/hotlist', hotlist);
 app.use('/statistics', statistics);
 app.use('/performance', performanceRouter);
+app.use('/email', email);
 
 app.get('/status', (req, res) => {
     res.json({
@@ -44,6 +49,7 @@ app.get('/status', (req, res) => {
         URL: req.originalUrl,
     });
 });
+
 
 app.listen(PORT, function () {
     console.log(`Listening on port ${PORT}...`);

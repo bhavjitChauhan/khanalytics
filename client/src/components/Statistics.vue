@@ -49,38 +49,34 @@ export default {
     components: {
         Metric
     },
-    data: () => ({
-        uniquePrograms: null,
-        votesVolume: null,
-        forksVolume: null,
-        comments: null,
-        commentVotes: null,
-        replies: null
-    }),
-    methods: {
-        calculatePercentDiff(a, b) {
-            return Math.round(((a - b) / b) * 100);
+    computed: {
+        statisticsData() {
+            return this.$store.state.statisticsData;
         },
-        prepareData() {
-            const statisticsData = this.$parent.statisticsData;
-            this.uniquePrograms = statisticsData.map(
-                (statistic) => statistic.programs
-            );
-            this.votesVolume = statisticsData.map(
-                (statistic) => statistic.votes
-            );
-            this.forksVolume = statisticsData.map(
-                (statistic) => statistic.forks
-            );
-            this.comments = statisticsData.map((statistic) => statistic.comments);
-            this.commentVotes = statisticsData.map(
-                (statistic) => statistic.commentVotes
-            );
-            this.replies = statisticsData.map((statistic) => statistic.replies);
+        uniquePrograms() {
+            const statisticsData = this.statisticsData;
+            return statisticsData.map((statistic) => statistic.programs);
+        },
+        votesVolume() {
+            const statisticsData = this.statisticsData;
+            return statisticsData.map((statistic) => statistic.votes);
+        },
+        forksVolume() {
+            const statisticsData = this.statisticsData;
+            return statisticsData.map((statistic) => statistic.forks);
+        },
+        comments() {
+            const statisticsData = this.statisticsData;
+            return statisticsData.map((statistic) => statistic.comments);
+        },
+        commentVotes() {
+            const statisticsData = this.statisticsData;
+            return statisticsData.map((statistic) => statistic.commentVotes);
+        },
+        replies() {
+            const statisticsData = this.statisticsData;
+            return statisticsData.map((statistic) => statistic.replies);
         }
-    },
-    mounted() {
-        this.emitter.on('statistics-data', this.prepareData);
     }
 };
 </script>

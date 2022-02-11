@@ -93,7 +93,7 @@ export default {
                 animations: {
                     enabled: false
                 },
-                height: 350,
+                height: '100%',
                 id: 'ratio-chart',
                 toolbar: {
                     autoSelected: 'pan'
@@ -146,12 +146,15 @@ export default {
                 }
             }
         },
-        chartSeries: [],
-        mappings: []
+        selectedFields: ['forks', 'votes']
     }),
-    methods: {
-        prepareData(fieldA = 'forks', fieldB = 'votes') {
-            const hotlistSnapshot = this.$parent.hotlistSnapshot;
+    computed: {
+        chartSeries() {
+            const hotlistSnapshot = this.$store.state.hotlistSnapshot;
+            if (!hotlistSnapshot) return null;
+
+            const [fieldA, fieldB] = this.selectedFields;
+
             const series = [];
 
             Object.values(hotlistSnapshot).forEach((program) => {
@@ -165,7 +168,6 @@ export default {
                 return colorHash.hex(series.name);
             });
 
-            this.chartSeries = series;
             this.chartOptions = {
                 ...this.chartOptions,
                 colors: colors,
@@ -189,20 +191,23 @@ export default {
                     }
                 }
             };
-        },
-        handleLegendClick(_chartContext, seriesIndex) {
-            const BASE_URL = 'https://khanacademy.org/cs/-/';
-            const url = BASE_URL + this.mappings[seriesIndex];
 
-            window.open(url, '_blank');
+            return series;
+        }
+    },
+    methods: {
+        handleLegendClick(_chartContext, seriesIndex) {
+            const title = this.chartSeries[seriesIndex].name;
+            const id = this.$store.getters.getProgramByTitle(title).id;
+
+            if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');
         },
         handleDataPointSelection(_event, _chartContext, config) {
             const seriesIndex = config.seriesIndex;
+            const title = this.chartSeries[seriesIndex].name;
+            const id = this.$store.getters.getProgramByTitle(title).id;
 
-            const BASE_URL = 'https://khanacademy.org/cs/-/';
-            const url = BASE_URL + this.mappings[seriesIndex];
-
-            window.open(url, '_blank');
+            if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');
         },
         handleSelectChange(_event) {
             const fieldSelectA = document.getElementById('fieldSelectA');
@@ -210,10 +215,12 @@ export default {
 
             const fieldA = fieldSelectA.value;
             const fieldB = fieldSelectB.value;
-            this.prepareData(fieldA, fieldB);
+            this.selectedFields = [fieldA, fieldB];
 
-            const fieldSelectAOptions = fieldSelectA.getElementsByTagName('option');
-            const fieldSelectBOptions = fieldSelectB.getElementsByTagName('option');
+            const fieldSelectAOptions =
+                fieldSelectA.getElementsByTagName('option');
+            const fieldSelectBOptions =
+                fieldSelectB.getElementsByTagName('option');
             for (const option of fieldSelectAOptions) {
                 option.disabled = option.value == fieldB;
             }
@@ -221,9 +228,6 @@ export default {
                 option.disabled = option.value == fieldA;
             }
         }
-    },
-    mounted() {
-        this.emitter.on('hotlist-snapshot', this.prepareData);
     }
 };
 </script>

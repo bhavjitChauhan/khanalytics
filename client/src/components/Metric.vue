@@ -34,7 +34,7 @@
         </div>
         <div class="stat-desc">
             <div
-                v-if="!isNumber(value)"
+                v-if="isNaN(value)"
                 class="flex space-x-4 animate-pulse"
             >
                 <div class="w-1/2 h-4 bg-gray-300 rounded"></div>
@@ -83,10 +83,38 @@ export default {
         data: Array,
         chartColor: String
     },
+    computed: {
+        value() {
+            const data = this.data;
+            if (!data) return null;
+            return data[data.length - 1];
+        },
+        previousValue() {
+            const data = this.data;
+            if (!data) return null;
+            return data[data.length - 2];
+        },
+        diff() {
+            const data = this.data;
+            if (!data) return null;
+            return this.value - this.previousValue;
+        },
+        percentDiff() {
+            const data = this.data;
+            if (!data) return null;
+            return Math.round(
+                ((this.value - this.previousValue) / this.previousValue) * 100
+            );
+        },
+        chartSeries() {
+            return [
+                {
+                    data: this.data
+                }
+            ];
+        }
+    },
     data: () => ({
-        value: null,
-        diff: null,
-        percentDiff: null,
         chartOptions: {
             chart: {
                 id: Math.random().toString().slice(2),
@@ -129,43 +157,13 @@ export default {
                     show: false
                 }
             }
-        },
-        chartSeries: [
-            {
-                data: null
-            }
-        ]
-    }),
-    methods: {
-        isNumber(value) {
-            return typeof value == 'number';
-        },
-        calculatePercentDiff(a, b) {
-            return Math.round(((a - b) / b) * 100);
-        },
-        prepareData() {
-            const lastIndex = this.data.length - 1;
-            this.value = this.data[lastIndex];
-            this.diff = this.data[lastIndex] - this.data[lastIndex - 1];
-            this.percentDiff = this.calculatePercentDiff(
-                this.data[lastIndex],
-                this.data[lastIndex - 1]
-            );
-            this.chartSeries[0].data = this.data;
         }
-    },
-    mounted() {
+    }),
+    created() {
         this.chartOptions = {
             ...this.chartOptions,
             colors: [this.chartColor]
         };
-    },
-    watch: {
-        data: {
-            handler() {
-                this.prepareData();
-            }
-        }
     }
 };
 </script>

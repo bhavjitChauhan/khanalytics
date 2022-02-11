@@ -8,26 +8,32 @@
                 <a
                     class="transition-transform ease-in-out tab hover:scale-110"
                     id="rank-tab"
+                    @click="handleTabClick"
                 >Rank</a>
                 <a
                     class="transition-transform ease-in-out tab hover:scale-110 tab-active"
                     id="votes-tab"
+                    @click="handleTabClick"
                 >Votes</a>
                 <a
                     class="transition-transform ease-in-out tab hover:scale-110"
                     id="forks-tab"
+                    @click="handleTabClick"
                 >Forks</a>
                 <a
                     class="transition-transform ease-in-out tab hover:scale-110"
                     id="comments-tab"
+                    @click="handleTabClick"
                 >Comments</a>
                 <a
                     class="transition-transform ease-in-out tab hover:scale-110"
                     id="commentVotes-tab"
+                    @click="handleTabClick"
                 >Upvotes</a>
                 <a
                     class="transition-transform ease-in-out tab hover:scale-110"
                     id="replies-tab"
+                    @click="handleTabClick"
                 >Replies</a>
             </div>
             <div class="justify-end w-full">
@@ -65,8 +71,9 @@
             </div>
         </div>
         <apexchart
+            v-if="chartSeries"
             width="100%"
-            height="500px"
+            height="550px"
             type="line"
             :options="chartOptions"
             :series="chartSeries"
@@ -111,10 +118,7 @@ export default {
             yaxis: {
                 reversed: false,
                 min: 0,
-                forceNiceScale: true,
-                title: {
-                    text: 'Votes'
-                }
+                forceNiceScale: true
             },
             tooltip: {
                 x: {
@@ -123,13 +127,28 @@ export default {
                 }
             }
         },
-        chartSeries: []
+        field: 'votes',
+        previousField: null,
+        previousLabels: null,
+        tabs: null
     }),
-    methods: {
-        prepareData(field = 'votes') {
-            const performanceTopData = this.$parent.performanceTopData;
-            const hotlistSnapshot = this.$parent.hotlistSnapshot;
+    computed: {
+        performanceTopData() {
+            const data = this.$store.state.performanceTopData;
+            if (!data.length) return null;
+            return this.$store.state.performanceTopData;
+        },
+        hotlistSnapshot() {
+            const data = this.$store.state.hotlistSnapshot;
+            if (!Object.keys(data).length) return null;
+            return this.$store.state.hotlistSnapshot;
+        },
+        chartSeries() {
+            const performanceTopData = this.performanceTopData;
+            const hotlistSnapshot = this.hotlistSnapshot;
+            if (!performanceTopData || !hotlistSnapshot) return null;
 
+            const field = this.field;
             const series = [];
             for (const entry of performanceTopData) {
                 const data = entry.programs.map((program) => {
@@ -142,6 +161,8 @@ export default {
                     data: data
                 });
             }
+            const labels = [];
+            // todo: add any programs that squeezed in
             series.map((series) => {
                 if (!hotlistSnapshot[series.name]) return;
                 if (['rank', 'votes', 'forks'].includes(field)) {
@@ -150,50 +171,48 @@ export default {
                         hotlistSnapshot[series.name][field]
                     ]);
                 }
-                series.name = hotlistSnapshot[series.name].title;
+                const title = hotlistSnapshot[series.name].title;
+                series.name = title;
+                labels.push(title);
+
                 return series;
             });
+            if (
+                JSON.stringify(labels) !=
+                JSON.stringify(this.previousLabels)
+            ) {
+                this.updateChartColors(series);
+            }
+            this.previousLabels = labels;
 
-            const colors = series.map((series) => {
-                return colorHash.hex(series.name);
-            });
-
-            this.chartSeries = series;
-            this.chartOptions = {
-                ...this.chartOptions,
-                colors
-            };
-        },
-        handleLegendClick(_chartContext, seriesIndex) {
-            const BASE_URL = 'https://khanacademy.org/cs/-/';
-            const url = BASE_URL + Object.keys(hotlistSnapshot)[seriesIndex];
-            window.open(url, '_blank');
+            return series;
         }
     },
-    mounted() {
-        this.emitter.on('performance-top-data', this.prepareData);
-        const rankTab = document.getElementById('rank-tab');
-        const votesTab = document.getElementById('votes-tab');
-        const forksTab = document.getElementById('forks-tab');
-        const commentsTab = document.getElementById('comments-tab');
-        const commentVotesTab = document.getElementById('commentVotes-tab');
-        const repliesTab = document.getElementById('replies-tab');
+    methods: {
+        updateChartColors(chartSeries) {
+            const colors = chartSeries.map((series) => {
+                return colorHash.hex(series.name);
+            });
+            const previousColors = this.chartOptions.colors;
+            if (previousColors != colors) {
+                this.chartOptions = {
+                    ...this.chartOptions,
+                    colors
+                };
+            }
+        },
+        handleLegendClick(_chartContext, seriesIndex) {
+            const title = this.chartSeries[seriesIndex].name;
+            const id = this.$store.getters.getProgramByTitle(title).id;
 
-        const tabs = [
-            rankTab,
-            votesTab,
-            forksTab,
-            commentsTab,
-            commentVotesTab,
-            repliesTab
-        ];
-        tabs.forEach((tab) => {
-            tab.addEventListener('click', (e) => {
-                tabs.forEach((tab) => tab.classList.remove('tab-active'));
-                e.target.classList.add('tab-active');
-                this.prepareData(e.target.id.split('-')[0]);
-                let title = e.target.id.split('-')[0];
-                title = title.charAt(0).toUpperCase() + title.slice(1);
+            if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');
+        },
+        handleTabClick(e) {
+            const field = e.target.id.split('-')[0];
+            this.previousField = this.field;
+            this.field = field;
+
+            if (field == 'rank' || this.previousField == 'rank') {
                 this.chartOptions = {
                     ...this.chartOptions,
                     ...{
@@ -207,15 +226,31 @@ export default {
                             reversed: e.target.id == 'rank-tab',
                             min: e.target.id == 'rank-tab' ? 1 : 0,
                             max: e.target.id == 'rank-tab' ? 25 : (max) => max,
-                            forceNiceScale: e.target.id != 'rank-tab',
-                            title: {
-                                text: title
-                            }
+                            forceNiceScale: e.target.id != 'rank-tab'
                         }
                     }
                 };
-            });
-        });
+            }
+
+            this.tabs.forEach((tab) => tab.classList.remove('tab-active'));
+            e.target.classList.add('tab-active');
+        }
+    },
+    mounted() {
+        const rankTab = document.getElementById('rank-tab');
+        const votesTab = document.getElementById('votes-tab');
+        const forksTab = document.getElementById('forks-tab');
+        const commentsTab = document.getElementById('comments-tab');
+        const commentVotesTab = document.getElementById('commentVotes-tab');
+        const repliesTab = document.getElementById('replies-tab');
+        this.tabs = [
+            rankTab,
+            votesTab,
+            forksTab,
+            commentsTab,
+            commentVotesTab,
+            repliesTab
+        ];
     }
 };
 </script>

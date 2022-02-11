@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-col h-full p-2 py-5 space-y-4 rounded shadow-lg">
-        <div class="overflow-x-auto">
+    <div id="hotlist-table-container" class="flex flex-col h-full p-5 space-y-4 rounded shadow-lg">
+        <div class="overflow-x-hidden">
             <table
                 class="table w-full table-fixed table-compact"
                 id="hotlist-table"
@@ -45,13 +45,12 @@
 <script>
 export default {
     name: 'HotTable',
-    data: () => ({
-        programs: {}
-    }),
-    methods: {
-        prepareData() {
-            const hotlistSnapshot = this.$parent.hotlistSnapshot;
-            this.programs = Object.entries(hotlistSnapshot).map((entry) => {
+    computed: {
+        programs() {
+            const hotlistSnapshot = this.$store.state.hotlistSnapshot;
+            if (!hotlistSnapshot) return null;
+
+            return Object.entries(hotlistSnapshot).map((entry) => {
                 const [id, program] = entry;
                 return {
                     program_id: id,
@@ -61,13 +60,16 @@ export default {
                     forks: program.forks
                 };
             });
+        }
+    },
+    methods: {
+        updateHeight() {
             const element = document.getElementById('hotlist-table');
+            if (!element) return;
+
             element.parentElement.parentElement.style.height =
                 document.getElementById('main-chart').clientHeight + 'px';
         }
-    },
-    mounted() {
-        this.emitter.on('hotlist-snapshot', this.prepareData);
     }
 };
 </script>
@@ -75,5 +77,9 @@ export default {
 <style scoped>
 .table th:first-child {
     position: static;
+}
+
+#hotlist-table-container {
+    height: 645px;
 }
 </style>

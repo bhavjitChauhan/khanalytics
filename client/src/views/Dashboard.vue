@@ -34,14 +34,24 @@ export default {
         MainChart,
         TopChart,
         RatioChart
-    },
-    props: {
-        hotlistSnapshot: Object,
-        performanceTopData: Array,
-        statisticsData: Array,
-        topData: Array
+    },    
+    computed: {
+        statisticsData() {
+            return this.$store.state.statisticsData;
+        },
+        hotlistSnapshot() {
+            return this.$store.state.hotlistSnapshot;
+        },
+        performanceTopData() {
+            return this.$store.state.performanceTopData;
+        }
     },
     watch: {
+        statisticsData: {
+            handler: function () {
+                this.emitter.emit('statistics-data');
+            }
+        },
         hotlistSnapshot: {
             handler: function () {
                 this.emitter.emit('hotlist-snapshot');
@@ -50,16 +60,6 @@ export default {
         performanceTopData: {
             handler: function () {
                 this.emitter.emit('performance-top-data');
-            }
-        },
-        statisticsData: {
-            handler: function () {
-                this.emitter.emit('statistics-data');
-            }
-        },
-        topData: {
-            handler: function () {
-                this.emitter.emit('top-data');
             }
         }
     }

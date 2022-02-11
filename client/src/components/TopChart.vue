@@ -65,6 +65,7 @@ export default {
                 animations: {
                     enabled: false
                 },
+                height: '100%',
                 id: 'top-chart',
                 type: 'pie'
             },
@@ -76,17 +77,21 @@ export default {
                 }
             }
         },
-        chartSeries: []
+        field: 'votes'
     }),
-    methods: {
-        prepareData(field = 'votes') {
-            const hotlistSnapshot = this.$parent.hotlistSnapshot;
+    computed: {
+        chartSeries() {
+            const hotlistSnapshot = this.$store.state.hotlistSnapshot;
+            if (!hotlistSnapshot) return null;
+            const field = this.field;
 
+            const labels = [];
             let programs = Object.values(hotlistSnapshot).map((program) => {
+                const label = program.title;
                 return {
-                    label: program.title,
+                    label: label,
                     value: program[field],
-                    color: colorHash.hex(program.title)
+                    color: colorHash.hex(label)
                 };
             });
             const fieldTotal = programs.reduce(
@@ -118,26 +123,20 @@ export default {
                 labels: programs.map((program) => program.label),
                 colors: programs.map((program) => program.color)
             };
-            this.chartSeries = programs.map((entry) => entry.value);
-        },
-        handleLegendClick(chartContext, seriesIndex) {
-            const label = chartContext.w.config.labels[seriesIndex];
 
-            const entries = Object.entries(this.$parent.hotlistSnapshot);
-            const index = entries.findIndex((entry) => entry[1].title == label);
-            const id = entries[index][0];
-
-            const BASE_URL = 'https://khanacademy.org/cs/-/';
-            const url = BASE_URL + id;
-
-            window.open(url, '_blank');
-        },
-        handleSelectChange(event) {
-            this.prepareData(event.target.value);
+            return programs.map((entry) => entry.value);
         }
     },
-    mounted() {
-        this.emitter.on('hotlist-snapshot', this.prepareData);
+    methods: {
+        handleLegendClick(chartContext, seriesIndex) {
+            const title = chartContext.w.config.labels[seriesIndex];
+            const id = this.$store.getters.getProgramByTitle(title).id;
+            
+            if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');
+        },
+        handleSelectChange(event) {
+            this.field = event.target.value;
+        }
     }
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col h-full p-5 space-y-4 rounded shadow-lg">
+    <div class="flex flex-col h-full p-5 space-y-4 rounded ring-offset-2 ring-1 ring-gray-200">
         <div class="grid grid-cols-2">
             <div class="justify-start w-full">
                 <select
@@ -35,37 +35,18 @@
                 </select>
             </div>
             <div class="justify-end w-full">
-                <label
-                    for="ratioChartModal"
-                    class="float-right btn btn-sm btn-circle btn-outline modal-button"
-                >
-                    <font-awesome-icon icon="info" />
-                </label>
-                <input
-                    type="checkbox"
-                    id="ratioChartModal"
-                    class="modal-toggle"
-                >
-                <div class="modal">
-                    <div class="modal-box">
-                        <p>
-                            The ratio chart shows the corelation between the two metrics. The top 100 programs from the Hotlist are plotted.
-                            <br><br>
-                            <b>Select other metrics</b> at the top-left of the chart. You cannot select the same metric twice.
-                            <br><br>
-                            <b>Use the toolbar</b> at the top-right to manipulate the chart. Hover over the icons for more information.
-                            <br><br>
-                            <b>Save the chart</b> as an image by clicking the &nbsp;
-                            <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data please contact me.
-                        </p>
-                        <div class="modal-action">
-                            <label
-                                for="ratioChartModal"
-                                class="btn btn-sm"
-                            >Close</label>
-                        </div>
-                    </div>
-                </div>
+                <InfoButton id="ratio-chart-modal">
+                    <p>
+                        The ratio chart shows the corelation between the two metrics. The top 100 programs from the Hotlist are plotted.
+                        <br><br>
+                        <b>Select other metrics</b> at the top-left of the chart. You cannot select the same metric twice.
+                        <br><br>
+                        <b>Use the toolbar</b> at the top-right to manipulate the chart. Hover over the icons for more information.
+                        <br><br>
+                        <b>Save the chart</b> as an image by clicking the &nbsp;
+                        <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data please contact me.
+                    </p>
+                </InfoButton>
             </div>
         </div>
         <apexchart
@@ -81,12 +62,17 @@
 </template>
 
 <script>
-import colorHash from '../util/colorHash';
-import toTitleCase from '../util/toTitleCase';
-import truncate from '../util/truncate';
+import colorHash from '@/util/colorHash';
+import toTitleCase from '@/util/toTitleCase';
+import truncate from '@/util/truncate';
+
+import InfoButton from '@/components/InfoButton';
 
 export default {
     name: 'RatioChart',
+    components: {
+        InfoButton
+    },
     data: () => ({
         chartOptions: {
             chart: {
@@ -116,11 +102,7 @@ export default {
                     show: false
                 },
                 y: {
-                    title: {
-                        formatter: function (title) {
-                            return `${title}:`;
-                        }
-                    }
+                    formatter: () => null
                 },
                 marker: {
                     show: false
@@ -128,7 +110,7 @@ export default {
             },
             xaxis: {
                 reversed: false,
-                tickAmount: 1,
+                tickAmount: 10,
                 min: 0,
                 max: (max) => max,
                 title: {
@@ -137,12 +119,15 @@ export default {
             },
             yaxis: {
                 reversed: false,
-                tickAmount: 1,
+                tickAmount: 10,
                 min: 0,
                 max: (max) => max,
                 forceNiceScale: true,
                 title: {
                     text: 'Forks'
+                },
+                tooltip: {
+                    enabled: true
                 }
             }
         },
@@ -172,8 +157,8 @@ export default {
                 ...this.chartOptions,
                 colors: colors,
                 xaxis: {
+                    ...this.chartOptions.xaxis,
                     reversed: fieldB == 'rank',
-                    tickAmount: 1,
                     min: fieldB == 'rank' ? 1 : 0,
                     max: fieldB == 'rank' ? 100 : (max) => max,
                     title: {
@@ -181,8 +166,8 @@ export default {
                     }
                 },
                 yaxis: {
+                    ...this.chartOptions.yaxis,
                     reversed: fieldA == 'rank',
-                    tickAmount: 1,
                     max: fieldA == 'rank' ? 100 : (max) => max,
                     min: fieldA == 'rank' ? 1 : 0,
                     forceNiceScale: fieldA != 'rank',
@@ -200,13 +185,21 @@ export default {
             const title = this.chartSeries[seriesIndex].name;
             const id = this.$store.getters.getProgramByTitle(title).id;
 
-            if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');
+            if (id)
+                this.$router.push({
+                    name: 'program',
+                    params: { id }
+                });
         },
         handleDataPointSelection(_event, _chartContext, { seriesIndex }) {
             const title = this.chartSeries[seriesIndex].name;
             const id = this.$store.getters.getProgramByTitle(title).id;
 
-            if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');
+            if (id)
+                this.$router.push({
+                    name: 'program',
+                    params: { id }
+                });
         },
         handleSelectChange(_event) {
             const fieldSelectA = document.getElementById('fieldSelectA');

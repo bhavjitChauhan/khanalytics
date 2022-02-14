@@ -1,6 +1,6 @@
 <template>
     <div
-        class="p-5 rounded shadow-lg"
+        class="p-5 rounded ring-offset-2 ring-1 ring-gray-200"
         id="main-chart"
     >
         <div class="grid grid-cols-2">
@@ -37,37 +37,18 @@
                 >Replies</a>
             </div>
             <div class="justify-end w-full">
-                <label
-                    for="main-chart-modal"
-                    class="float-right btn btn-sm btn-circle btn-outline modal-button"
-                >
-                    <font-awesome-icon icon="info" />
-                </label>
-                <input
-                    type="checkbox"
-                    id="main-chart-modal"
-                    class="modal-toggle"
-                >
-                <div class="modal">
-                    <div class="modal-box">
-                        <p>
-                            This chart shows the performance of the current top 10 programs on the Hotlist. To reduce bandwidth, the granularity is reduced to three hour intervals.
-                            <br><br>
-                            <b>Use the tabs</b> at the top-left of the chart to switch between the different metrics.
-                            <br><br>
-                            <b>Use the toolbar</b> at the top-right to manipulate the chart. Hover over the icons for more information.
-                            <br><br>
-                            <b>Save the chart</b> as an image by clicking the &nbsp;
-                            <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data please contact me.
-                        </p>
-                        <div class="modal-action">
-                            <label
-                                for="main-chart-modal"
-                                class="btn btn-sm"
-                            >Close</label>
-                        </div>
-                    </div>
-                </div>
+                <InfoButton id="main-chart-modal">
+                    <p>
+                        This chart shows the performance of the current top 10 programs on the Hotlist. To reduce bandwidth, the granularity is reduced to three hour intervals.
+                        <br><br>
+                        <b>Use the tabs</b> at the top-left of the chart to switch between the different metrics.
+                        <br><br>
+                        <b>Use the toolbar</b> at the top-right to manipulate the chart. Hover over the icons for more information.
+                        <br><br>
+                        <b>Save the chart</b> as an image by clicking the &nbsp;
+                        <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data please contact me.
+                    </p>
+                </InfoButton>
             </div>
         </div>
         <apexchart
@@ -83,10 +64,16 @@
 </template>
 
 <script>
-import colorHash from '../util/colorHash';
+import colorHash from '@/util/colorHash';
+import formatDate from '@/util/formatDate';
+
+import InfoButton from '@/components/InfoButton';
 
 export default {
     name: 'MainChart',
+    components: {
+        InfoButton
+    },
     data: () => ({
         chartOptions: {
             chart: {
@@ -113,6 +100,11 @@ export default {
                 },
                 title: {
                     text: 'Time'
+                },
+                tooltip: {
+                    enabled: true,
+                    format: 'dd MMM HH:00',
+                    formatter: (val) => formatDate(val)
                 }
             },
             yaxis: {
@@ -122,8 +114,9 @@ export default {
             },
             tooltip: {
                 x: {
-                    show: false,
-                    format: 'dd MMM HH:00'
+                    // show: false,
+                    format: 'dd MMM HH:00',
+                    formatter: () => null
                 }
             }
         },
@@ -177,10 +170,7 @@ export default {
 
                 return series;
             });
-            if (
-                JSON.stringify(labels) !=
-                JSON.stringify(this.previousLabels)
-            ) {
+            if (JSON.stringify(labels) != JSON.stringify(this.previousLabels)) {
                 this.updateChartColors(series);
             }
             this.previousLabels = labels;
@@ -205,7 +195,11 @@ export default {
             const title = this.chartSeries[seriesIndex].name;
             const id = this.$store.getters.getProgramByTitle(title).id;
 
-            if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');
+            if (id)
+                this.$router.push({
+                    name: 'program',
+                    params: { id }
+                });
         },
         handleTabClick(e) {
             const field = e.target.id.split('-')[0];

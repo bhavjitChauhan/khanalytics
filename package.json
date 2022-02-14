@@ -4,7 +4,8 @@
     "description": "",
     "main": "./server/index.js",
     "scripts": {
-        "build": "npm ci --only=prod --prefix server && npm ci --only=prod --prefix client && npm run build --prefix client"
+        "build": "npm ci --only=prod --prefix server && npm ci --only=prod --prefix client && npm run build --prefix client",
+        "dev:build": "npm i --prefix server && npm i --prefix client && npm run build --prefix client"
     },
     "author": "Bhavjit Chauhan",
     "license": "MIT",

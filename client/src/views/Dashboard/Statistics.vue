@@ -1,6 +1,6 @@
 <template>
     <div class="p-5">
-        <div class="w-full shadow-lg stats">
+        <div class="w-full ring-offset-2 ring-1 ring-gray-200 stats">
             <Metric
                 title="Unique Programs"
                 tooltip="Number of programs that were on the Hotlist"
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import Metric from '@/components/Metric.vue';
+import Metric from '@/views/Dashboard/Metric.vue';
 
 export default {
     name: 'Statistics',

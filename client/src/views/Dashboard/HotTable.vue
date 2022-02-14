@@ -1,5 +1,8 @@
 <template>
-    <div id="hotlist-table-container" class="flex flex-col h-full p-5 space-y-4 rounded shadow-lg">
+    <div
+        id="hotlist-table-container"
+        class="flex flex-col h-full p-5 space-y-4 rounded ring-offset-2 ring-1 ring-gray-200"
+    >
         <div class="overflow-x-hidden">
             <table
                 class="table w-full table-fixed table-compact"
@@ -24,13 +27,12 @@
                             class="truncate"
                             :title="program.title"
                         >
-                            <a
+                            <router-link
                                 v-if="program.title"
-                                :href="`https://khanacademy.org/cs/-/${program.program_id}`"
-                                target="_blank"
+                                :to="`/program/${program.program_id}`"
                             >
                                 {{ program.title }}
-                            </a>
+                            </router-link>
                             <span v-else>...</span>
                         </td>
                         <td> {{ program.votes }} </td>

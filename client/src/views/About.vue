@@ -1,6 +1,6 @@
 <template>
     <div class="p-5 mx-64 mt-32">
-        <div class="p-5 rounded shadow-lg">
+        <div class="p-5 rounded ring-offset-2 ring-1 ring-gray-200">
             <img
                 alt="Khanalytics Logo"
                 src="../assets/logo.png"

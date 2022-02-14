@@ -2,7 +2,7 @@ const axios = require('axios').default;
 
 
 const instance = axios.create({
-    baseURL: `http://khanacademy.org/api/labs/`
+    baseURL: `http://khanacademy.org/api/`
 });
 
 /**
@@ -48,7 +48,7 @@ const get = async (path, params) => {
  * @returns {Promise}
  */
 const getHotlist = async (limit = 100) =>
-    (await get('scratchpads/top', {
+    (await get('labs/scratchpads/top', {
         sort: 3,
         limit: limit,
         projection: ['scratchpads']

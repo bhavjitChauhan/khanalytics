@@ -2,7 +2,7 @@ const { week } = require('./periods');
 const { HOUR } = require('./durations');
 
 
-const performanceTop = (minimumRank = 5) => {
+const topPipeline = (minimumRank = 5) => {
     const field = week.granularity.field;
     const values = week.granularity.values;
     return [
@@ -88,7 +88,23 @@ const performanceTop = (minimumRank = 5) => {
     ];
 };
 
+const programPipeline = (programID) => [
+    {
+        '$match': {
+            'program_id': programID
+        }
+    }, {
+        '$group': {
+            '_id': '$program_id',
+            'programs': {
+                '$push': '$$ROOT'
+            }
+        }
+    }
+];
+
 
 module.exports = {
-    performanceTop
+    topPipeline,
+    programPipeline
 };

@@ -1,8 +1,8 @@
 const NodeCache = require("node-cache");
 
-const { HOUR, DAY } = require('../util/durations');
+const { MINUTE, HOUR, DAY } = require('../util/durations');
 
-const Cache = new NodeCache();
+const Cache = new NodeCache({ stdTTL: HOUR / 2, checkperiod: MINUTE });
 
 const handler = (req, res, next) => {
     const key = `__express__${req.originalUrl || req.url}`;

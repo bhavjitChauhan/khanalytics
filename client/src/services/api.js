@@ -11,8 +11,12 @@ export default {
         const response = await instance.get(url);
         return response.data;
     },
-    async fetchProgramData(params) {
-        const response = await instance.get(`khan/${params}`);
+    async fetchKhanLabs(params) {
+        const response = await instance.get(`khan/labs/${params}`);
+        return response.data;
+    },
+    async fetchKhanInternal(params) {
+        const response = await instance.get(`khan/internal/${params}`);
         return response.data;
     },
     async fetchHotlistData(param = 'day') {
@@ -20,8 +24,12 @@ export default {
         return response.data;
     },
     async fetchStatisticsData(param = '') {
-        if (param.slice(1) != '/' && param != '') param = '/' + param;
-        const response = await instance.get(`statistics${param}`);
+        const response = await instance.get(`statistics/${param}`);
+        return response.data;
+    },
+    async fetchPerformanceData(param) {
+        if (!param) throw new Error('No param provided');
+        const response = await instance.get(`performance/${param}`);
         return response.data;
     },
     async postEmail(name, body) {

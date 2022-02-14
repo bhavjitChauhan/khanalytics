@@ -1,6 +1,7 @@
 <template>
     <div class="p-5 mx-32">
         <h1 class="mb-8 text-4xl font-bold">Dashboard</h1>
+        <!-- todo: use Container component -->
         <Statistics />
         <div class="grid grid-cols-4 grid-rows-1 gap-4">
             <div class="col-span-1 row-span-1">
@@ -20,11 +21,11 @@
 </template>
 
 <script>
-import Statistics from '@/components/Statistics.vue';
-import HotTable from '@/components/HotTable.vue';
-import MainChart from '@/components/MainChart.vue';
-import TopChart from '@/components/TopChart.vue';
-import RatioChart from '@/components/RatioChart.vue';
+import Statistics from '@/views/Dashboard/Statistics.vue';
+import HotTable from '@/views/Dashboard/HotTable.vue';
+import MainChart from '@/views/Dashboard/MainChart.vue';
+import TopChart from '@/views/Dashboard/TopChart.vue';
+import RatioChart from '@/views/Dashboard/RatioChart.vue';
 
 export default {
     name: 'Dashboard',

@@ -1,6 +1,6 @@
 <template>
     <div class="p-5 mx-64 mt-32">
-        <div class="p-5 rounded shadow-lg">
+        <div class="p-5 rounded ring-offset-2 ring-1 ring-gray-200">
             <div class="py-8 mx-32 form-control">
                 <h3 class="text-lg font-bold">Contact</h3>
                 <form
@@ -15,6 +15,7 @@
                         name="name"
                         placeholder="Anonymous"
                         class="input input-bordered"
+                        @input="event => name = event.target.value"
                     >
                     <label class="label">
                         <span class="label-text">Message</span>
@@ -23,21 +24,24 @@
                         name="body"
                         placeholder="Message"
                         class="w-full h-24 textarea textarea-bordered"
+                        :class="{ 'input-warning': warning }"
+                        @input="event => body = event.target.value"
                     ></textarea>
-                    <!-- <input
-                        type="submit"
-                        name="submit"
-                        value="Send"
-                        class="mt-4 btn btn-primary"
-                    > -->
+                    <label class="h-0 mt-2 label">
+                        <span
+                            v-if="warning"
+                            class="label-text-alt text-warning"
+                        >Empty message</span>
+                    </label>
                     <button
                         type="submit"
                         form="contact_form"
                         name="submit"
-                        value="Submit"
                         class="mt-4 btn btn-primary"
+                        :class="{ loading: sending, 'btn-disabled': sending || sent }"
+                        :disabled="sending"
                     >
-                        Submit
+                        {{ sending ? 'Sending...' : sent ? 'Sent!' : 'Send' }}
                     </button>
                 </form>
             </div>
@@ -50,24 +54,28 @@ import api from '@/services/api';
 
 export default {
     name: 'Contact',
+    data: () => ({
+        name: null,
+        body: null,
+        sending: false,
+        sent: false
+    }),
+    computed: {
+        warning() {
+            return !this.body && typeof this.body == 'string' && !this.sent;
+        }
+    },
     methods: {
         async submit(event) {
-            const name = event.target.elements.name.value || 'Anonymous';
-            const body = event.target.elements.body.value;
+            const name = this.name || 'Anonymous';
+            const body = this.body;
             if (!body) return;
 
-            event.target.elements.submit.disabled = true;
-            event.target.elements.submit.value = 'Sending...';
-            event.target.elements.submit.textContent = 'Sending...';
-            event.target.elements.submit.classList.add('btn-disabled', 'loading');
+            this.sending = true;
+            await api.postEmail(name, body)            
 
-            await api.postEmail(name, body);
-            
-            event.target.elements.submit.disabled = false;
-            event.target.elements.submit.value = 'Sent!';
-            event.target.elements.submit.textContent = 'Sent!';
-            event.target.elements.submit.classList.remove('loading');
-
+            this.sending = false;
+            this.sent = true;
         }
     }
 };

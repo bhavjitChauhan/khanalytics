@@ -7,8 +7,9 @@ import {
     faAngleUp,
     faBars,
     faEquals,
-    faHistory,
-    faInfo
+    faExclamationTriangle,
+    faInfo,
+    faSearch
 } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -19,8 +20,9 @@ library.add(
     faAngleUp,
     faBars,
     faEquals,
-    faHistory,
-    faInfo
+    faExclamationTriangle,
+    faInfo,
+    faSearch
 );
 library.add(faQuestionCircle);
 

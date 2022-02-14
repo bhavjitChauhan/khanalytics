@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col h-full p-5 space-y-4 rounded shadow-lg">
+    <div class="flex flex-col h-full p-5 space-y-4 rounded ring-offset-2 ring-1 ring-gray-200">
         <div class="grid grid-cols-2">
             <div class="justify-start w-full">
                 <select
@@ -14,32 +14,13 @@
                 </select>
             </div>
             <div class="justify-end w-full">
-                <label
-                    for="top-chart-modal"
-                    class="float-right btn btn-sm btn-circle btn-outline modal-button"
-                >
-                    <font-awesome-icon icon="info" />
-                </label>
-                <input
-                    type="checkbox"
-                    id="top-chart-modal"
-                    class="modal-toggle"
-                >
-                <div class="modal">
-                    <div class="modal-box">
-                        <p>
-                            The pie chart shows distribution of a metric across the top 100 programs on the Hotlist. Programs with less than 1% of the total are shown as the "Other" category.
-                            <br><br>
-                            <b>Select other metrics</b> at the top-left of the chart.
-                        </p>
-                        <div class="modal-action">
-                            <label
-                                for="top-chart-modal"
-                                class="btn btn-sm"
-                            >Close</label>
-                        </div>
-                    </div>
-                </div>
+                <InfoButton id="top-chart-modal">
+                    <p>
+                        The pie chart shows distribution of a metric across the top 100 programs on the Hotlist. Programs with less than 1% of the total are shown as the "Other" category.
+                        <br><br>
+                        <b>Select other metrics</b> at the top-left of the chart.
+                    </p>
+                </InfoButton>
             </div>
         </div>
         <apexchart
@@ -55,11 +36,16 @@
 </template>
 
 <script>
-import colorHash from '../util/colorHash';
-import truncate from '../util/truncate';
+import colorHash from '@/util/colorHash';
+import truncate from '@/util/truncate';
+
+import InfoButton from '@/components/InfoButton';
 
 export default {
     name: 'TopChart',
+    components: {
+        InfoButton
+    },
     data: () => ({
         chartOptions: {
             chart: {
@@ -86,7 +72,6 @@ export default {
             if (!hotlistSnapshot) return null;
             const field = this.field;
 
-            const labels = [];
             let programs = Object.values(hotlistSnapshot).map((program) => {
                 const label = program.title;
                 return {
@@ -132,14 +117,22 @@ export default {
         handleLegendClick(_chartContext, seriesIndex) {
             const title = this.chartOptions.labels[seriesIndex];
             const id = this.$store.getters.getProgramByTitle(title).id;
-            
-            if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');
+
+            if (id)
+                this.$router.push({
+                    name: 'program',
+                    params: { id }
+                });
         },
         handleDataPointSelection(_event, _chartContext, { dataPointIndex }) {
             const title = this.chartOptions.labels[dataPointIndex];
             const id = this.$store.getters.getProgramByTitle(title).id;
-            
-            if (id) window.open(`https://khanacademy.org/cs/-/${id}`, '_blank');
+
+            if (id)
+                this.$router.push({
+                    name: 'program',
+                    params: { id }
+                });
         },
         handleSelectChange(event) {
             this.field = event.target.value;

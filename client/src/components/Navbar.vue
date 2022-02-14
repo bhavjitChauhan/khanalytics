@@ -3,7 +3,11 @@
         <!-- todo: replace with filtered logo -->
         <div class="px-2 mx-2 navbar-start">
             <router-link to="/">
-                <img alt="Khanaltics Logo" src="../assets/logo_inverted.png" class="h-8" />
+                <img
+                    alt="Khanaltics Logo"
+                    src="../assets/logo_inverted.png"
+                    class="h-8"
+                />
             </router-link>
         </div>
         <div class="hidden px-2 mx-2 navbar-center lg:flex">
@@ -22,45 +26,77 @@
                 >About</router-link>
             </div>
         </div>
-        <div class="px-2 mx-2 navbar-end">
-            <div
-                data-tip="Next Refresh"
-                class="tooltip tooltip-bottom"
+        <div class="px-2 ml-2 navbar-end">
+            <form
+                id="navbar_search_form"
+                class="space-x-2"
+                @submit.prevent="search"
             >
-                <font-awesome-icon icon="history" />
-            </div>
-            <span class="ml-2 text-lg font-bold countdown">
-                <span
-                    id="minutes"
-                    style="--value: 0"
-                ></span>m
-                <span
-                    id="seconds"
-                    style="--value: 0"
-                ></span>s
-            </span>
+                <input
+                    type="text"
+                    placeholder="Program ID"
+                    :value="query"
+                    class="input input-ghost input-sm"
+                    @input="event => query = event.target.value"
+                >
+                <button
+                    type="submit"
+                    form="navbar_search_form"
+                    class="btn btn-ghost btn-circle btn-sm"
+                    :class="{ loading: searching }"
+                >
+                    <font-awesome-icon
+                        v-if="!searching"
+                        icon="search"
+                    />
+                </button>
+            </form>
         </div>
     </div>
 </template>
 
 <script>
+import isValidProgramID from '@/util/isValidProgramID';
+
 export default {
     name: 'Navbar',
-    mounted() {
-        const countdownMinutes = document.querySelector('#minutes');
-        const countdownSeconds = document.querySelector('#seconds');
-        const updateCountdownMinutes = () => {
-            const minutes = 60 - new Date().getMinutes();
-            countdownMinutes.style.setProperty('--value', minutes);
-        };
-        const updateCountdownSeconds = () => {
-            const seconds = (60 - new Date().getSeconds()) % 60;
-            if (seconds == 0) updateCountdownMinutes();
-            countdownSeconds.style.setProperty('--value', seconds);
-        };
-        updateCountdownMinutes();
-        updateCountdownSeconds();
-        setInterval(updateCountdownSeconds, 1000);
+    data: () => ({
+        query: null,
+        searching: false,
+        error: false
+    }),
+    methods: {
+        search() {
+            this.error = null;
+            try {
+                isValidProgramID(this.query);
+            } catch (err) {
+                this.$router.push({
+                    name: 'search',
+                    params: { query: this.query }
+                });
+                return;
+            }
+
+            this.searching = true;
+
+            this.$router.push({
+                name: 'program',
+                params: { id: this.query }
+            });
+
+            this.searching = false;
+            this.query = null;
+        }
     }
 };
 </script>
+
+<style scoped>
+::placeholder {
+    color: whitesmoke;
+}
+:focus::placeholder {
+    color: gray;
+}
+</style>

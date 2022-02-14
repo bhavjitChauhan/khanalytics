@@ -83,37 +83,6 @@ export default {
         data: Array,
         chartColor: String
     },
-    computed: {
-        value() {
-            const data = this.data;
-            if (!data) return null;
-            return data[data.length - 1];
-        },
-        previousValue() {
-            const data = this.data;
-            if (!data) return null;
-            return data[data.length - 2];
-        },
-        diff() {
-            const data = this.data;
-            if (!data) return null;
-            return this.value - this.previousValue;
-        },
-        percentDiff() {
-            const data = this.data;
-            if (!data) return null;
-            return Math.round(
-                ((this.value - this.previousValue) / this.previousValue) * 100
-            );
-        },
-        chartSeries() {
-            return [
-                {
-                    data: this.data
-                }
-            ];
-        }
-    },
     data: () => ({
         chartOptions: {
             chart: {
@@ -159,6 +128,37 @@ export default {
             }
         }
     }),
+    computed: {
+        value() {
+            const data = this.data;
+            if (!data) return null;
+            return data[data.length - 1];
+        },
+        previousValue() {
+            const data = this.data;
+            if (!data) return null;
+            return data[data.length - 2];
+        },
+        diff() {
+            const data = this.data;
+            if (!data) return null;
+            return this.value - this.previousValue;
+        },
+        percentDiff() {
+            const data = this.data;
+            if (!data) return null;
+            return Math.round(
+                ((this.value - this.previousValue) / this.previousValue) * 100
+            );
+        },
+        chartSeries() {
+            return [
+                {
+                    data: this.data
+                }
+            ];
+        }
+    },
     created() {
         this.chartOptions = {
             ...this.chartOptions,

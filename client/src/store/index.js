@@ -31,13 +31,13 @@ export default createStore({
     },
     mutations: {
         setStatisticsData(state, data) {
-            state.statisticsData = data
+            state.statisticsData = data;
         },
         setHotlistSnapshot(state, snapshot) {
-            state.hotlistSnapshot = snapshot
+            state.hotlistSnapshot = snapshot;
         },
         setPerformanceTopData(state, data) {
-            state.performanceTopData = data
+            state.performanceTopData = data;
         }
     },
     actions: {
@@ -46,7 +46,7 @@ export default createStore({
             commit('setStatisticsData', data);
         },
         async fetchHotlistSnapshot({ commit }) {
-            const data = await api.fetch('/khan/scratchpads/top?sort=3&limit=100&projection={"scratchpads":1}');
+            const data = await api.fetchKhanLabs('scratchpads/top?sort=3&limit=100&projection={"scratchpads":1}');
             const snapshot = {};
             const scratchpads = data.scratchpads;
             for (const i in scratchpads) {
@@ -62,7 +62,7 @@ export default createStore({
             commit('setHotlistSnapshot', snapshot);
         },
         async fetchPerformanceTopData({ commit }) {
-            const data = await api.fetch('/performance/top/10');
+            const data = await api.fetchPerformanceData('top/10');
             commit('setPerformanceTopData', data);
         }
     },

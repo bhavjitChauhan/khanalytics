@@ -57,6 +57,9 @@
                 The <b>median</b> is 
             </p>
         </InfoButton> -->
+        <div v-if="isLegacyProgram" class="flex items-center justify-center w-full h-full">
+            <span class="font-bold uppercase text-neutral">No data</span>
+        </div>
     </Container>
 </template>
 
@@ -76,6 +79,9 @@ export default {
         height: String
     },
     computed: {
+        isLegacyProgram() {
+            return this.$parent.isLegacyProgram;
+        },
         performance() {
             return this.$parent.performance;
         },

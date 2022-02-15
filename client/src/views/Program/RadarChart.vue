@@ -25,6 +25,9 @@
                 <font-awesome-icon icon="bars" /> &nbsp; icon.
             </p>
         </InfoButton>
+        <div v-if="isLegacyProgram" class="flex items-center justify-center w-full h-full">
+            <span class="font-bold uppercase text-neutral">No data</span>
+        </div>
     </Container>
 </template>
 
@@ -87,6 +90,9 @@ export default {
     computed: {
         isDarkModeEnabled() {
             return isDarkModeEnabled();
+        },
+        isLegacyProgram() {
+            return this.$parent.isLegacyProgram;
         },
         performance: function () {
             return this.$parent.performance;

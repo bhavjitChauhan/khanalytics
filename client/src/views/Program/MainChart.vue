@@ -35,6 +35,9 @@
                 <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data fill out the contact form linked at the bottom.
             </p>
         </InfoButton>
+        <div v-if="isLegacyProgram" class="flex items-center justify-center w-full h-full">
+            <span class="font-bold uppercase text-neutral">No data</span>
+        </div>
     </Container>
 </template>
 
@@ -153,6 +156,9 @@ export default {
     computed: {
         isDarkModeEnabled() {
             return isDarkModeEnabled();
+        },
+        isLegacyProgram() {
+            return this.$parent.isLegacyProgram;
         },
         performance() {
             return this.$parent.performance;

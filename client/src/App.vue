@@ -1,17 +1,17 @@
 <template>
     <div>
         <Navbar />
-        <div
-            v-if="width <= 425"
-            class="alert alert-warning"
-        >
-            <div class="flex-1">
-                <label>
-                    <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; Khanalytics is not optimized for mobile devices.
-                </label>
-            </div>
-        </div>
         <Page>
+            <div
+                v-if="width <= 425"
+                class="m-2 alert alert-warning"
+            >
+                <div class="flex-1">
+                    <label>
+                        <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; Khanalytics is not optimized for mobile devices.
+                    </label>
+                </div>
+            </div>
             <router-view />
         </Page>
         <Footer />

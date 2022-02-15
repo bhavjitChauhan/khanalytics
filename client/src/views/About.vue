@@ -3,9 +3,8 @@
         <img
             alt="Khanalytics Logo"
             src="../assets/logo.png"
-            class="h-24 mx-auto md:h-32"
+            class="h-24 mx-auto my-8 md:h-32"
         />
-        <div class="mt-8"></div>
         <h1 class="text-3xl font-bold text-center">
             Khanalytics
         </h1>
@@ -28,23 +27,23 @@
             <div class="mt-12"></div>
             <h3 class="text-lg font-bold">FAQ</h3>
             <div class="mt-4"></div>
-            <!-- <div class="grid grid-flow-col gap-4">
-                    <div
-                        tabindex="0"
-                        class="border collapse w-96 rounded-box border-base-300 collapse-arrow"
-                        v-for="question in entries"
-                        v-bind:key="question"
-                    >
-                        <div>
-                            <div class="font-medium text-l collapse-title">
-                                {{ question[0] }}
-                            </div>
-                            <div class="collapse-content">
-                                <p v-html="question[1]"></p>
-                            </div>
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div
+                    tabindex="0"
+                    class="border collapse rounded-box border-base-300 collapse-arrow"
+                    v-for="question in entries"
+                    v-bind:key="question"
+                >
+                    <div>
+                        <div class="font-medium text-l collapse-title">
+                            {{ question[0] }}
+                        </div>
+                        <div class="collapse-content">
+                            <p v-html="question[1]"></p>
                         </div>
                     </div>
-                </div> -->
+                </div>
+            </div>
         </div>
     </Container>
 </template>
@@ -72,8 +71,29 @@ export default {
                 `Khanalytics uses a <a href="https://www.mongodb.com/" target="_blank" class="link">MongoDB</a> database behind-the-scenes to store and perform analysis on the data.`
             ],
             [
-                `I have a feature request or bug report`,
-                `To report a bug or request a feature, please visit the contact page linked at the bottom of the page.`
+                `What do the different metrics mean?`,
+                `<b>Rank</b> is the position of the program on the <a href="https://www.khanacademy.org/browse" target="_blank" class="link">Hotlist</a>.<br>
+                <b>Votes</b> is the number of votes a program has received.<br>
+                <b>Forks</b> is the number of spin-offs created from a program.<br>
+                <b>Comments</b> is the number of messages in the Tips and Thanks section of a program.<br>
+                <b>Upvotes</b> or <b>comment votes</b> is the total number of votes <i>all</i> comments have received under one program.<br>
+                <b>Replies</b> is the total number of replies <i>all</i> comments have received under one program.`
+            ],
+            [
+                `It looks like some data is missing`,                
+                `This is possible. If there is no outage logged in the <a href="https://github.com/bhavjitChauhan/khanalytics/wiki/Updates" target="_blank" class="link">Updates</a> page in the wiki, fill out the contact form linked at the bottom of the page.`
+            ],
+            [
+                `Is there any way to go further back?`,
+                `Khanalytics started collecting data on August 18th, 2021. If you need access to legacy data, see the <a href="https://github.com/bhavjitChauhan/khanalytics/wiki/Legacy-Data" target="_blank" class="link">Legacy Data</a> page in the wiki.`
+            ],
+            [
+                `How was this project made?`,
+                `The Khanalytics source code is available in the <a href="https://github.com/bhavjitChauhan/khanalytics" target="_blank" class="link">GitHub repository</a>.`
+            ],
+            [
+                `I have more questions or a suggestion`,
+                `To report a bug or request a feature, fill out the contact form linked at the bottom of the page.`
             ]
         ]
     })

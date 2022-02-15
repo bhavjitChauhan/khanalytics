@@ -26,17 +26,17 @@
                     :class="{ 'input-warning': warning }"
                     @input="event => body = event.target.value"
                 ></textarea>
-                <label class="h-0 mt-2 label">
-                    <span
-                        v-if="warning"
-                        class="label-text-alt text-warning"
-                    >Empty message</span>
+                <label
+                    v-if="warning"
+                    class="h-0 mb-4 label"
+                >
+                    <span class="label-text-alt text-warning">Empty message</span>
                 </label>
                 <button
                     type="submit"
                     form="contact_form"
                     name="submit"
-                    class="mt-4 btn btn-primary"
+                    class="btn btn-primary"
                     :class="{ loading: sending, 'btn-disabled': sending || sent }"
                     :disabled="sending"
                 >

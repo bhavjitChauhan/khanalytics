@@ -4,7 +4,7 @@
         :style="{ width, height }"
     >
         <slot>
-            <div class="flex w-full h-full space-x-4 bg-gray-300 animate-pulse">
+            <div class="flex w-full h-full space-x-4 bg-base-300 animate-pulse">
             </div>
         </slot>
     </div>

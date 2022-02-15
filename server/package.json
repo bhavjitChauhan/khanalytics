@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev:serve": "nodemon .",
+        "dev:serve": "nodemon index.js",
         "serve": "node index.js"
     },
     "author": "Bhavjit Chauhan",

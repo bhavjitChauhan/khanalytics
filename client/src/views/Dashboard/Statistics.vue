@@ -1,5 +1,5 @@
 <template>
-    <div class="p-5">
+    <div class="pb-5">
         <Container class="w-full p-0 stats">
             <Metric
                 title="Unique Programs"

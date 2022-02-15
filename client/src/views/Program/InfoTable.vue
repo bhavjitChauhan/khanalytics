@@ -106,7 +106,7 @@
         </div>
         <div
             v-if="userData"
-            class="w-full col-span-4 row-span-1 mt-4 mb-2 btn-group place-content-center"
+            class="w-full col-span-4 row-span-1 mt-4 mb-2 lg:btn-group place-content-center"
         >
             <a
                 :href="`https://khanacademy.org/cs/-/${id}`"

@@ -25,7 +25,10 @@
                 <font-awesome-icon icon="bars" /> &nbsp; icon.
             </p>
         </InfoButton>
-        <div v-if="isLegacyProgram" class="flex items-center justify-center w-full h-full">
+        <div
+            v-if="isLegacyProgram"
+            class="flex items-center justify-center w-full h-full"
+        >
             <span class="font-bold uppercase text-neutral">No data</span>
         </div>
     </Container>
@@ -52,6 +55,13 @@ export default {
             chart: {
                 background: isDarkModeEnabled() ? 'transparent' : '#fff',
                 id: 'radar-main-chart'
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: (val) => Math.round(val) + '%',
+                background: {
+                    borderWidth: isDarkModeEnabled() ? 0 : 1
+                }
             },
             markers: {
                 strokeColors: isDarkModeEnabled ? 'transparent' : '#fff'
@@ -80,7 +90,6 @@ export default {
             yaxis: {
                 tickAmount: 2,
                 min: 0,
-                max: 100,
                 labels: {
                     formatter: (val) => Math.round(val) + '%'
                 }
@@ -162,6 +171,12 @@ export default {
                 chart: {
                     ...this.chartOptions.chart,
                     background: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                dataLabels: {
+                    ...this.chartOptions.dataLabels,
+                    background: {
+                        borderWidth: isDarkModeEnabled ? 0 : 1
+                    }
                 },
                 markers: {
                     strokeColors: isDarkModeEnabled ? 'transparent' : '#fff'

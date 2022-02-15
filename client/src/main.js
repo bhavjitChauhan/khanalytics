@@ -17,7 +17,6 @@ const app = createApp(App)
 app.config.globalProperties.emitter = emitter;
 app.config.globalProperties.$window = window;
 app.config.compilerOptions.isCustomElement = (tag) => {
-    console.log(tag);
     return tag == 'marquee';
 };
 app

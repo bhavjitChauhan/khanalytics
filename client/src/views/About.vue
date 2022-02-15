@@ -1,35 +1,34 @@
 <template>
-    <div class="p-5 mx-64 mt-32">
-        <div class="p-5 rounded ring-offset-2 ring-1 ring-gray-200">
-            <img
-                alt="Khanalytics Logo"
-                src="../assets/logo.png"
-                class="h-32 mx-auto"
-            />
-            <div class="mt-8"></div>
-            <h1 class="text-3xl font-bold text-center">
-                Khanalytics
-            </h1>
-            <h2 class="mb-16 text-lg text-center text-gray-500">
-                (Khan + Analytics)
-            </h2>
-            <div class="px-32 py-8">
-                <h3 class="text-lg font-bold">About</h3>
-                <p>
-                    Explore, analyze, and visualize the performance of your programs on <a
-                        href="https://www.khanacademy.org/browse"
-                        target="_blank"
-                        class="link-primary"
-                    >Khan Academy</a>.
-                </p>
-                <br>
-                <p>
-                    Khanalytics is a web application that allows you to better understand the activity of the Hotlist and the performance of your programs. It does this by providing various visual tools that allow you to compare and see what exactly makes a program go from a good program to a great program.
-                </p>
-                <div class="mt-12"></div>
-                <h3 class="text-lg font-bold">FAQ</h3>
-                <div class="mt-4"></div>
-                <div class="grid grid-flow-col gap-4">
+    <Container>
+        <img
+            alt="Khanalytics Logo"
+            src="../assets/logo.png"
+            class="h-24 mx-auto md:h-32"
+        />
+        <div class="mt-8"></div>
+        <h1 class="text-3xl font-bold text-center">
+            Khanalytics
+        </h1>
+        <h2 class="mb-16 text-lg text-center text-gray-500">
+            (Khan + Analytics)
+        </h2>
+        <div class="px-0 py-8 md:px-16 lg:mx-32">
+            <h3 class="text-lg font-bold">About</h3>
+            <p>
+                Explore, analyze, and visualize the performance of your programs on <a
+                    href="https://www.khanacademy.org/browse"
+                    target="_blank"
+                    class="link-primary"
+                >Khan Academy</a>.
+            </p>
+            <br>
+            <p>
+                Khanalytics is a web application that allows you to better understand the activity of the Hotlist and the performance of your programs. It does this by providing various visual tools that allow you to compare and see what exactly makes a program go from a good program to a great program.
+            </p>
+            <div class="mt-12"></div>
+            <h3 class="text-lg font-bold">FAQ</h3>
+            <div class="mt-4"></div>
+            <!-- <div class="grid grid-flow-col gap-4">
                     <div
                         tabindex="0"
                         class="border collapse w-96 rounded-box border-base-300 collapse-arrow"
@@ -45,15 +44,19 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div> -->
         </div>
-    </div>
+    </Container>
 </template>
 
 <script>
+import Container from '@/components/Container.vue';
+
 export default {
     name: 'Home',
+    components: {
+        Container
+    },
     data: () => ({
         entries: [
             [

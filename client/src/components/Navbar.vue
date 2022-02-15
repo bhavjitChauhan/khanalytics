@@ -1,10 +1,9 @@
 <template>
-    <div class="m-2 shadow-lg navbar bg-primary text-neutral-content rounded-box">
-        <!-- todo: replace with filtered logo -->
+    <div class="shadow-lg md:m-2 navbar bg-primary text-neutral-content md:rounded-box">
         <div class="px-2 mx-2 navbar-start">
             <router-link to="/">
                 <img
-                    alt="Khanaltics Logo"
+                    alt="Khanalytics Logo"
                     src="../assets/logo_inverted.png"
                     class="h-8"
                 />
@@ -36,36 +35,65 @@
                     type="text"
                     placeholder="Program ID"
                     :value="query"
-                    class="input input-ghost input-sm"
+                    class="hidden input input-ghost input-sm md:inline-block"
                     @input="event => query = event.target.value"
                 >
-                <button
-                    type="submit"
-                    form="navbar_search_form"
-                    class="btn btn-ghost btn-circle btn-sm"
-                    :class="{ loading: searching }"
+                <div
+                    data-tip="Search Program ID"
+                    class="tooltip tooltip-bottom"
                 >
-                    <font-awesome-icon
-                        v-if="!searching"
-                        icon="search"
-                    />
-                </button>
+                    <button
+                        type="submit"
+                        form="navbar_search_form"
+                        class="btn btn-ghost btn-circle btn-sm"
+                        :class="{ loading: searching }"
+                    >
+                        <font-awesome-icon
+                            v-if="!searching"
+                            icon="search"
+                        />
+                    </button>
+                </div>
             </form>
+            <div
+                data-tip="Dark Mode"
+                class="tooltip tooltip-bottom"
+            >
+                <button
+                    class="ml-2 btn btn-circle"
+                    :class="{ 'btn-ghost' : !darkMode }"
+                    @click="toggleDarkMode"
+                >
+                    <font-awesome-icon icon="moon" />
+                </button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import isValidProgramID from '@/util/isValidProgramID';
+import { isDarkModeEnabled, toggleDarkMode } from '@/util/darkMode';
 
 export default {
     name: 'Navbar',
     data: () => ({
         query: null,
         searching: false,
-        error: false
+        error: false,
+        darkMode: isDarkModeEnabled()
     }),
     methods: {
+        toggleDarkMode() {
+            toggleDarkMode();
+            this.darkMode = isDarkModeEnabled();
+            if (this.$router.currentRoute.value.path == '/dashboard')
+                this.$router.go();
+            else
+                setTimeout(() => {
+                    this.emitter.emit('dark-mode-toggle', this.darkMode);
+                }, 0);
+        },
         search() {
             this.error = null;
             try {

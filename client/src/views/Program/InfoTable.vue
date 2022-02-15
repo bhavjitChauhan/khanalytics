@@ -40,7 +40,7 @@
                 <Container
                     width="fit-content"
                     height="fit-content"
-                    class="p-2 mb-4 transition-all bg-white shadow-xl hover:scale-105 hover:shadow-2xl"
+                    class="p-2 mb-4 transition-all shadow-xl bg-base-100 hover:scale-105 hover:shadow-2xl"
                 >
                     <a
                         v-if="programData"

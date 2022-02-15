@@ -1,7 +1,7 @@
 <template>
     <label
         :for="id"
-        class="float-right btn btn-xs btn-circle btn-outline modal-button"
+        class="float-right btn btn-circle btn-outline modal-button btn-sm lg:btn-xs"
         :class="{ absolute: corner, 'mt-4': corner, 'ml-0': corner }"
         :style="{ top: (corner ? 0 : 'auto') }"
     >
@@ -18,7 +18,7 @@
             <div class="modal-action">
                 <label
                     :for="id"
-                    class="btn btn-sm"
+                    class="btn lg:btn-sm"
                 >Close</label>
             </div>
         </div>

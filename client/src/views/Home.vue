@@ -1,11 +1,11 @@
 <template>
-    <div class="min-h-screen hero bg-base-200">
+    <div class="min-h-screen rounded hero">
         <div class="text-center hero-content">
             <div class="max-w-md">
                 <img
                     alt="Khanalytics Logo"
                     src="../assets/logo.png"
-                    class="h-32 mx-auto"
+                    class="h-24 mx-auto md:h-32"
                 />
                 <div class="mt-16"></div>
                 <div

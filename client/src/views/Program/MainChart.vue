@@ -13,7 +13,11 @@
             :series="chartSeries"
             @mounted="this.$window.ApexCharts.exec('program-main-chart', 'hideSeries', 'Rank')"
         ></apexchart>
-        <InfoButton v-if="chartSeries" id="program-main-chart-modal" :corner="true">
+        <InfoButton
+            v-if="chartSeries"
+            id="program-main-chart-modal"
+            :corner="true"
+        >
             <p>
                 This chart shows the performance of the current program while it is in the top 100 on the Hotlist.
             </p>
@@ -28,13 +32,15 @@
             <br>
             <p>
                 <b>Save the chart</b> as an image by clicking the &nbsp;
-                <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data please contact me.
+                <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data fill out the contact form linked at the bottom.
             </p>
         </InfoButton>
     </Container>
 </template>
 
 <script>
+import { isDarkModeEnabled } from '@/util/darkMode';
+
 import Container from '@/components/Container.vue';
 import InfoButton from '@/components/InfoButton.vue';
 
@@ -51,10 +57,17 @@ export default {
     data: () => ({
         chartOptions: {
             chart: {
+                background: isDarkModeEnabled() ? 'transparent' : '#fff',
                 id: 'program-main-chart',
                 toolbar: {
                     autoSelected: 'zoom'
                 }
+            },
+            grid: {
+                borderColor: isDarkModeEnabled() ? '#6b7280' : '#90A4AE'
+            },
+            markers: {
+                strokeColors: isDarkModeEnabled() ? 'transparent' : '#fff'
             },
             stroke: {
                 curve: [
@@ -65,6 +78,9 @@ export default {
                     'smooth',
                     'smooth'
                 ]
+            },
+            theme: {
+                mode: isDarkModeEnabled() ? 'dark' : 'light'
             },
             xaxis: {
                 type: 'datetime',
@@ -135,6 +151,9 @@ export default {
         }
     }),
     computed: {
+        isDarkModeEnabled() {
+            return isDarkModeEnabled();
+        },
         performance() {
             return this.$parent.performance;
         },
@@ -163,6 +182,35 @@ export default {
 
             return series;
         }
+    },
+    watch: {
+        isDarkModeEnabled() {
+            console.log('isDarkModeEnabled');
+        }
+    },
+    methods: {
+        handleDarkModeToggle(isDarkModeEnabled) {
+            this.chartOptions = {
+                ...this.chartOptions,
+                chart: {
+                    ...this.chartOptions.chart,
+                    background: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                grid: {
+                    ...this.chartOptions.grid,
+                    borderColor: isDarkModeEnabled ? '#6b7280' : '#90A4AE'
+                },
+                markers: {
+                    strokeColors: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                theme: {
+                    mode: isDarkModeEnabled ? 'dark' : 'light'
+                }
+            };
+        }
+    },
+    mounted() {
+        this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
     }
 };
 </script>

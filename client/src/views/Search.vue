@@ -1,11 +1,11 @@
 <template>
-    <div class="min-h-screen hero bg-base-200">
+    <div class="min-h-screen hero">
         <div class="w-full text-center hero-content">
-            <div class="w-1/2">
+            <div class="w-5/6 md:w-1/2">
                 <h1 class="mb-8 -mt-32 text-5xl font-bold">
-                    Lookup
+                    Search
                 </h1>
-                <div class="rows-2">
+                <div>
                     <form
                         id="search_form"
                         @submit.prevent="search"
@@ -16,7 +16,7 @@
                                 type="text"
                                 :value="query"
                                 name="query"
-                                placeholder="Program ID"
+                                :placeholder="'Program ID' + (exampleID ? ` (e.g. ${exampleID})` : '')"
                                 autofocus
                                 class="w-full input input-primary input-bordered input-lg"
                                 :class="{ 'input-warning': warning }"
@@ -48,6 +48,20 @@
 
                     </form>
                 </div>
+                <div class="overflow-hidden whitespace-nowrap">
+                    <marquee
+                        scrollamount="5"
+                        @mouseover="(event) => (event.target.stop ? event.target.stop() : event.target.parentElement.stop())"
+                        @mouseout="(event) => (event.target.start ? event.target.start() : event.target.parentElement.start())"
+                    >
+                        <router-link
+                            v-for="(id, index) in hotlistSnapshotKeys"
+                            :key="index"
+                            :to="`/program/${id}`"
+                            class="mx-1 btn btn-md btn-ghost"
+                        >{{ id }}</router-link>
+                    </marquee>
+                </div>
             </div>
         </div>
     </div>
@@ -55,6 +69,7 @@
 
 <script>
 import isValidProgramID from '@/util/isValidProgramID';
+import sampleSize from '@/util/sampleSize';
 
 export default {
     name: 'Search',
@@ -62,15 +77,21 @@ export default {
         query: null,
         searching: false,
         warning: false,
-        error: false
+        error: false,
+        exampleID: null
     }),
+    computed: {
+        hotlistSnapshotKeys() {
+            return Object.keys(this.$store.state.hotlistSnapshot);
+        }
+    },
     methods: {
         search() {
             this.warning = this.error = null;
             try {
                 isValidProgramID(this.query);
             } catch (err) {
-                this.warning = err.message;
+                this.warning = 'Invalid program ID: ' + err.message;
                 return;
             }
             this.searching = true;
@@ -82,7 +103,14 @@ export default {
                 });
             } catch (err) {
                 this.searching = false;
-                this.error = err.message;
+                this.error = 'Invalid program ID: ' + err.message;
+            }
+        }
+    },
+    watch: {
+        hotlistSnapshotKeys: {
+            handler() {
+                this.exampleID = sampleSize(this.hotlistSnapshotKeys);
             }
         }
     },
@@ -99,6 +127,12 @@ export default {
                 this.search();
             }
         );
+        setInterval(() => {
+            const hotlistSnapshotKeys = this.hotlistSnapshotKeys;
+            if (!hotlistSnapshotKeys) return null;
+
+            this.exampleID = sampleSize(hotlistSnapshotKeys);
+        }, 5000);
     }
 };
 </script>

@@ -1,5 +1,9 @@
 <template>
-    <div class="flex flex-col h-full p-5 space-y-4 rounded ring-offset-2 ring-1 ring-gray-200">
+    <Container
+        height="auto"
+        class="flex flex-col h-full p-5 space-y-4"
+        :style="{'min-height': height}"
+    >
         <div class="grid grid-cols-2">
             <div class="justify-start w-full">
                 <select
@@ -27,24 +31,31 @@
             v-if="chartSeries.length > 0"
             type="pie"
             width="100%"
+            :height="height"
             :options="chartOptions"
             :series="chartSeries"
             @legendClick=handleLegendClick
             @dataPointSelection=handleDataPointSelection
         ></apexchart>
-    </div>
+    </Container>
 </template>
 
 <script>
 import colorHash from '@/util/colorHash';
 import truncate from '@/util/truncate';
+import { isDarkModeEnabled } from '@/util/darkMode';
 
+import Container from '@/components/Container';
 import InfoButton from '@/components/InfoButton';
 
 export default {
     name: 'TopChart',
     components: {
+        Container,
         InfoButton
+    },
+    props: {
+        height: String
     },
     data: () => ({
         chartOptions: {
@@ -52,6 +63,7 @@ export default {
                 animations: {
                     enabled: false
                 },
+                background: isDarkModeEnabled() ? 'transparent' : '#fff',
                 height: '100%',
                 id: 'top-chart',
                 type: 'pie'
@@ -62,11 +74,20 @@ export default {
                 onItemClick: {
                     toggleDataSeries: false
                 }
+            },
+            stroke: {
+                colors: [isDarkModeEnabled() ? '#6b7280' : '#fff']
+            },
+            theme: {
+                mode: isDarkModeEnabled() ? 'dark' : 'light'
             }
         },
         field: 'votes'
     }),
     computed: {
+        isDarkModeEnabled() {
+            return isDarkModeEnabled();
+        },
         chartSeries() {
             const hotlistSnapshot = this.$store.state.hotlistSnapshot;
             if (!hotlistSnapshot) return null;
@@ -114,6 +135,21 @@ export default {
         }
     },
     methods: {
+        handleDarkModeToggle(isDarkModeEnabled) {
+            this.chartOptions = {
+                ...this.chartOptions,
+                chart: {
+                    ...this.chartOptions.chart,
+                    background: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                stroke: {
+                    colors: [isDarkModeEnabled ? '#6b7280' : '#fff']
+                },
+                theme: {
+                    mode: isDarkModeEnabled ? 'dark' : 'light'
+                }
+            };
+        },
         handleLegendClick(_chartContext, seriesIndex) {
             const title = this.chartOptions.labels[seriesIndex];
             const id = this.$store.getters.getProgramByTitle(title).id;
@@ -137,6 +173,9 @@ export default {
         handleSelectChange(event) {
             this.field = event.target.value;
         }
+    },
+    mounted() {
+        this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
     }
 };
 </script>

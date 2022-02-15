@@ -12,7 +12,11 @@
             :options="chartOptions"
             :series="chartSeries"
         ></apexchart>
-        <InfoButton v-if="chartSeries" id="rank-chart-modal" :corner="true">
+        <InfoButton
+            v-if="chartSeries"
+            id="rank-chart-modal"
+            :corner="true"
+        >
             <p>
                 This chart shows how long the current program stayed in the top 10 on the Hotlist. The rank of the program on the Hotlist is displayed along the left axis.
             </p>
@@ -30,6 +34,8 @@
 </template>
 
 <script>
+import { isDarkModeEnabled } from '@/util/darkMode';
+
 import Container from '@/components/Container.vue';
 import InfoButton from '@/components/InfoButton.vue';
 
@@ -45,10 +51,17 @@ export default {
     },
     data: () => ({
         chartOptions: {
+            chart: {
+                background: isDarkModeEnabled() ? 'transparent' : '#fff',
+                id: 'program-rank-chart'
+            },
             plotOptions: {
                 bar: {
                     horizontal: true
                 }
+            },
+            theme: {
+                mode: isDarkModeEnabled() ? 'dark' : 'light'
             },
             tooltip: {
                 x: {
@@ -71,6 +84,9 @@ export default {
         }
     }),
     computed: {
+        isDarkModeEnabled() {
+            return isDarkModeEnabled();
+        },
         performance() {
             return this.$parent.performance;
         },
@@ -116,6 +132,23 @@ export default {
 
             return [{ data: series }];
         }
+    },
+    methods: {
+        handleDarkModeToggle(isDarkModeEnabled) {
+            this.chartOptions = {
+                ...this.chartOptions,
+                chart: {
+                    ...this.chartOptions.chart,
+                    background: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                theme: {
+                    mode: isDarkModeEnabled ? 'dark' : 'light'
+                }
+            };
+        }
+    },
+    mounted() {
+        this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
     }
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="p-5">
-        <div class="w-full ring-offset-2 ring-1 ring-gray-200 stats">
+        <Container class="w-full p-0 stats">
             <Metric
                 title="Unique Programs"
                 tooltip="Number of programs that were on the Hotlist"
@@ -37,16 +37,18 @@
                 :data="replies"
                 chartColor="#FEB019"
             /> -->
-        </div>
+        </Container>
     </div>
 </template>
 
 <script>
+import Container from '@/components/Container.vue';
 import Metric from '@/views/Dashboard/Metric.vue';
 
 export default {
     name: 'Statistics',
     components: {
+        Container,
         Metric
     },
     computed: {

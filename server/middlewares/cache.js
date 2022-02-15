@@ -22,10 +22,10 @@ const handler = (req, res, next) => {
                     ttl = DAY - (Date.now() % DAY);
                     break;
                 default:
-                    ttl = HOUR - (Date.now() % HOUR);;
+                    ttl = HOUR - (Date.now() % HOUR);
                     break;
             }
-            if (Object.keys(body).length != 0) Cache.set(key, body, ttl);
+            if (Object.keys(body).length != 0) Cache.set(key, body, ttl / 1000);
             res.sendResponse(body);
         }
         next();

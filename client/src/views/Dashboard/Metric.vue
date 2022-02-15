@@ -42,7 +42,7 @@
             <span
                 v-else
                 :class="
-                    percentDiff < 0 ? 'red' : percentDiff > 0 ? 'green' : ''
+                    percentDiff < 0 ? 'text-error' : percentDiff > 0 ? 'text-success' : ''
                 "
             >
                 <font-awesome-icon
@@ -75,6 +75,8 @@
 </template>
 
 <script>
+import { isDarkModeEnabled } from '@/util/darkMode';
+
 export default {
     name: 'Metric',
     props: {
@@ -86,6 +88,7 @@ export default {
     data: () => ({
         chartOptions: {
             chart: {
+                background: isDarkModeEnabled() ? 'transparent' : '#fff',
                 id: Math.random().toString().slice(2),
                 group: 'statistics',
                 animations: {
@@ -108,6 +111,9 @@ export default {
                     width: 1
                 }
             },
+            theme: {
+                mode: isDarkModeEnabled() ? 'dark' : 'light'
+            },
             tooltip: {
                 fixed: {
                     enabled: false
@@ -129,6 +135,9 @@ export default {
         }
     }),
     computed: {
+        isDarkModeEnabled() {
+            return isDarkModeEnabled();
+        },
         value() {
             const data = this.data;
             if (!data) return null;
@@ -159,11 +168,28 @@ export default {
             ];
         }
     },
+    methods: {        
+        handleDarkModeToggle(isDarkModeEnabled) {
+            this.chartOptions = {
+                ...this.chartOptions,
+                chart: {
+                    ...this.chartOptions.chart,
+                    background: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                theme: {
+                    mode: isDarkModeEnabled ? 'dark' : 'light'
+                }
+            };
+        }
+    },
     created() {
         this.chartOptions = {
             ...this.chartOptions,
             colors: [this.chartColor]
         };
+    },
+    mounted() {
+        this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
     }
 };
 </script>

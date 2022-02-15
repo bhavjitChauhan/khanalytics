@@ -1,21 +1,19 @@
 <template>
-    <div class="p-5 mx-32">
-        <h1 class="mb-8 text-4xl font-bold">Dashboard</h1>
-        <!-- todo: use Container component -->
-        <Statistics />
-        <div class="grid grid-cols-4 grid-rows-1 gap-4">
-            <div class="col-span-1 row-span-1">
-                <HotTable />
-            </div>
-            <div class="col-span-3 row-span-1">
-                <MainChart />
-            </div>
-            <div class="col-span-2 row-span-1">
-                <TopChart />
-            </div>
-            <div class="col-span-2 row-span-1">
-                <RatioChart />
-            </div>
+    <h1 class="mb-8 text-4xl font-bold">Dashboard</h1>
+    <!-- todo: use Container component -->
+    <Statistics />
+    <div class="grid grid-cols-4 grid-rows-1 gap-4">
+        <div class="hidden col-span-1 row-span-1 lg:flex">
+            <HotTable />
+        </div>
+        <div class="col-span-4 row-span-1 lg:col-span-3">
+            <MainChart height="550px" />
+        </div>
+        <div class="col-span-4 row-span-1 lg:col-span-2">
+            <TopChart height="400px" />
+        </div>
+        <div class="col-span-4 row-span-1 lg:col-span-2">
+            <RatioChart height="400px" />
         </div>
     </div>
 </template>
@@ -35,7 +33,7 @@ export default {
         MainChart,
         TopChart,
         RatioChart
-    },    
+    },
     computed: {
         statisticsData() {
             return this.$store.state.statisticsData;

@@ -1,5 +1,9 @@
 <template>
-    <div class="flex flex-col h-full p-5 space-y-4 rounded ring-offset-2 ring-1 ring-gray-200">
+    <Container
+        height="auto"
+        class="flex flex-col h-full space-y-4"
+        :style="{'min-height': height}"
+    >
         <div class="grid grid-cols-2">
             <div class="justify-start w-full">
                 <select
@@ -44,7 +48,7 @@
                         <b>Use the toolbar</b> at the top-right to manipulate the chart. Hover over the icons for more information.
                         <br><br>
                         <b>Save the chart</b> as an image by clicking the &nbsp;
-                        <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data please contact me.
+                        <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data fill out the contact form linked at the bottom.
                     </p>
                 </InfoButton>
             </div>
@@ -53,25 +57,32 @@
             v-if="chartSeries.length > 0"
             type="scatter"
             width="100%"
+            :height="height"
             :options="chartOptions"
             :series="chartSeries"
             @legendClick=handleLegendClick
             @dataPointSelection=handleDataPointSelection
         ></apexchart>
-    </div>
+    </Container>
 </template>
 
 <script>
 import colorHash from '@/util/colorHash';
 import toTitleCase from '@/util/toTitleCase';
 import truncate from '@/util/truncate';
+import { isDarkModeEnabled } from '@/util/darkMode';
 
+import Container from '@/components/Container';
 import InfoButton from '@/components/InfoButton';
 
 export default {
     name: 'RatioChart',
     components: {
+        Container,
         InfoButton
+    },
+    props: {
+        height: String
     },
     data: () => ({
         chartOptions: {
@@ -79,6 +90,7 @@ export default {
                 animations: {
                     enabled: false
                 },
+                background: isDarkModeEnabled() ? 'transparent' : '#fff',
                 height: '100%',
                 id: 'ratio-chart',
                 toolbar: {
@@ -90,12 +102,21 @@ export default {
                     type: 'xy'
                 }
             },
+            grid: {
+                borderColor: isDarkModeEnabled() ? '#6b7280' : '#90A4AE'
+            },
             legend: {
                 position: 'right',
                 formatter: (seriesName) => truncate(seriesName, 32),
                 onItemClick: {
                     toggleDataSeries: false
                 }
+            },
+            markers: {
+                strokeColors: isDarkModeEnabled() ? 'transparent' : '#fff'
+            },
+            theme: {
+                mode: isDarkModeEnabled() ? 'dark' : 'light'
             },
             tooltip: {
                 x: {
@@ -134,6 +155,9 @@ export default {
         selectedFields: ['forks', 'votes']
     }),
     computed: {
+        isDarkModeEnabled() {
+            return isDarkModeEnabled();
+        },
         chartSeries() {
             const hotlistSnapshot = this.$store.state.hotlistSnapshot;
             if (!hotlistSnapshot) return null;
@@ -181,6 +205,25 @@ export default {
         }
     },
     methods: {
+        handleDarkModeToggle(isDarkModeEnabled) {
+            this.chartOptions = {
+                ...this.chartOptions,
+                chart: {
+                    ...this.chartOptions.chart,
+                    background: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                grid: {
+                    ...this.chartOptions.grid,
+                    borderColor: isDarkModeEnabled ? '#6b7280' : '#90A4AE'
+                },
+                markers: {
+                    strokeColors: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                theme: {
+                    mode: isDarkModeEnabled ? 'dark' : 'light'
+                }
+            };
+        },
         handleLegendClick(_chartContext, seriesIndex) {
             const title = this.chartSeries[seriesIndex].name;
             const id = this.$store.getters.getProgramByTitle(title).id;
@@ -220,6 +263,9 @@ export default {
                 option.disabled = option.value == fieldA;
             }
         }
+    },
+    mounted() {
+        this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
     }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div
         id="hotlist-table-container"
-        class="flex flex-col h-full p-5 space-y-4 rounded ring-offset-2 ring-1 ring-gray-200"
+        class="flex flex-col h-full p-5 space-y-4 rounded ring-1 ring-base-300"
     >
         <div class="overflow-x-hidden">
             <table
@@ -45,8 +45,13 @@
 </template>
 
 <script>
+import Container from '@/components/Container.vue';
+
 export default {
     name: 'HotTable',
+    components: {
+        Container
+    },
     computed: {
         programs() {
             const hotlistSnapshot = this.$store.state.hotlistSnapshot;

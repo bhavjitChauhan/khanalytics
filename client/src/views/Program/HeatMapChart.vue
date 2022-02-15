@@ -31,6 +31,7 @@
 
 <script>
 import formatDate from '@/util/formatDate';
+import { isDarkModeEnabled } from '@/util/darkMode';
 
 import Container from '@/components/Container.vue';
 import InfoButton from '@/components/InfoButton.vue';
@@ -51,6 +52,8 @@ export default {
                 animations: {
                     enabled: false
                 },
+                background: isDarkModeEnabled() ? 'transparent' : '#fff',
+                id: 'program-heatmap-chart',
                 toolbar: {
                     tools: {
                         selection: false,
@@ -70,6 +73,12 @@ export default {
                     distributed: true
                 }
             },
+            stroke: {
+                colors: [isDarkModeEnabled() ? '#6b7280' : '#fff']
+            },
+            theme: {
+                mode: isDarkModeEnabled() ? 'dark' : 'light'
+            },
             xaxis: {
                 labels: {
                     show: false
@@ -79,6 +88,9 @@ export default {
         peaks: {}
     }),
     computed: {
+        isDarkModeEnabled() {
+            return isDarkModeEnabled();
+        },
         performance() {
             return this.$parent.performance;
         },
@@ -97,10 +109,11 @@ export default {
             const series = [];
 
             for (const [key, label] of labels) {
-                const differences = performance.map((value, i) =>
-                    Math.abs(
-                        value[key] - (i === 0 ? 0 : performance[i - 1][key])
-                    ) || 0
+                const differences = performance.map(
+                    (value, i) =>
+                        Math.abs(
+                            value[key] - (i === 0 ? 0 : performance[i - 1][key])
+                        ) || 0
                 );
                 this.peaks[key] = Math.max(...differences);
 
@@ -114,14 +127,27 @@ export default {
             }
 
             return series;
-            // [{
-            //   name: 'Metric1',
-            //   data: generateData(18, {
-            //     min: 0,
-            //     max: 90
-            //   })
-            // },
         }
+    },
+    methods: {
+        handleDarkModeToggle(isDarkModeEnabled) {
+            this.chartOptions = {
+                ...this.chartOptions,
+                chart: {
+                    ...this.chartOptions.chart,
+                    background: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                stroke: {
+                    colors: [isDarkModeEnabled ? '#6b7280' : '#fff']
+                },
+                theme: {
+                    mode: isDarkModeEnabled ? 'dark' : 'light'
+                }
+            };
+        }
+    },
+    mounted() {
+        this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
     }
 };
 </script>

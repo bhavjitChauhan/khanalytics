@@ -1,62 +1,60 @@
 <template>
-    <div class="p-5 mx-32">
-        <div class="mb-4">
-            <div
-                v-if="programData && Date.parse(programData.created) < 1629266402000"
-                class="alert alert-error"
-            >
-                <div class="flex-1">
-                    <label>
-                        <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The program you selected was created before Khanalytics started recording the Hotlist. Data may be partially or completely missing.
-                    </label>
-                </div>
-            </div>
-            <div
-                v-else-if="programData && Date.parse(programData.created) < 1642651200000"
-                class="alert alert-warning"
-            >
-                <div class="flex-1">
-                    <label>
-                        <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The program you selected was created before Khanalytics started recording discussions. Discussions data may be partially or completely missing.
-                    </label>
-                </div>
+    <div class="mb-4">
+        <div
+            v-if="programData && Date.parse(programData.created) < 1629266402000"
+            class="alert alert-error"
+        >
+            <div class="flex-1">
+                <label>
+                    <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The program you selected was created before Khanalytics started recording the Hotlist. Data may be partially or completely missing.
+                </label>
             </div>
         </div>
-        <h1 class="mb-8 text-4xl">
-            <span class="font-bold">Program:</span> {{ title ? title : id }}
-        </h1>
+        <div
+            v-else-if="programData && Date.parse(programData.created) < 1642651200000"
+            class="alert alert-warning"
+        >
+            <div class="flex-1">
+                <label>
+                    <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The program you selected was created before Khanalytics started recording discussions. Discussions data may be partially or completely missing.
+                </label>
+            </div>
+        </div>
+    </div>
+    <h1 class="mb-8 text-4xl">
+        <span class="font-bold">Program:</span> {{ title ? title : id }}
+    </h1>
 
-        <div class="grid grid-cols-4 grid-rows-1 gap-4">
-            <div class="col-span-3 row-span-1">
-                <MainChart
-                    :id="id"
-                    height="550px"
-                />
-            </div>
-            <div class="col-span-1 row-span-1">
-                <InfoTable
-                    :id="id"
-                    height="550px"
-                />
-            </div>
-            <div class="col-span-3 row-span-1">
-                <RankChart
-                    :id="id"
-                    height="350px"
-                />
-            </div>
-            <div class="col-span-1 row-span-1">
-                <RadarChart height="350px" />
-            </div>
-            <div class="col-span-1 row-span-1">
-                <HeatMapTable height="350px" />
-            </div>
-            <div class="col-span-3 row-span-1">
-                <HeatMapChart
-                    :id="id"
-                    height="350px"
-                />
-            </div>
+    <div class="grid grid-cols-4 grid-rows-1 gap-4">
+        <div class="col-span-4 row-span-1 lg:col-span-3">
+            <MainChart
+                :id="id"
+                height="550px"
+            />
+        </div>
+        <div class="col-span-4 row-span-1 lg:col-span-1">
+            <InfoTable
+                :id="id"
+                height="550px"
+            />
+        </div>
+        <div class="col-span-4 row-span-1 lg:col-span-3">
+            <RankChart
+                :id="id"
+                height="350px"
+            />
+        </div>
+        <div class="col-span-4 row-span-1 lg:col-span-1">
+            <RadarChart height="350px" />
+        </div>
+        <div class="col-span-4 row-span-1 lg:col-span-1">
+            <HeatMapTable height="350px" />
+        </div>
+        <div class="col-span-4 row-span-1 lg:col-span-3">
+            <HeatMapChart
+                :id="id"
+                height="350px"
+            />
         </div>
     </div>
 </template>

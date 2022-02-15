@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { isDarkModeEnabled } from '@/util/darkMode';
+
 import Container from '@/components/Container.vue';
 import InfoButton from '@/components/InfoButton.vue';
 
@@ -44,8 +46,15 @@ export default {
     },
     data: () => ({
         chartOptions: {
-            xaxis: {
-                categories: ['Votes', 'Forks', 'Comments', 'Upvotes', 'Replies']
+            chart: {
+                background: isDarkModeEnabled() ? 'transparent' : '#fff',
+                id: 'radar-main-chart'
+            },
+            markers: {
+                strokeColors: isDarkModeEnabled ? 'transparent' : '#fff'
+            },
+            theme: {
+                mode: isDarkModeEnabled() ? 'dark' : 'light'
             },
             tooltip: {
                 x: {
@@ -62,6 +71,9 @@ export default {
                     show: false
                 }
             },
+            xaxis: {
+                categories: ['Votes', 'Forks', 'Comments', 'Upvotes', 'Replies']
+            },
             yaxis: {
                 tickAmount: 2,
                 min: 0,
@@ -73,6 +85,9 @@ export default {
         }
     }),
     computed: {
+        isDarkModeEnabled() {
+            return isDarkModeEnabled();
+        },
         performance: function () {
             return this.$parent.performance;
         },
@@ -85,8 +100,13 @@ export default {
         chartSeries() {
             const performance = this.performance;
             const userTopProgramsData = this.userTopProgramsData;
-            if (!performance || !userTopProgramsData) return null;
             const userTopProgramsDiscussions = this.userTopProgramsDiscussions;
+            if (
+                !performance ||
+                !userTopProgramsData ||
+                !userTopProgramsDiscussions
+            )
+                return null;
 
             const latestPerformance = performance[performance.length - 1];
             const series = [];
@@ -96,46 +116,58 @@ export default {
             const topForks =
                 latestPerformance.forks /
                 Math.max(...userTopProgramsData.map(({ forks }) => forks));
-            if (userTopProgramsDiscussions) {
-                const topComments =
-                    latestPerformance.comments /
-                    Math.max(
-                        ...userTopProgramsDiscussions.map(
-                            ({ comments }) => comments
-                        )
-                    );
-                const topUpvotes =
-                    latestPerformance.commentVotes /
-                    Math.max(
-                        ...userTopProgramsDiscussions.map(
-                            ({ commentVotes }) => commentVotes
-                        )
-                    );
-                const topReplies =
-                    latestPerformance.replies /
-                    Math.max(
-                        ...userTopProgramsDiscussions.map(
-                            ({ replies }) => replies
-                        )
-                    );
+            const topComments =
+                latestPerformance.comments /
+                Math.max(
+                    ...userTopProgramsDiscussions.map(
+                        ({ comments }) => comments
+                    )
+                );
+            const topUpvotes =
+                latestPerformance.commentVotes /
+                Math.max(
+                    ...userTopProgramsDiscussions.map(
+                        ({ commentVotes }) => commentVotes
+                    )
+                );
+            const topReplies =
+                latestPerformance.replies /
+                Math.max(
+                    ...userTopProgramsDiscussions.map(({ replies }) => replies)
+                );
 
-                series.push({
-                    data: [
-                        topVotes * 100,
-                        topForks * 100,
-                        topComments * 100 || 0,
-                        topUpvotes * 100 || 0,
-                        topReplies * 100 || 0
-                    ]
-                });
-            } else {
-                series.push({
-                    data: [topVotes * 100, topForks * 100, 0, 0, 0]
-                });
-            }
+            series.push({
+                data: [
+                    topVotes * 100,
+                    topForks * 100,
+                    topComments * 100 || 0,
+                    topUpvotes * 100 || 0,
+                    topReplies * 100 || 0
+                ]
+            });
 
             return series;
         }
+    },
+    methods: {
+        handleDarkModeToggle(isDarkModeEnabled) {
+            this.chartOptions = {
+                ...this.chartOptions,
+                chart: {
+                    ...this.chartOptions.chart,
+                    background: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                markers: {
+                    strokeColors: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                theme: {
+                    mode: isDarkModeEnabled ? 'dark' : 'light'
+                }
+            };
+        }
+    },
+    mounted() {
+        this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
     }
 };
 </script>

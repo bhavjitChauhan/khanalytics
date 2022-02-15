@@ -2,6 +2,18 @@
     <footer class="p-10 footer bg-base-200 text-base-content footer-center">
         <div class="grid grid-flow-col gap-4">
             <router-link
+                class="link link-hover lg:hidden"
+                to="/"
+            >Home</router-link>
+            <router-link
+                class="link link-hover lg:hidden"
+                to="/dashboard"
+            >Dashboard</router-link>
+            <router-link
+                class="link link-hover lg:hidden"
+                to="/about"
+            >About</router-link>
+            <router-link
                 class="link link-hover"
                 to="/contact"
             >Contact</router-link>

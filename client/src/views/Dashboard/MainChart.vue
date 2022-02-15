@@ -1,10 +1,17 @@
 <template>
-    <div
-        class="p-5 rounded ring-offset-2 ring-1 ring-gray-200"
+    <Container
+        height="auto"
         id="main-chart"
+        :style="{'min-height': height}"
     >
-        <div class="grid grid-cols-2">
-            <div class="justify-start w-full tabs tabs-boxed">
+        <div
+            v-if="chartSeries"
+            class="grid grid-cols-2"
+        >
+            <div
+                class="justify-start hidden tabs tabs-boxed w-fit flex-nowrap md:flex"
+                style="width: fit-content"
+            >
                 <a
                     class="transition-transform ease-in-out tab hover:scale-110"
                     id="rank-tab"
@@ -46,7 +53,7 @@
                         <b>Use the toolbar</b> at the top-right to manipulate the chart. Hover over the icons for more information.
                         <br><br>
                         <b>Save the chart</b> as an image by clicking the &nbsp;
-                        <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data please contact me.
+                        <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data fill out the contact form linked at the bottom.
                     </p>
                 </InfoButton>
             </div>
@@ -54,29 +61,36 @@
         <apexchart
             v-if="chartSeries"
             width="100%"
-            height="550px"
+            :height="height"
             type="line"
             :options="chartOptions"
             :series="chartSeries"
             @legendClick=handleLegendClick
         ></apexchart>
-    </div>
+    </Container>
 </template>
 
 <script>
 import colorHash from '@/util/colorHash';
 import formatDate from '@/util/formatDate';
+import { isDarkModeEnabled } from '@/util/darkMode';
 
+import Container from '@/components/Container';
 import InfoButton from '@/components/InfoButton';
 
 export default {
     name: 'MainChart',
     components: {
+        Container,
         InfoButton
+    },
+    props: {
+        height: String
     },
     data: () => ({
         chartOptions: {
             chart: {
+                background: isDarkModeEnabled() ? 'transparent' : '#fff',
                 animations: {
                     enabled: false
                 },
@@ -85,13 +99,32 @@ export default {
                     autoSelected: 'zoom'
                 }
             },
+            grid: {
+                borderColor: isDarkModeEnabled() ? '#6b7280' : '#90A4AE'
+            },
             legend: {
                 onItemClick: {
                     toggleDataSeries: false
                 }
             },
+            markers: {
+                strokeColors: isDarkModeEnabled() ? 'transparent' : '#fff'
+            },
             stroke: {
                 curve: 'smooth'
+            },
+            theme: {
+                mode: 'dark'
+            },
+            theme: {
+                mode: isDarkModeEnabled() ? 'dark' : 'light'
+            },
+            tooltip: {
+                x: {
+                    // show: false,
+                    format: 'dd MMM HH:00',
+                    formatter: () => null
+                }
             },
             xaxis: {
                 type: 'datetime',
@@ -111,21 +144,16 @@ export default {
                 reversed: false,
                 min: 0,
                 forceNiceScale: true
-            },
-            tooltip: {
-                x: {
-                    // show: false,
-                    format: 'dd MMM HH:00',
-                    formatter: () => null
-                }
             }
         },
         field: 'votes',
         previousField: null,
-        previousLabels: null,
-        tabs: null
+        previousLabels: null
     }),
     computed: {
+        isDarkModeEnabled() {
+            return isDarkModeEnabled();
+        },
         performanceTopData() {
             const data = this.$store.state.performanceTopData;
             if (!data.length) return null;
@@ -176,9 +204,45 @@ export default {
             this.previousLabels = labels;
 
             return series;
+        },
+        tabs() {
+            const rankTab = document.getElementById('rank-tab');
+            const votesTab = document.getElementById('votes-tab');
+            const forksTab = document.getElementById('forks-tab');
+            const commentsTab = document.getElementById('comments-tab');
+            const commentVotesTab = document.getElementById('commentVotes-tab');
+            const repliesTab = document.getElementById('replies-tab');
+
+            return [
+                rankTab,
+                votesTab,
+                forksTab,
+                commentsTab,
+                commentVotesTab,
+                repliesTab
+            ];
         }
     },
     methods: {
+        handleDarkModeToggle(isDarkModeEnabled) {
+            this.chartOptions = {
+                ...this.chartOptions,
+                chart: {
+                    ...this.chartOptions.chart,
+                    background: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                grid: {
+                    ...this.chartOptions.grid,
+                    borderColor: isDarkModeEnabled ? '#6b7280' : '#90A4AE'
+                },
+                markers: {
+                    strokeColors: isDarkModeEnabled ? 'transparent' : '#fff'
+                },
+                theme: {
+                    mode: isDarkModeEnabled ? 'dark' : 'light'
+                }
+            };
+        },
         updateChartColors(chartSeries) {
             const colors = chartSeries.map((series) => {
                 return colorHash.hex(series.name);
@@ -231,20 +295,7 @@ export default {
         }
     },
     mounted() {
-        const rankTab = document.getElementById('rank-tab');
-        const votesTab = document.getElementById('votes-tab');
-        const forksTab = document.getElementById('forks-tab');
-        const commentsTab = document.getElementById('comments-tab');
-        const commentVotesTab = document.getElementById('commentVotes-tab');
-        const repliesTab = document.getElementById('replies-tab');
-        this.tabs = [
-            rankTab,
-            votesTab,
-            forksTab,
-            commentsTab,
-            commentVotesTab,
-            repliesTab
-        ];
+        this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
     }
 };
 </script>

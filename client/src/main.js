@@ -16,6 +16,10 @@ const emitter = mitt();
 const app = createApp(App)
 app.config.globalProperties.emitter = emitter;
 app.config.globalProperties.$window = window;
+app.config.compilerOptions.isCustomElement = (tag) => {
+    console.log(tag);
+    return tag == 'marquee';
+};
 app
     .component('font-awesome-icon', FontAwesomeIcon)
     .use(router)

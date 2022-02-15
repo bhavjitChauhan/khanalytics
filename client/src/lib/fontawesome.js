@@ -9,6 +9,7 @@ import {
     faEquals,
     faExclamationTriangle,
     faInfo,
+    faMoon,
     faSearch
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -22,6 +23,7 @@ library.add(
     faEquals,
     faExclamationTriangle,
     faInfo,
+    faMoon,
     faSearch
 );
 library.add(faQuestionCircle);

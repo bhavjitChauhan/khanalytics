@@ -5,7 +5,11 @@
                 href="https://khanacademy.org/browse"
                 target="_blank"
                 class="link"
-            >Hotlist</a>. Use the &nbsp; <font-awesome-icon icon="info"></font-awesome-icon> &nbsp; icons to see what information is displayed. Click on a specific program to view more detailed statistics for that program.</span>
+            >Hotlist</a>. Use the
+            <InfoButton
+                id=""
+                :demo="true"
+            /> buttons to see what information is displayed. Click on a specific program to view more detailed statistics for that program.</span>
     </div>
     <Statistics />
     <div class="grid grid-cols-4 grid-rows-1 gap-4">
@@ -25,6 +29,7 @@
 </template>
 
 <script>
+import InfoButton from '@/components/InfoButton';
 import Statistics from '@/views/Dashboard/Statistics.vue';
 import HotTable from '@/views/Dashboard/HotTable.vue';
 import MainChart from '@/views/Dashboard/MainChart.vue';
@@ -34,6 +39,7 @@ import RatioChart from '@/views/Dashboard/RatioChart.vue';
 export default {
     name: 'Dashboard',
     components: {
+        InfoButton,
         Statistics,
         HotTable,
         MainChart,

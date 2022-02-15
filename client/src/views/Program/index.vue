@@ -1,7 +1,7 @@
 <template>
     <div class="mb-4">
         <div
-            v-if="programData && Date.parse(programData.created) < 1629266402000"
+            v-if="isLegacyProgram"
             class="alert alert-error"
         >
             <div class="flex-1">
@@ -32,7 +32,12 @@
                 v-if="userData"
                 :href="`https://khanacademy.org/profile/${userData.username}/projects`"
                 class="link"
-            >{{ userData.nickname }}</a>. Use the &nbsp; <font-awesome-icon icon="info"></font-awesome-icon> &nbsp; icons to see what information is displayed.</span>
+            >{{ userData.nickname }}</a>. Use the
+            <InfoButton
+                id=""
+                :demo="true"
+            /> buttons to see what information is displayed.
+        </span>
     </div>
 
     <div class="grid grid-cols-4 grid-rows-1 gap-4">
@@ -72,6 +77,7 @@
 <script>
 import api from '@/services/api';
 
+import InfoButton from '@/components/InfoButton.vue';
 import MainChart from '@/views/Program/MainChart.vue';
 import InfoTable from '@/views/Program/InfoTable.vue';
 import RankChart from '@/views/Program/RankChart.vue';
@@ -82,6 +88,7 @@ import HeatMapChart from '@/views/Program/HeatMapChart.vue';
 export default {
     name: 'Program',
     components: {
+        InfoButton,
         MainChart,
         InfoTable,
         RankChart,
@@ -98,6 +105,12 @@ export default {
         userTopProgramsDiscussions: null
     }),
     computed: {
+        isLegacyProgram() {
+            const programData = this.programData;
+            if (!programData) return null;
+
+            return Date.parse(programData.created) < 1629266402000;
+        },
         title() {
             return this.programData && this.programData.title;
         }
@@ -118,6 +131,8 @@ export default {
                 );
             this.programData = programData;
             this.userData = userData;
+
+            if (this.isLegacyProgram) return;
 
             this.userTopProgramsData = (
                 await api.fetchKhanLabs(

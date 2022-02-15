@@ -1,13 +1,14 @@
 <template>
     <label
         :for="id"
-        class="float-right btn btn-circle btn-outline modal-button btn-sm lg:btn-xs"
-        :class="{ absolute: corner, 'mt-4': corner, 'ml-0': corner }"
+        class="btn btn-circle btn-outline modal-button btn-sm lg:btn-xs"
+        :class="{ 'float-right': !demo, absolute: corner, 'mt-4': corner, 'ml-0': corner }"
         :style="{ top: (corner ? 0 : 'auto') }"
     >
         <font-awesome-icon icon="info" />
     </label>
     <input
+        v-if="!demo"
         type="checkbox"
         :id="id"
         class="modal-toggle"
@@ -29,8 +30,18 @@
 export default {
     name: 'InfoButton',
     props: {
-        id: String,
-        corner: Boolean
+        id: {
+            type: String,
+            required: true
+        },
+        corner: {
+            type: Boolean,
+            default: false
+        },
+        demo: {
+            type: Boolean,
+            default: false
+        }
     }
 };
 </script>

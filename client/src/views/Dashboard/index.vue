@@ -1,6 +1,12 @@
 <template>
-    <h1 class="mb-8 text-4xl font-bold">Dashboard</h1>
-    <!-- todo: use Container component -->
+    <div class="mb-8">
+        <h1 class="mb-2 text-4xl font-bold">Dashboard</h1>
+        <span class="text-lg">This is an overview of the performance of the <a
+                href="https://khanacademy.org/browse"
+                target="_blank"
+                class="link"
+            >Hotlist</a>. Use the &nbsp; <font-awesome-icon icon="info"></font-awesome-icon> &nbsp; icons to see what information is displayed. Click on a specific program to view more detailed statistics for that program.</span>
+    </div>
     <Statistics />
     <div class="grid grid-cols-4 grid-rows-1 gap-4">
         <div class="hidden col-span-1 row-span-1 lg:flex">

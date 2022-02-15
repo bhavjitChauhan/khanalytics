@@ -21,9 +21,19 @@
             </div>
         </div>
     </div>
-    <h1 class="mb-8 text-4xl">
-        <span class="font-bold">Program:</span> {{ title ? title : id }}
-    </h1>
+
+    <div class="mb-8">
+        <h1 class="mb-2 text-4xl"><span class="font-bold">Program:</span> {{ title ? title : id }}</h1>
+        <span class="text-lg">This is an overview of <a
+                :href="`https://khanacademy.org/cs/-/${id}`"
+                target="_blank"
+                class="link"
+            >{{ title ? title : id }}</a> {{ userData && 'by' }} <a
+                v-if="userData"
+                :href="`https://khanacademy.org/profile/${userData.username}/projects`"
+                class="link"
+            >{{ userData.nickname }}</a>. Use the &nbsp; <font-awesome-icon icon="info"></font-awesome-icon> &nbsp; icons to see what information is displayed.</span>
+    </div>
 
     <div class="grid grid-cols-4 grid-rows-1 gap-4">
         <div class="col-span-4 row-span-1 lg:col-span-3">

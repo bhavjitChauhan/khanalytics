@@ -11,7 +11,7 @@
         <h2 class="mb-16 text-lg text-center text-gray-500">
             (Khan + Analytics)
         </h2>
-        <div class="px-0 py-8 md:px-16 lg:mx-32">
+        <div class="px-0 py-8 md:px-16 xl:mx-32">
             <h3 class="text-lg font-bold">About</h3>
             <p>
                 Explore, analyze, and visualize the performance of your programs on <a
@@ -29,16 +29,15 @@
             <div class="mt-4"></div>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <div
-                    tabindex="0"
-                    class="border collapse rounded-box border-base-300 collapse-arrow"
-                    v-for="question in entries"
-                    v-bind:key="question"
+                    v-for="(question, index) in entries"
+                    v-bind:key="index"
+                    class="gap-4 border rounded-box border-base-300"
                 >
-                    <div>
-                        <div class="font-medium text-l collapse-title">
+                    <div class="p-5">
+                        <div class="font-medium text-l">
                             {{ question[0] }}
                         </div>
-                        <div class="collapse-content">
+                        <div class="">
                             <p v-html="question[1]"></p>
                         </div>
                     </div>
@@ -60,27 +59,14 @@ export default {
         entries: [
             [
                 `Where does Khanalytics get it's data?`,
-                `Khanalytics uses Khan Academy's API to fetch the data of the top 100 program on the Hotlist.
-                <br><br>
-                Although the Hotlist updates every 10 minutes, Khanalytics only updates hourly. This is done to reduce the amount of data involved in the process.
-                <br><br>
-                This information is then stored and used to generate the visualizations.`
+                `Khanalytics uses Khan Academy's API to fetch the data of the top 100 program on the Hotlist.`
             ],
             [
                 `Where does Khanalytics store it's data?`,
                 `Khanalytics uses a <a href="https://www.mongodb.com/" target="_blank" class="link">MongoDB</a> database behind-the-scenes to store and perform analysis on the data.`
             ],
             [
-                `What do the different metrics mean?`,
-                `<b>Rank</b> is the position of the program on the <a href="https://www.khanacademy.org/browse" target="_blank" class="link">Hotlist</a>.<br>
-                <b>Votes</b> is the number of votes a program has received.<br>
-                <b>Forks</b> is the number of spin-offs created from a program.<br>
-                <b>Comments</b> is the number of messages in the Tips and Thanks section of a program.<br>
-                <b>Upvotes</b> or <b>comment votes</b> is the total number of votes <i>all</i> comments have received under one program.<br>
-                <b>Replies</b> is the total number of replies <i>all</i> comments have received under one program.`
-            ],
-            [
-                `It looks like some data is missing`,                
+                `It looks like some data is missing`,
                 `This is possible. If there is no outage logged in the <a href="https://github.com/bhavjitChauhan/khanalytics/wiki/Updates" target="_blank" class="link">Updates</a> page in the wiki, fill out the contact form linked at the bottom of the page.`
             ],
             [
@@ -94,6 +80,15 @@ export default {
             [
                 `I have more questions or a suggestion`,
                 `To report a bug or request a feature, fill out the contact form linked at the bottom of the page.`
+            ],
+            [
+                `What do the different metrics mean?`,
+                `<b>Rank</b> is the position of the program on the <a href="https://www.khanacademy.org/browse" target="_blank" class="link">Hotlist</a>.<br>
+                <b>Votes</b> is the number of votes a program has received.<br>
+                <b>Forks</b> is the number of spin-offs created from a program.<br>
+                <b>Comments</b> is the number of messages in the Tips and Thanks section of a program.<br>
+                <b>Upvotes</b> or <b>comment votes</b> is the total number of votes <i>all</i> comments have received under one program.<br>
+                <b>Replies</b> is the total number of replies <i>all</i> comments have received under one program.`
             ]
         ]
     })

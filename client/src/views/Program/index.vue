@@ -1,29 +1,35 @@
 <template>
     <div class="mb-4">
         <div
-            v-if="isLegacyProgram"
+            v-if="isPredatingProgram"
             class="alert alert-error"
         >
             <div class="flex-1">
                 <label>
-                    <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The program you selected was created before Khanalytics started recording the Hotlist. Data may be partially or completely missing.
+                    <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The current program was created before Khanalytics started recording the Hotlist. Data may be partially or completely missing.
                 </label>
             </div>
         </div>
         <div
-            v-else-if="programData && Date.parse(programData.created) < 1642651200000"
+            v-else-if="isLegacyProgram"
             class="alert alert-warning"
         >
             <div class="flex-1">
                 <label>
-                    <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The program you selected was created before Khanalytics started recording discussions. Discussions data may be partially or completely missing.
+                    <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The current program was created before Khanalytics started recording discussions. Discussions data may be partially or completely missing.
                 </label>
             </div>
         </div>
     </div>
 
     <div class="mb-8">
-        <h1 class="mb-2 text-4xl"><span class="font-bold">Program:</span> {{ title ? title : id }}</h1>
+        <h1 class="mb-2 text-4xl">
+            <span class="font-bold">Program:</span> {{ title ? title : id }} <div
+                class="badge badge-lg tooltip tooltip-bottom"
+                data-tip="Color Hash"
+                :style="{ 'background-color': color }"
+            ></div>
+        </h1>
         <span class="text-lg">This is an overview of <a
                 :href="`https://khanacademy.org/cs/-/${id}`"
                 target="_blank"
@@ -76,6 +82,11 @@
 
 <script>
 import api from '@/services/api';
+import colorHash from '@/util/colorHash';
+import {
+    beforeRecording,
+    beforeDiscussionRecording
+} from '@/util/programCreation';
 
 import InfoButton from '@/components/InfoButton.vue';
 import MainChart from '@/views/Program/MainChart.vue';
@@ -105,14 +116,26 @@ export default {
         userTopProgramsDiscussions: null
     }),
     computed: {
+        isPredatingProgram() {
+            const programData = this.programData;
+            if (!programData) return null;
+
+            return beforeRecording(programData.created);
+        },
         isLegacyProgram() {
             const programData = this.programData;
             if (!programData) return null;
 
-            return Date.parse(programData.created) < 1629266402000;
+            return beforeDiscussionRecording(programData.created);
         },
         title() {
             return this.programData && this.programData.title;
+        },
+        color() {
+            const id = this.id;
+            if (!id) return null;
+
+            return colorHash.hex(this.id);
         }
     },
     methods: {
@@ -132,7 +155,7 @@ export default {
             this.programData = programData;
             this.userData = userData;
 
-            if (this.isLegacyProgram) return;
+            if (this.isPredatingProgram) return;
 
             this.userTopProgramsData = (
                 await api.fetchKhanLabs(

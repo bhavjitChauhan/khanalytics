@@ -26,7 +26,7 @@
             </p>
         </InfoButton>
         <div
-            v-if="isLegacyProgram"
+            v-if="isPredatingProgram"
             class="flex items-center justify-center w-full h-full"
         >
             <span class="font-bold uppercase text-neutral">No data</span>
@@ -64,7 +64,7 @@ export default {
                 }
             },
             markers: {
-                strokeColors: isDarkModeEnabled ? 'transparent' : '#fff'
+                strokeColors: isDarkModeEnabled() ? 'transparent' : '#fff'
             },
             theme: {
                 mode: isDarkModeEnabled() ? 'dark' : 'light'
@@ -100,8 +100,8 @@ export default {
         isDarkModeEnabled() {
             return isDarkModeEnabled();
         },
-        isLegacyProgram() {
-            return this.$parent.isLegacyProgram;
+        isPredatingProgram() {
+            return this.$parent.isPredatingProgram;
         },
         performance: function () {
             return this.$parent.performance;
@@ -188,7 +188,7 @@ export default {
         }
     },
     mounted() {
-        this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
+        // this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
     }
 };
 </script>

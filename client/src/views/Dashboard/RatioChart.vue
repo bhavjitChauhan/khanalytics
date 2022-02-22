@@ -91,7 +91,6 @@ export default {
                     enabled: false
                 },
                 background: isDarkModeEnabled() ? 'transparent' : '#fff',
-                height: '100%',
                 id: 'ratio-chart',
                 toolbar: {
                     autoSelected: 'pan'
@@ -106,6 +105,7 @@ export default {
                 borderColor: isDarkModeEnabled() ? '#6b7280' : '#90A4AE'
             },
             legend: {
+                show: window.innerWidth > 640,
                 position: 'right',
                 formatter: (seriesName) => truncate(seriesName, 32),
                 onItemClick: {

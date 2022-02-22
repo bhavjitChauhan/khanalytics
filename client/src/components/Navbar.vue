@@ -87,7 +87,8 @@ export default {
         toggleDarkMode() {
             toggleDarkMode();
             this.darkMode = isDarkModeEnabled();
-            if (this.$router.currentRoute.value.path == '/dashboard')
+            console.log(this.$router.currentRoute);
+            if (this.$router.currentRoute.value.name == 'dashboard' || this.$router.currentRoute.value.name == 'program')
                 this.$router.go();
             else
                 setTimeout(() => {

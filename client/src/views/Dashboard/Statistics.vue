@@ -1,54 +1,53 @@
 <template>
-    <div class="pb-5">
-        <Container class="w-full p-0 stats">
-            <Metric
-                title="Unique Programs"
-                tooltip="Number of programs that were on the Hotlist"
-                :data="uniquePrograms"
-                chartColor="#570DF8"
-            />
-            <Metric
-                title="Votes Volume"
-                tooltip="Number of votes that were cast"
-                :data="votesVolume"
-                chartColor="#008FFB"
-            />
-            <Metric
-                title="Forks Volume"
-                tooltip="Number of forks that were created"
-                :data="forksVolume"
-                chartColor="#14BF95"
-            />
-            <!-- <Metric
-                title="Comments Volume"
-                tooltip="Number of comments that were posted"
-                :data="comments"
-                chartColor="#FEB019"
-            />
-            <Metric
-                title="Comments Votes Volume"
-                tooltip="Number of comment votes that were cast"
-                :data="commentVotes"
-                chartColor="#FEB019"
-            />
-            <Metric
-                title="Replies Volume"
-                tooltip="Number of replies that were posted"
-                :data="replies"
-                chartColor="#FEB019"
-            /> -->
-        </Container>
-    </div>
+    <Container class="relative w-full p-0 stats">
+        <Metric
+            title="
+                Unique
+                Programs"
+            :data="uniquePrograms"
+            chartColor="#570DF8"
+        />
+        <Metric
+            title="Votes Volume"
+            :data="votesVolume"
+            chartColor="#00E396"
+        />
+        <Metric
+            title="Forks Volume"
+            :data="forksVolume"
+            chartColor="#FEB019"
+        />
+        <Metric
+            title="Comments Volume"
+            :data="comments"
+            chartColor="#FF4560"
+        />
+        <Metric
+            title="Upvotes Volume"
+            :data="commentVotes"
+            chartColor="#775DD0"
+        />
+        <Metric
+            title="Replies Volume"
+            :data="replies"
+            chartColor="#008FFB"
+        />
+        <!-- <InfoButton :corner="false" :hovering="true" id="statistics-modal">
+        </InfoButton> -->
+    </Container>
+    <div class="mb-4"></div>
 </template>
 
 <script>
 import Container from '@/components/Container.vue';
+import InfoButton from '@/components/InfoButton.vue';
 import Metric from '@/views/Dashboard/Metric.vue';
 
 export default {
     name: 'Statistics',
     components: {
         Container,
+        InfoButton,
         Metric
     },
     computed: {
@@ -79,7 +78,7 @@ export default {
         comments() {
             const statisticsData = this.statisticsData;
             if (this.isEmpty(statisticsData)) return null;
-            
+
             return statisticsData.map((statistic) => statistic.comments);
         },
         commentVotes() {
@@ -91,7 +90,7 @@ export default {
         replies() {
             const statisticsData = this.statisticsData;
             if (this.isEmpty(statisticsData)) return null;
-            
+
             return statisticsData.map((statistic) => statistic.replies);
         }
     },

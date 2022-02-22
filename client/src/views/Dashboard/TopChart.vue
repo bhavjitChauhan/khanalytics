@@ -64,12 +64,12 @@ export default {
                     enabled: false
                 },
                 background: isDarkModeEnabled() ? 'transparent' : '#fff',
-                height: '100%',
                 id: 'top-chart',
                 type: 'pie'
             },
             labels: [],
             legend: {
+                show: window.innerWidth > 640,
                 formatter: (seriesName) => truncate(seriesName, 32),
                 onItemClick: {
                     toggleDataSeries: false

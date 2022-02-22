@@ -25,7 +25,7 @@ const handler = (req, res, next) => {
                     ttl = HOUR - (Date.now() % HOUR);
                     break;
             }
-            if (Object.keys(body).length != 0) Cache.set(key, body, ttl / 1000);
+            if ((Array.isArray(body) ? body.length > 0 : Object.keys(body).length != 0) && (body != '' || body != '[]' || body != '{}')) Cache.set(key, body, ttl / 1000);
             res.sendResponse(body);
         }
         next();

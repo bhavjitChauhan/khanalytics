@@ -5,13 +5,19 @@
         :height="height"
     >
         <apexchart
-            v-if="chartSeries"
+            v-if="chartSeries && peak <= 10"
             width="100%"
             height="100%"
             type="rangeBar"
             :options="chartOptions"
             :series="chartSeries"
         ></apexchart>
+        <div
+            v-else-if="isPredatingProgram || peak > 10"
+            class="flex items-center justify-center w-full h-full"
+        >
+            <span class="font-bold uppercase text-neutral">No data</span>
+        </div>
         <InfoButton
             v-if="chartSeries"
             id="rank-chart-modal"
@@ -30,9 +36,6 @@
                 <font-awesome-icon icon="bars" /> &nbsp; icon.
             </p>
         </InfoButton>
-        <div v-if="isLegacyProgram" class="flex items-center justify-center w-full h-full">
-            <span class="font-bold uppercase text-neutral">No data</span>
-        </div>
     </Container>
 </template>
 
@@ -90,11 +93,17 @@ export default {
         isDarkModeEnabled() {
             return isDarkModeEnabled();
         },
-        isLegacyProgram() {
-            return this.$parent.isLegacyProgram;
+        isPredatingProgram() {
+            return this.$parent.isPredatingProgram;
         },
         performance() {
             return this.$parent.performance;
+        },
+        peak() {
+            const performance = this.performance;
+            if (!performance) return null;
+
+            return Math.min(...performance.map((obj) => obj.rank));
         },
         chartSeries() {
             const performance = this.performance;
@@ -154,7 +163,7 @@ export default {
         }
     },
     mounted() {
-        this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
+        // this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
     }
 };
 </script>

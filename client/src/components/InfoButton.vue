@@ -2,8 +2,8 @@
     <label
         :for="id"
         class="btn btn-circle btn-outline modal-button btn-sm lg:btn-xs"
-        :class="{ 'float-right': !demo, absolute: corner, 'mt-4': corner, 'ml-0': corner }"
-        :style="{ top: (corner ? 0 : 'auto') }"
+        :class="{ 'float-right': !demo, absolute: corner, 'mt-4': corner, 'ml-0': corner, sticky: hovering, 'm-2': hovering }"
+        :style="{ top: (corner ? 0 : 'auto'), right: hovering ? 0 : 'auto' }"
     >
         <font-awesome-icon icon="info" />
     </label>
@@ -35,6 +35,10 @@ export default {
             required: true
         },
         corner: {
+            type: Boolean,
+            default: false
+        },
+        hovering: {
             type: Boolean,
             default: false
         },

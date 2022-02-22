@@ -5,38 +5,40 @@
     >
         <div
             v-if="programData || userData"
-            class="grid grid-cols-4 grid-rows-1"
+            class="grid h-full grid-cols-2 grid-rows-auto"
         >
             <div
                 v-if="programData"
-                class="col-span-4 row-span-1"
-                :style="{ display: (programData.definitelyNotSpam || programData.isChallenge || programData.originScratchpadId || programData.byChild || programData.hideFromHotlist) ? 'block' : 'none' }"
+                class="col-span-1 row-span-1"
             >
                 <div
-                    v-if="programData.definitelyNotSpam"
-                    class="mb-2 font-semibold uppercase badge badge-lg badge-success"
-                >Approved</div>
-                <div
-                    v-if="programData.isChallenge"
-                    class="mb-2 font-semibold uppercase badge badge-lg badge-info"
-                >Challenge</div>
-                <div
-                    v-if="programData.originScratchpadId != null"
-                    class="mb-2 font-semibold uppercase badge badge-lg badge-info"
-                >Spin-Off</div>
-                <div
-                    v-if="programData.byChild"
-                    class="mb-2 font-semibold uppercase badge badge-lg badge-warning"
-                >Child Account</div>
-                <div
-                    v-if="programData.hideFromHotlist"
-                    class="mb-2 font-semibold uppercase badge badge-lg badge-error"
-                >Hidden</div>
-            </div>
-            <div
-                v-if="programData"
-                class="col-span-2 row-span-1 h-fit"
-            >
+                    v-if="programData"
+                    :style="{ display: (programData.definitelyNotSpam || programData.isChallenge || programData.originScratchpadId || programData.byChild || programData.hideFromHotlist) ? 'block' : 'none' }"
+                >
+                    <div
+                        v-if="programData.definitelyNotSpam"
+                        class="mb-2 font-semibold uppercase badge badge-lg badge-success"
+                    >Approved</div>
+                    <div
+                        v-if="programData.isChallenge"
+                        class="mb-2 font-semibold uppercase badge badge-lg badge-info"
+                    >Challenge</div>
+                    <div
+                        v-if="programData.originScratchpadId != null"
+                        class="mb-2 font-semibold uppercase badge badge-lg badge-info"
+                    ><a
+                            :href="`https://khanacademy.org/cs/-/${programData.originScratchpadId}`"
+                            target="_blank"
+                        >Spin-Off</a></div>
+                    <div
+                        v-if="programData.byChild"
+                        class="mb-2 font-semibold uppercase badge badge-lg badge-warning"
+                    >Child Account</div>
+                    <div
+                        v-if="programData.hideFromHotlist"
+                        class="mb-2 font-semibold uppercase badge badge-lg badge-error"
+                    >Hidden</div>
+                </div>
                 <Container
                     width="fit-content"
                     height="fit-content"
@@ -51,9 +53,35 @@
             </div>
             <div
                 v-if="userData"
-                class="w-full col-span-2 row-span-1 px-1 text-center place-self-center"
+                class="w-full col-span-1 row-span-1 px-1 text-center place-self-center"
             >
-                <a
+                <div class="dropdown dropdown-end">
+                    <label
+                        tabindex="0"
+                        class="cursor-pointer text-info-content"
+                    >
+                        <img
+                            :src="userData.avatarSrc"
+                            :width="100"
+                            :height="100"
+                            class="inline-block transition-all rounded-full shadow-xl bg-primary hover:shadow-2xl hover:scale-105"
+                        >
+                    </label>
+                    <div
+                        tabindex="0"
+                        class="w-64 shadow card compact dropdown-content bg-base-100 rounded-box"
+                    >
+                        <div class="card-body">
+                            <a
+                                :href="`https://www.khanacademy.org/profile/${userData.username}/projects`"
+                                target="_blank"
+                                class="card-title"
+                            >{{ userData.nickname }}&nbsp;<font-awesome-icon icon="external-link-alt"></font-awesome-icon></a>
+                            <p>{{ userData.bio }}</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- <a
                     :href="`https://www.khanacademy.org/profile/${userData.username}/projects`"
                     target="_blank"
                 >
@@ -63,7 +91,7 @@
                         :height="100"
                         class="inline-block transition-all rounded-full shadow-xl bg-primary hover:shadow-2xl hover:scale-105"
                     >
-                </a>
+                </a> -->
                 <span
                     class="block font-bold truncate"
                     :title="userData.nickname"
@@ -77,28 +105,14 @@
                 v-if="formattedData"
                 class="col-span-2 row-span-1"
             >
-                <table class="table w-full table-compact">
+                <table class="table w-full mx-auto table-compact">
                     <tbody>
                         <tr
                             v-for="(data, key) in formattedData"
                             :key="key"
                         >
-                            <th class="p-1 text-right bg-transparent">{{ key }}</th>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div
-                v-if="formattedData"
-                class="col-span-2 row-span-1"
-            >
-                <table class="table w-full table-compact">
-                    <tbody>
-                        <tr
-                            v-for="(data, key) in formattedData"
-                            :key="key"
-                        >
-                            <td class="p-1 bg-transparent">{{ data || '-' }}</td>
+                            <td class="p-1 font-bold text-right capitalize bg-transparent">{{ key }}</td>
+                            <td class="p-1 text-left bg-transparent">{{ data || '-' }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -106,7 +120,7 @@
         </div>
         <div
             v-if="userData"
-            class="w-full col-span-4 row-span-1 mt-4 mb-2 lg:btn-group place-content-center"
+            class="sticky bottom-0 z-10 w-full col-span-2 row-span-1 gap-1 pt-4 mt-2 overflow-y-auto border-t-2 rounded-lg lg:btn-group place-content-center bg-base-200"
         >
             <a
                 :href="`https://khanacademy.org/cs/-/${id}`"
@@ -193,6 +207,12 @@ export default {
                     Replies: performance[performance.length - 1].replies
                 };
             }
+            data = {
+                ...data,
+                Lines: programData.revision.code
+                    .split('\n')
+                    .length.toLocaleString()
+            };
 
             return data;
         }

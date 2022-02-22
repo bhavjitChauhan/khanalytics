@@ -20,7 +20,8 @@
                     <tr
                         v-for="(program, index) in programs"
                         :key="index"
-                        class="hover"
+                        class="transition-transform cursor-pointer md:hover:scale-105 hover:shadow-lg hover:text-black"
+                        @click="$router.push({ name: 'program', params: { id: program.program_id }});"
                     >
                         <th class="text-right">{{ program.rank }}</th>
                         <td
@@ -35,8 +36,8 @@
                             </router-link>
                             <span v-else>...</span>
                         </td>
-                        <td> {{ program.votes }} </td>
-                        <td> {{ program.forks }} </td>
+                        <td class="text-right"> {{ program.votes }} </td>
+                        <td class="text-right"> {{ program.forks }} </td>
                     </tr>
                 </tbody>
             </table>

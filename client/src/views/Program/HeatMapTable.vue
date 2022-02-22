@@ -20,9 +20,9 @@
                 <tr
                     v-for="(peak, key) in peaks"
                     :key="key"
-                    class="hover"
+                    class="text-right hover"
                 >
-                    <th class="text-right">{{ key }}</th>
+                    <th class="text-left">{{ key }}</th>
                     <td>
                         {{ peak.max }}
                     </td>
@@ -57,7 +57,7 @@
                 The <b>median</b> is 
             </p>
         </InfoButton> -->
-        <div v-if="isLegacyProgram" class="flex items-center justify-center w-full h-full">
+        <div v-if="isPredatingProgram" class="flex items-center justify-center w-full h-full">
             <span class="font-bold uppercase text-neutral">No data</span>
         </div>
     </Container>
@@ -79,8 +79,8 @@ export default {
         height: String
     },
     computed: {
-        isLegacyProgram() {
-            return this.$parent.isLegacyProgram;
+        isPredatingProgram() {
+            return this.$parent.isPredatingProgram;
         },
         performance() {
             return this.$parent.performance;

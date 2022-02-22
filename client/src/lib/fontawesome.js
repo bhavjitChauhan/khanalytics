@@ -8,6 +8,7 @@ import {
     faBars,
     faEquals,
     faExclamationTriangle,
+    faExternalLinkAlt,
     faInfo,
     faMoon,
     faSearch
@@ -22,6 +23,7 @@ library.add(
     faBars,
     faEquals,
     faExclamationTriangle,
+    faExternalLinkAlt,
     faInfo,
     faMoon,
     faSearch

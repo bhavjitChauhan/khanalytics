@@ -11,6 +11,7 @@
                 width="100"
                 :options="chartOptions"
                 :series="chartSeries"
+                class="hidden md:block"
             ></apexchart>
         </div>
         <div class="stat-title">
@@ -30,7 +31,11 @@
             >
                 <div class="w-1/3 h-8 bg-gray-300 rounded"></div>
             </div>
-            <span v-if="value">{{ value }}</span>
+            <span
+                v-if="value"
+                class="md:!text-current"
+                :style="{ color: chartColor }"
+            >{{ value }}</span>
         </div>
         <div class="stat-desc">
             <div
@@ -41,9 +46,8 @@
             </div>
             <span
                 v-else
-                :class="
-                    percentDiff < 0 ? 'text-error' : percentDiff > 0 ? 'text-success' : ''
-                "
+                class="text-current"
+                :class="{ '!text-error': percentDiff < 0, '!text-success': percentDiff > 0 }"
             >
                 <font-awesome-icon
                     v-if="percentDiff >= 10"
@@ -168,7 +172,7 @@ export default {
             ];
         }
     },
-    methods: {        
+    methods: {
         handleDarkModeToggle(isDarkModeEnabled) {
             this.chartOptions = {
                 ...this.chartOptions,

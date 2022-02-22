@@ -4,7 +4,7 @@
         class="relative overflow-auto"
     >
         <div
-            v-if="programData || userData || performance"
+            v-if="programData || userData"
             class="grid grid-cols-4 grid-rows-1"
         >
             <div

@@ -86,6 +86,9 @@ export default {
                 labels: {
                     show: false
                 }
+            },
+            yaxis: {
+                reversed: true
             }
         },
         peaks: {}
@@ -111,7 +114,7 @@ export default {
                 ['comments', 'Comments'],
                 ['commentVotes', 'Upvotes'],
                 ['replies', 'Replies']
-            ].reverse();
+            ];
             const series = [];
 
             for (const [key, label] of labels) {

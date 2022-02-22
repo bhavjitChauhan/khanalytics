@@ -20,6 +20,7 @@
     "khanalytics": "file:..",
     "mitt": "^3.0.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
+    "timeseries-analysis": "^1.0.12",
     "vue": "^3.0.0",
     "vue-cli-plugin-store": "~0.0.7",
     "vue-gtag": "^2.0.1",
@@ -34,6 +35,7 @@
     "@vue/compiler-sfc": "^3.0.0",
     "autoprefixer": "^9.8.6",
     "postcss": "^7.0.36",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "worker-loader": "^3.0.8"
   }
 }

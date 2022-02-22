@@ -31,17 +31,25 @@
             </p>
             <br>
             <p>
-                <b>Save the chart</b> as an image by clicking the &nbsp;
-                <font-awesome-icon icon="bars" /> &nbsp; icon. Currently there is no way of downloading the data from the chart, if you need access to the raw data fill out the contact form linked at the bottom.
+                <b>Download the data</b> or save the chart as an image by clicking the &nbsp;
+                <font-awesome-icon icon="bars" /> &nbsp; icon.
             </p>
         </InfoButton>
-        <div v-if="isLegacyProgram" class="flex items-center justify-center w-full h-full">
+        <div
+            v-if="isLegacyProgram"
+            class="flex items-center justify-center w-full h-full"
+        >
             <span class="font-bold uppercase text-neutral">No data</span>
         </div>
     </Container>
+    <button
+        class="btn"
+        @click="forecast"
+    >Forecast</button>
 </template>
 
 <script>
+import worker from '@/workers/forecast';
 import { isDarkModeEnabled } from '@/util/darkMode';
 
 import Container from '@/components/Container.vue';
@@ -213,6 +221,33 @@ export default {
                     mode: isDarkModeEnabled ? 'dark' : 'light'
                 }
             };
+        },
+        forecast() {
+            const series = this.chartSeries;
+            if (!series) return null;
+
+            const data = series[1].data;
+
+            worker.postMessage({
+                series: data
+            });
+
+            worker.onmessage = function (e) {
+                console.log('worker: ', e.data);
+            };
+
+
+            // const worker = createInlineWorker(({ timeseries, series }) => {
+            //     console.log(JSONfn.parse(timeseries))
+
+            //     self.postMessage('Hello from the worker!');
+            // });
+
+            // worker.postMessage({
+            //     timeseries: JSONfn.JSONfn.stringify(timeseries),
+            //     series
+            // });
+
         }
     },
     mounted() {

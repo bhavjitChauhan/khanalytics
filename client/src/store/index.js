@@ -56,7 +56,9 @@ export default createStore({
                     title: scratchpad.title || 'None',
                     rank: parseInt(i, 10) + 1,
                     votes: scratchpad.sumVotesIncremented,
-                    forks: scratchpad.spinoffCount
+                    forks: scratchpad.spinoffCount,
+                    author: scratchpad.authorNickname,
+                    authorID: scratchpad.authorKaid.slice(5)
                 };
             }
             commit('setHotlistSnapshot', snapshot);

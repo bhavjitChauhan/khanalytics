@@ -26,7 +26,7 @@
                 <router-link
                     to="/dashboard"
                     role="button"
-                    class="btn btn-primary"
+                    class="transition-all btn btn-primary hover:scale-110"
                 >
                     Get Started
                 </router-link>

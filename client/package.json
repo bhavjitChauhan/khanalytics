@@ -24,6 +24,7 @@
     "vue": "^3.0.0",
     "vue-cli-plugin-store": "~0.0.7",
     "vue-gtag": "^2.0.1",
+    "vue-marquee-text-component": "^2.0.1",
     "vue-router": "^4.0.12",
     "vue3-apexcharts": "^1.4.1",
     "vuex": "^4.0.2"

@@ -1,13 +1,13 @@
 <template>
-    <div class="min-h-screen hero">
-        <div class="w-full text-center hero-content">
-            <div class="w-5/6 md:w-1/2">
-                <router-link to="/search">
-                    <h1 class="mb-8 -mt-32 text-5xl font-bold">
-                        Search
-                    </h1>
-                </router-link>
-                <div>
+    <div class="w-full min-h-screen pt-64 place-items-center">
+        <div>
+            <div class="flex items-center justify-center w-full text-center">
+                <div class="w-5/6 lg:w-1/2">
+                    <router-link to="/search">
+                        <h1 class="mb-8 -mt-32 text-5xl font-bold">
+                            Search
+                        </h1>
+                    </router-link>
                     <form
                         id="search_form"
                         @submit.prevent="search"
@@ -28,7 +28,7 @@
                                 type="submit"
                                 form="search_form"
                                 name="submit"
-                                class="btn btn-primary btn-lg"
+                                class="transition-all btn btn-primary btn-lg btn-circle hover:scale-110"
                                 :class="{ loading: searching, 'btn-square': searching }"
                             >
                                 <font-awesome-icon
@@ -47,24 +47,37 @@
                                 class="label-text-alt text-warning"
                             >{{ warning }}</span>
                         </label>
-
                     </form>
                 </div>
-                <div class="overflow-hidden whitespace-nowrap">
-                    <marquee
-                        scrollamount="5"
-                        @mouseover="(event) => (event.target.stop ? event.target.stop() : event.target.parentElement.stop())"
-                        @mouseout="(event) => (event.target.start ? event.target.start() : event.target.parentElement.start())"
-                    >
-                        <router-link
-                            v-for="(program, id) in hotlistSnapshot"
-                            :key="id"
-                            :to="`/program/${id}`"
-                            class="mx-1 btn btn-md btn-ghost"
-                        >{{ program.title }}</router-link>
-                    </marquee>
-                </div>
             </div>
+            <MarqueeText :duration="120" class="hidden md:block">
+                <div class="grid grid-flow-col grid-rows-1 py-8 space-x-4">
+                    <router-link
+                        v-for="program in hotlistArray"
+                        :key="program.id"
+                        :to="`/program/${program.id}`"
+                    >
+                        <div class="w-32 transition-all shadow-xl md:w-64 card bg-base-100 hover:scale-105">
+                            <figure>
+                                <img
+                                    :src="`https://www.khanacademy.org/cs/-/${program.id}/latest.png`"
+                                    alt="Shoes"
+                                >
+                            </figure>
+                            <div class="p-4 card-body">
+                                <h2
+                                    class="truncate card-title"
+                                    :title="program.title"
+                                >{{ program.title }}</h2>
+                                <p
+                                    class="truncate card-text"
+                                    :title="program.author"
+                                >{{ program.author }}</p>
+                            </div>
+                        </div>
+                    </router-link>
+                </div>
+            </MarqueeText>
         </div>
     </div>
 </template>
@@ -73,8 +86,11 @@
 import extractProgramID from '@/util/programID';
 import sampleSize from '@/util/sampleSize';
 
+import MarqueeText from 'vue-marquee-text-component';
+
 export default {
     name: 'Search',
+    components: { MarqueeText },
     data: () => ({
         query: null,
         searching: false,
@@ -83,11 +99,18 @@ export default {
         exampleID: null
     }),
     computed: {
-        hotlistSnapshot() {
-            return this.$store.state.hotlistSnapshot;
+        hotlistArray() {
+            const hotlistSnapshot = this.$store.state.hotlistSnapshot;
+            if (!hotlistSnapshot) return null;
+
+            const hotlistArray = Object.keys(hotlistSnapshot)
+                .slice(0, 25)
+                .map((key) => ({ id: key, ...hotlistSnapshot[key] }));
+
+            return hotlistArray;
         },
         hotlistSnapshotKeys() {
-            return Object.keys(this.$store.state.hotlistSnapshot);
+            return this.hotlistArray.map((program) => program.id);
         }
     },
     methods: {
@@ -113,7 +136,9 @@ export default {
         },
         updateExampleID() {
             const isURL = Math.random() < 0.5;
+            const isHTTP = isURL && Math.random() < 0.5;
             this.exampleID =
+                (isHTTP ? 'https://' : '') +
                 (isURL ? 'khanacademy.org/cs/-/' : '') +
                 sampleSize(this.hotlistSnapshotKeys);
         }

@@ -2,9 +2,11 @@
     <div class="min-h-screen hero">
         <div class="w-full text-center hero-content">
             <div class="w-5/6 md:w-1/2">
-                <h1 class="mb-8 -mt-32 text-5xl font-bold">
-                    Search
-                </h1>
+                <router-link to="/search">
+                    <h1 class="mb-8 -mt-32 text-5xl font-bold">
+                        Search
+                    </h1>
+                </router-link>
                 <div>
                     <form
                         id="search_form"
@@ -55,11 +57,11 @@
                         @mouseout="(event) => (event.target.start ? event.target.start() : event.target.parentElement.start())"
                     >
                         <router-link
-                            v-for="(id, index) in hotlistSnapshotKeys"
-                            :key="index"
+                            v-for="(program, id) in hotlistSnapshot"
+                            :key="id"
                             :to="`/program/${id}`"
                             class="mx-1 btn btn-md btn-ghost"
-                        >{{ id }}</router-link>
+                        >{{ program.title }}</router-link>
                     </marquee>
                 </div>
             </div>
@@ -68,7 +70,7 @@
 </template>
 
 <script>
-import isValidProgramID from '@/util/isValidProgramID';
+import extractProgramID from '@/util/programID';
 import sampleSize from '@/util/sampleSize';
 
 export default {
@@ -81,6 +83,9 @@ export default {
         exampleID: null
     }),
     computed: {
+        hotlistSnapshot() {
+            return this.$store.state.hotlistSnapshot;
+        },
         hotlistSnapshotKeys() {
             return Object.keys(this.$store.state.hotlistSnapshot);
         }
@@ -89,7 +94,7 @@ export default {
         search() {
             this.warning = this.error = null;
             try {
-                isValidProgramID(this.query);
+                this.query = extractProgramID(this.query);
             } catch (err) {
                 this.warning = 'Invalid program ID: ' + err.message;
                 return;
@@ -105,12 +110,18 @@ export default {
                 this.searching = false;
                 this.error = 'Invalid program ID: ' + err.message;
             }
+        },
+        updateExampleID() {
+            const isURL = Math.random() < 0.5;
+            this.exampleID =
+                (isURL ? 'khanacademy.org/cs/-/' : '') +
+                sampleSize(this.hotlistSnapshotKeys);
         }
     },
     watch: {
         hotlistSnapshotKeys: {
             handler() {
-                this.exampleID = sampleSize(this.hotlistSnapshotKeys);
+                this.updateExampleID();
             }
         }
     },
@@ -131,7 +142,7 @@ export default {
             const hotlistSnapshotKeys = this.hotlistSnapshotKeys;
             if (!hotlistSnapshotKeys) return null;
 
-            this.exampleID = sampleSize(hotlistSnapshotKeys);
+            this.updateExampleID();
         }, 5000);
     }
 };

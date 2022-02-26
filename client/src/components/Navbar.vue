@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import isValidProgramID from '@/util/isValidProgramID';
+import extractProgramID from '@/util/programID';
 import { isDarkModeEnabled, toggleDarkMode } from '@/util/darkMode';
 
 export default {
@@ -98,7 +98,7 @@ export default {
         search() {
             this.error = null;
             try {
-                isValidProgramID(this.query);
+                this.query = extractProgramID(this.query);
             } catch (err) {
                 this.$router.push({
                     name: 'search',

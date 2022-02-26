@@ -1,7 +1,15 @@
-import timeseries from 'timeseries-analysis';
+import ARIMA from 'arima';
 
-self.addEventListener('message', ({ data: { series } }) => {
-    const t = new timeseries.main(series);
+self.addEventListener('message', ({ data: { series, name, n = 10 } }) => {
+    const arima = new ARIMA({
+        auto: true,
+        verbose: process.env.NODE_ENV != 'production'
+    });
+    const ts = series.map(val => val[1]);
 
-    postMessage('Not implemented');
+    arima.train(ts);
+
+    const [pred, _errors] = arima.predict(n);
+
+    postMessage([name, pred]);
 });

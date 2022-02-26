@@ -2,7 +2,6 @@
     <Container
         id="program-main-chart"
         class="relative"
-        :height="height"
     >
         <apexchart
             v-if="chartSeries"
@@ -13,6 +12,37 @@
             :series="chartSeries"
             @mounted="this.$window.ApexCharts.exec('program-main-chart', 'hideSeries', 'Rank')"
         ></apexchart>
+
+        <div
+            v-if="chartSeries"
+            class="hidden float-right mt-2 mb-4 space-x-1 min-w-min md:block"
+        >
+            <input
+                type="number"
+                placeholder="Hours"
+                title="Hours to predict"
+                :value="forecastInput"
+                id="forecast-input"
+                class="w-16 input input-bordered input-sm"
+                @change="event => forecastInput = event.target.value"
+            >
+            <button
+                id="forecast-btn"
+                class="btn btn-sm"
+                :class="{ loading: forecasting }"
+                @click="forecast"
+            >
+                Forecast
+            </button>
+            <button
+                id="reset-btn"
+                class="inline-flex btn btn-sm btn-outline"
+                @click="reset"
+            >
+                Reset
+            </button>
+        </div>
+
         <InfoButton
             v-if="chartSeries"
             id="program-main-chart-modal"
@@ -34,6 +64,10 @@
                 <b>Download the data</b> or save the chart as an image by clicking the &nbsp;
                 <font-awesome-icon icon="bars" /> &nbsp; icon.
             </p>
+            <div class="uppercase divider">Beta</div>
+            <p>
+                <b>Forecast</b> the performance of the program by entering the number of hours to predict.
+            </p>
         </InfoButton>
         <div
             v-if="isPredatingProgram"
@@ -42,10 +76,6 @@
             <span class="font-bold uppercase text-neutral">No data</span>
         </div>
     </Container>
-    <button
-        class="btn"
-        @click="forecast"
-    >Forecast</button>
 </template>
 
 <script>
@@ -159,7 +189,11 @@ export default {
                     format: 'dd MMM HH:00'
                 }
             }
-        }
+        },
+        forecastInput: 10,
+        forecasting: false,
+        forecastProgress: null,
+        resetKey: false
     }),
     computed: {
         isDarkModeEnabled() {
@@ -175,6 +209,7 @@ export default {
             const performance = this.performance;
             if (!performance) return null;
 
+            this.resetKey = !this.resetKey;
             const series = [];
             const labels = [
                 ['rank', 'Rank'],
@@ -194,12 +229,39 @@ export default {
                 });
             }
 
+            const annotations = [];
+            const data = series[1].data;
+            let previousTimestamp = data[0][0];
+            for (const i in data) {
+                const timestamp = data[i][0];
+                const difference = timestamp - previousTimestamp;
+
+                if (difference > 1000 * 60 * 60 * 2) {
+                    annotations.push({
+                        x: previousTimestamp,
+                        x2: timestamp,
+                        opacity: 0.1,
+                        fillColor: '#f00',
+                        label: {
+                            text: 'Hidden',
+                            borderWidth: 0,
+                            style: {
+                                background: 'rgba(255, 0, 0, 0.1)'
+                            }
+                        }
+                    });
+                }
+
+                previousTimestamp = timestamp;
+            }
+            this.chartOptions = {
+                ...this.chartOptions,
+                annotations: {
+                    xaxis: annotations
+                }
+            };
+
             return series;
-        }
-    },
-    watch: {
-        isDarkModeEnabled() {
-            console.log('isDarkModeEnabled');
         }
     },
     methods: {
@@ -222,36 +284,122 @@ export default {
                 }
             };
         },
-        forecast() {
-            const series = this.chartSeries;
-            if (!series) return null;
+        async forecast() {
+            const performance = this.performance;
+            const chartSeries = this.chartSeries;
+            const forecastInput = this.forecastInput;
+            if (!performance || !chartSeries || !forecastInput) return null;
+            if (forecastInput < 1) return null;
 
-            const data = series[1].data;
+            this.forecasting = true;
+            this.forecastProgress = 0;
 
-            worker.postMessage({
-                series: data
-            });
+            for (const i in chartSeries) {
+                const series = chartSeries[i];
 
-            worker.onmessage = function (e) {
-                console.log('worker: ', e.data);
+                worker.postMessage({
+                    series: series.data,
+                    name: series.name,
+                    n: forecastInput
+                });
+            }
+
+            const that = this;
+            worker.onmessage = async function (e) {
+                const data = e.data;
+                const pred = data[1];
+                const index = chartSeries.findIndex(
+                    (series) => series.name == data[0]
+                );
+                const series = chartSeries[index];
+
+                const lastTimestamp = series.data[series.data.length - 1][0];
+
+                const formattedData = pred.map((val, i) => [
+                    lastTimestamp + (i + 1) * 1000 * 60 * 60,
+                    val
+                ]);
+
+                chartSeries[index].data = [...series.data, ...formattedData];
+                that.forecastProgress += 1 / 6;
+
+                if (
+                    chartSeries
+                        .map((series) => series.data.length)
+                        .every((data, _, arr) => data == arr[0])
+                ) {
+                    await window.ApexCharts.exec(
+                        'program-main-chart',
+                        'updateSeries',
+                        chartSeries
+                    );
+                    await window.ApexCharts.exec(
+                        'program-main-chart',
+                        'updateOptions',
+                        {
+                            forecastDataPoints: {
+                                count:
+                                    chartSeries[0].data.length -
+                                    performance.length
+                            }
+                        }
+                    );
+
+                    that.forecasting = false;
+                    this.forecastProgress = null;
+                }
             };
-
-
-            // const worker = createInlineWorker(({ timeseries, series }) => {
-            //     console.log(JSONfn.parse(timeseries))
-
-            //     self.postMessage('Hello from the worker!');
-            // });
-
-            // worker.postMessage({
-            //     timeseries: JSONfn.JSONfn.stringify(timeseries),
-            //     series
-            // });
-
+        },
+        async reset() {
+            this.resetKey = !this.resetKey;
+            await window.ApexCharts.exec(
+                'program-main-chart',
+                'updateOptions',
+                {
+                    forecastDataPoints: {
+                        count: 0
+                    }
+                }
+            );
+            await window.ApexCharts.exec(
+                'program-main-chart',
+                'hideSeries',
+                'Rank'
+            );
         }
     },
     mounted() {
         // this.emitter.on('dark-mode-toggle', this.handleDarkModeToggle);
+    },
+    updated() {
+        const series = this.chartSeries;
+        if (!series) return null;
+
+        window.ApexCharts.exec('program-main-chart', 'clearAnnotation');
+        const data = series[1].data;
+        let previousTimestamp = data[0][0];
+        for (const i in data) {
+            const timestamp = data[i][0];
+            const difference = timestamp - previousTimestamp;
+
+            if (difference > 1000 * 60 * 60 * 2) {
+                window.ApexCharts.exec(
+                    'program-main-chart',
+                    'addXaxisAnnotation',
+                    {
+                        x: previousTimestamp,
+                        x2: timestamp,
+                        opacity: 0.1,
+                        fillColor: '#f00',
+                        label: {
+                            text: 'Hidden'
+                        }
+                    }
+                );
+            }
+
+            previousTimestamp = timestamp;
+        }
     }
 };
 </script>

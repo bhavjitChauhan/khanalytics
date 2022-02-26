@@ -24,11 +24,41 @@
 
     <div class="mb-8">
         <h1 class="mb-2 text-4xl">
-            <span class="font-bold">Program:</span> {{ title ? title : id }} <div
+            <span class="font-bold">Program:</span> {{ title ? title : id }}            
+            <!-- <div
                 class="badge badge-lg tooltip tooltip-bottom"
                 data-tip="Color Hash"
                 :style="{ 'background-color': color }"
-            ></div>
+            ></div> -->
+            <div
+                v-if="programData"
+                class="ml-2"
+                :style="{ display: (programData.definitelyNotSpam || programData.isChallenge || programData.originScratchpadId || programData.byChild || programData.hideFromHotlist) ? 'inline' : 'none' }"
+            >
+                <div
+                    v-if="programData.definitelyNotSpam"
+                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-success"
+                >Approved</div>
+                <div
+                    v-if="programData.isChallenge"
+                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-info"
+                >Challenge</div>
+                <div
+                    v-if="programData.originScratchpadId != null"
+                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-info"
+                ><a
+                        :href="`https://khanacademy.org/cs/-/${programData.originScratchpadId}`"
+                        target="_blank"
+                    >Spin-Off</a></div>
+                <div
+                    v-if="programData.byChild"
+                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-warning"
+                >Child Account</div>
+                <div
+                    v-if="programData.hideFromHotlist"
+                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-error"
+                >Hidden</div>
+            </div>
         </h1>
         <span class="text-lg">This is an overview of <a
                 :href="`https://khanacademy.org/cs/-/${id}`"
@@ -37,6 +67,7 @@
             >{{ title ? title : id }}</a> {{ userData && 'by' }} <a
                 v-if="userData"
                 :href="`https://khanacademy.org/profile/${userData.username}/projects`"
+                target="_blank"
                 class="link"
             >{{ userData.nickname }}</a>. Use the
             <InfoButton
@@ -147,6 +178,7 @@ export default {
             this.performance = Object.keys(performance).length
                 ? performance
                 : null;
+            this.emitter.emit(`performance-program-data-${this.id}`);
 
             const { scratchpad: programData, creatorProfile: userData } =
                 await api.fetchKhanInternal(

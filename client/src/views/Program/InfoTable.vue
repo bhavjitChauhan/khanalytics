@@ -11,34 +11,6 @@
                 v-if="programData"
                 class="col-span-1 row-span-1"
             >
-                <div
-                    v-if="programData"
-                    :style="{ display: (programData.definitelyNotSpam || programData.isChallenge || programData.originScratchpadId || programData.byChild || programData.hideFromHotlist) ? 'block' : 'none' }"
-                >
-                    <div
-                        v-if="programData.definitelyNotSpam"
-                        class="mb-2 font-semibold uppercase badge badge-lg badge-success"
-                    >Approved</div>
-                    <div
-                        v-if="programData.isChallenge"
-                        class="mb-2 font-semibold uppercase badge badge-lg badge-info"
-                    >Challenge</div>
-                    <div
-                        v-if="programData.originScratchpadId != null"
-                        class="mb-2 font-semibold uppercase badge badge-lg badge-info"
-                    ><a
-                            :href="`https://khanacademy.org/cs/-/${programData.originScratchpadId}`"
-                            target="_blank"
-                        >Spin-Off</a></div>
-                    <div
-                        v-if="programData.byChild"
-                        class="mb-2 font-semibold uppercase badge badge-lg badge-warning"
-                    >Child Account</div>
-                    <div
-                        v-if="programData.hideFromHotlist"
-                        class="mb-2 font-semibold uppercase badge badge-lg badge-error"
-                    >Hidden</div>
-                </div>
                 <Container
                     width="fit-content"
                     height="fit-content"
@@ -81,17 +53,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <a
-                    :href="`https://www.khanacademy.org/profile/${userData.username}/projects`"
-                    target="_blank"
-                >
-                    <img
-                        :src="userData.avatarSrc"
-                        :width="100"
-                        :height="100"
-                        class="inline-block transition-all rounded-full shadow-xl bg-primary hover:shadow-2xl hover:scale-105"
-                    >
-                </a> -->
                 <span
                     class="block font-bold truncate"
                     :title="userData.nickname"

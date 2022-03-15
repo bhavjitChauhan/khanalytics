@@ -2,6 +2,7 @@ require('dotenv').config();
 const cors = require('cors');
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
+const history = require('connect-history-api-fallback');
 const express = require('express');
 const expressWinston = require('express-winston');
 const winston = require('winston');
@@ -25,6 +26,7 @@ app.use(
         contentSecurityPolicy: false,
     })
 );
+app.use(history());
 app.use(expressWinston.logger({
     transports: [
         new winston.transports.Console()

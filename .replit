@@ -1,1 +1,1 @@
-run="cd server && node ."
+run="npm run build && npm run serve --prefix server"

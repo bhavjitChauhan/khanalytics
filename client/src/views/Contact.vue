@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import gtag from 'vue-gtag';
+
 import api from '@/services/api';
 
 import Container from '@/components/Container';
@@ -79,6 +81,8 @@ export default {
 
             this.sending = false;
             this.sent = true;
+
+            gtag.event('email_form_complete');
         }
     }
 };

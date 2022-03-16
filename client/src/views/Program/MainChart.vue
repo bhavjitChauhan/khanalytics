@@ -79,6 +79,8 @@
 </template>
 
 <script>
+import gtag from 'vue-gtag';
+
 import worker from '@/workers/forecast';
 import { isDarkModeEnabled } from '@/util/darkMode';
 
@@ -349,6 +351,8 @@ export default {
                     this.forecastProgress = null;
                 }
             };
+
+            gtag.event('forecast', { value: forecastInput });
         },
         async reset() {
             this.resetKey = !this.resetKey;

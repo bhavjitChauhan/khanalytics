@@ -25,7 +25,7 @@ app
     .use(store)
     .use(VueApexCharts)
     .use(VueGtag, {
-        config: { id: 'G-NSE87WJS3R' },
+        config: { id: 'G-6EDNECNG18' },
         enabled: process.env.NODE_ENV == 'production'
-    })
+    }, router)
     .mount('#app');

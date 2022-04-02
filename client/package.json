@@ -40,6 +40,6 @@
     "autoprefixer": "^9.8.6",
     "esm": "^3.2.25",
     "postcss": "^7.0.36",
-    "prettier": "^2.2.1"
+    "prettier": "^2.6.1"
   }
 }

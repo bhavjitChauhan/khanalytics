@@ -39,7 +39,7 @@
     "@vue/compiler-sfc": "^3.0.0",
     "autoprefixer": "^9.8.6",
     "esm": "^3.2.25",
-    "postcss": "^7.0.36",
+    "postcss": "^8.4.14",
     "prettier": "^2.6.1"
   }
 }

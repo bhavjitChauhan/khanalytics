@@ -27,7 +27,7 @@
     "vue-cli-plugin-store": "~0.0.7",
     "vue-gtag": "^2.0.1",
     "vue-marquee-text-component": "^2.0.1",
-    "vue-router": "^4.0.14",
+    "vue-router": "^4.0.15",
     "vue3-apexcharts": "^1.4.1",
     "vuex": "^4.0.2",
     "worker-loader": "^3.0.8"

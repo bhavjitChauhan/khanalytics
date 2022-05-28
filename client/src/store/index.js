@@ -46,7 +46,7 @@ export default createStore({
             commit('setStatisticsData', data);
         },
         async fetchHotlistSnapshot({ commit }) {
-            const data = await api.fetchKhanLabs('scratchpads/top?sort=3&limit=100&projection={"scratchpads":1}');
+            const data = await api.fetchKhanInternal('scratchpads/top?sort=3&limit=100&projection={"scratchpads":1}');
             const snapshot = {};
             const scratchpads = data.scratchpads;
             for (const i in scratchpads) {

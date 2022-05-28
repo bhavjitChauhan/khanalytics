@@ -190,7 +190,7 @@ export default {
             if (this.isPredatingProgram) return;
 
             this.userTopProgramsData = (
-                await api.fetchKhanLabs(
+                await api.fetchKhanInternal(
                     `user/scratchpads?kaid=${userData.kaid}&limit=10&projection={%22scratchpads%22:1}`
                 )
             ).scratchpads.map(({ url, sumVotesIncremented, spinoffCount }) => ({

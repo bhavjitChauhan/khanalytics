@@ -11,10 +11,6 @@ export default {
         const response = await instance.get(url);
         return response.data;
     },
-    async fetchKhanLabs(params) {
-        const response = await instance.get(`/khan/labs/${params}`);
-        return response.data;
-    },
     async fetchKhanInternal(params) {
         const response = await instance.get(`/khan/internal/${params}`);
         return response.data;

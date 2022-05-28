@@ -1,22 +1,20 @@
 <template>
     <div class="mb-4">
-        <div
-            v-if="isPredatingProgram"
-            class="alert alert-error"
-        >
+        <div v-if="isPredatingProgram" class="alert alert-error">
             <div class="flex-1">
                 <label>
-                    <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The current program was created before Khanalytics started recording the Hotlist. Data may be partially or completely missing.
+                    <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The current program was
+                    created before Khanalytics started recording the Hotlist. Data may be partially or completely
+                    missing.
                 </label>
             </div>
         </div>
-        <div
-            v-else-if="isLegacyProgram"
-            class="alert alert-warning"
-        >
+        <div v-else-if="isLegacyProgram" class="alert alert-warning">
             <div class="flex-1">
                 <label>
-                    <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The current program was created before Khanalytics started recording discussions. Discussions data may be partially or completely missing.
+                    <font-awesome-icon icon="exclamation-triangle"></font-awesome-icon> &nbsp; The current program was
+                    created before Khanalytics started recording discussions. Discussions data may be partially or
+                    completely missing.
                 </label>
             </div>
         </div>
@@ -24,77 +22,46 @@
 
     <div class="mb-8">
         <h1 class="mb-2 text-4xl">
-            <span class="font-bold">Program:</span> {{ title ? title : id }}            
+            <span class="font-bold">Program:</span> {{ title ? title : id }}
             <!-- <div
                 class="badge badge-lg tooltip tooltip-bottom"
                 data-tip="Color Hash"
                 :style="{ 'background-color': color }"
             ></div> -->
-            <div
-                v-if="programData"
-                class="ml-2"
-                :style="{ display: (programData.definitelyNotSpam || programData.isChallenge || programData.originScratchpadId || programData.byChild || programData.hideFromHotlist) ? 'inline' : 'none' }"
-            >
-                <div
-                    v-if="programData.definitelyNotSpam"
-                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-success"
-                >Approved</div>
-                <div
-                    v-if="programData.isChallenge"
-                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-info"
-                >Challenge</div>
-                <div
-                    v-if="programData.originScratchpadId != null"
-                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-info"
-                ><a
+            <div v-if="programData" class="ml-2"
+                :style="{ display: (programData.definitelyNotSpam || programData.isChallenge || programData.originScratchpadId || programData.byChild || programData.hideFromHotlist) ? 'inline' : 'none' }">
+                <div v-if="programData.definitelyNotSpam"
+                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-success">Approved</div>
+                <div v-if="programData.isChallenge"
+                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-info">Challenge</div>
+                <div v-if="programData.originScratchpadId != null"
+                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-info"><a
                         :href="`https://khanacademy.org/cs/-/${programData.originScratchpadId}`"
-                        target="_blank"
-                    >Spin-Off</a></div>
-                <div
-                    v-if="programData.byChild"
-                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-warning"
-                >Child Account</div>
-                <div
-                    v-if="programData.hideFromHotlist"
-                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-error"
-                >Hidden</div>
+                        target="_blank">Spin-Off</a></div>
+                <div v-if="programData.byChild"
+                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-warning">Child Account</div>
+                <div v-if="programData.hideFromHotlist"
+                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-error">Hidden</div>
             </div>
         </h1>
-        <span class="text-lg">This is an overview of <a
-                :href="`https://khanacademy.org/cs/-/${id}`"
-                target="_blank"
-                class="link"
-            >{{ title ? title : id }}</a> {{ userData && 'by' }} <a
-                v-if="userData"
-                :href="`https://khanacademy.org/profile/${userData.username}/projects`"
-                target="_blank"
-                class="link"
-            >{{ userData.nickname }}</a>. Use the
-            <InfoButton
-                id=""
-                :demo="true"
-            /> buttons to see what information is displayed.
+        <span class="text-lg">This is an overview of <a :href="`https://khanacademy.org/cs/-/${id}`" target="_blank"
+                class="link">{{ title ? title : id }}</a> {{ userData && 'by' }} <a v-if="userData"
+                :href="`https://khanacademy.org/profile/${userData.username}/projects`" target="_blank" class="link">{{
+                        userData.nickname
+                }}</a>. Use the
+            <InfoButton id="" :demo="true" /> buttons to see what information is displayed.
         </span>
     </div>
 
     <div class="grid grid-cols-4 grid-rows-1 gap-4">
         <div class="col-span-4 row-span-1 lg:col-span-3">
-            <MainChart
-                :id="id"
-                height="550px"
-            />
+            <MainChart :id="id" height="550px" />
         </div>
         <div class="col-span-4 row-span-1 lg:col-span-1">
-            <InfoTable
-                :id="id"
-                height="550px"
-            />
+            <InfoTable :id="id" height="550px" />
         </div>
         <div class="col-span-4 row-span-1 lg:col-span-3">
-            <RankChart
-                :id="id"
-                height="350px"
-            />
+            <RankChart :id="id" height="350px" />
         </div>
         <div class="col-span-4 row-span-1 lg:col-span-1">
             <RadarChart height="350px" />
@@ -103,10 +70,7 @@
             <HeatMapTable height="350px" />
         </div>
         <div class="col-span-4 row-span-1 lg:col-span-3">
-            <HeatMapChart
-                :id="id"
-                height="350px"
-            />
+            <HeatMapChart :id="id" height="350px" />
         </div>
     </div>
 </template>
@@ -209,10 +173,15 @@ export default {
                 userTopProgramsDiscussions.push({
                     comments: data.length,
                     commentVotes: data.reduce(
-                        (acc, cur) => acc + cur.sumVotesIncremented,
-                        0
+                        (acc, cur) => {
+                            if (!cur) return acc;
+                            return acc + cur.sumVotesIncremented
+                        }, 0
                     ),
-                    replies: data.reduce((acc, cur) => acc + cur.replyCount, 0)
+                    replies: data.reduce((acc, cur) => {
+                        if (!cur) return acc;
+                        acc + cur.replyCount
+                    }, 0)
                 });
             }
             this.userTopProgramsDiscussions = userTopProgramsDiscussions;

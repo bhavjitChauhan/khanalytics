@@ -16,7 +16,7 @@
     "@vue/cli-service": "~4.5.0",
     "apexcharts": "^3.35.0",
     "arima": "^0.2.5",
-    "axios": "^0.26.1",
+    "axios": "^0.27.2",
     "color-hash": "^2.0.1",
     "daisyui": "^1.14.0",
     "khanalytics": "file:..",

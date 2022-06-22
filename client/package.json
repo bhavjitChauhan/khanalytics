@@ -33,7 +33,7 @@
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {
-    "@vue/cli": "^4.5.13",
+    "@vue/cli": "^5.0.6",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-vuex": "^4.5.15",
     "@vue/compiler-sfc": "^3.2.37",

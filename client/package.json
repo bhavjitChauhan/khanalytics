@@ -13,7 +13,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/vue-fontawesome": "^3.0.1",
-    "@vue/cli-service": "~4.5.0",
+    "@vue/cli-service": "~4.5.18",
     "apexcharts": "^3.35.3",
     "arima": "^0.2.5",
     "axios": "^0.27.2",

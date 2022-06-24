@@ -12,7 +12,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@fortawesome/vue-fontawesome": "^3.0.0-5",
+    "@fortawesome/vue-fontawesome": "^3.0.1",
     "@vue/cli-service": "~4.5.0",
     "apexcharts": "^3.35.3",
     "arima": "^0.2.5",
@@ -40,6 +40,6 @@
     "autoprefixer": "^9.8.6",
     "esm": "^3.2.25",
     "postcss": "^7.0.36",
-    "prettier": "^2.6.2"
+    "prettier": "^2.7.1"
   }
 }

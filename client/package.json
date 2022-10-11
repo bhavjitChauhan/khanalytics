@@ -22,7 +22,7 @@
     "khanalytics": "file:..",
     "mitt": "^3.0.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7",
-    "vue": "^3.2.37",
+    "vue": "^3.2.40",
     "vue-cli-plugin-sitemap": "~2.3.0",
     "vue-cli-plugin-store": "~0.0.7",
     "vue-gtag": "^2.0.1",

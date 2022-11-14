@@ -81,7 +81,7 @@
         </div>
         <div
             v-if="userData"
-            class="sticky bottom-0 z-10 w-full col-span-2 row-span-1 gap-1 pt-4 mt-2 overflow-y-auto border-t-2 rounded-lg lg:btn-group place-content-center bg-base-200"
+            class="sticky bottom-0 z-10 w-full col-span-2 row-span-1 gap-1 pt-4 mt-2 overflow-y-auto border-t-2 lg:btn-group place-content-center bg-base-200"
         >
             <a
                 :href="`https://khanacademy.org/cs/-/${id}`"

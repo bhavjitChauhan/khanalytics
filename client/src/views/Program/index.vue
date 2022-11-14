@@ -180,7 +180,7 @@ export default {
                     ),
                     replies: data.reduce((acc, cur) => {
                         if (!cur) return acc;
-                        acc + cur.replyCount
+                        return acc + cur.replyCount
                     }, 0)
                 });
             }

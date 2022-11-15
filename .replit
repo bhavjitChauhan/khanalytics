@@ -1,1 +1,1 @@
-run="npm run build && npm run serve --prefix server"
+run="npm run serve --prefix server"

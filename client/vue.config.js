@@ -5,7 +5,7 @@ module.exports = {
     outputDir: '../server/dist',
     pluginOptions: {
         sitemap: {
-            baseURL: 'https://khanalytics.herokuapp.com',
+            baseURL: 'https://khanalytics.bhavjit.com',
             routes,
         }
     }

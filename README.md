@@ -1,4 +1,4 @@
-# [Khanalytics](https://khanalytics.herokuapp.com/) 
+# [Khanalytics](https://khanalytics.bhavjit.com/) 
 Explore, analyze, and visualize the performance of your programs on Khan Academy.
 
 ## About
@@ -19,7 +19,7 @@ See the [Wiki](https://github.com/bhavjitChauhan/khanalytics/wiki) for technical
 View the full list of dependencies in the [dependency graph](https://github.com/bhavjitChauhan/khanalytics/network/dependencies).
 
 ## Deployment
-The [production build](https://github.com/bhavjitChauhan/khanalytics/tree/production) is live on [Heroku](http://khanalytics.herokuapp.com/). The [staging build](https://github.com/bhavjitChauhan/khanalytics/tree/main) is live on [Replit](https://khanalytics.bhavjitchauhan.repl.co).
+The [production build](https://github.com/bhavjitChauhan/khanalytics/tree/production) is live on [~~Heroku~~](https://blog.heroku.com/next-chapter) [Replit](http://khanalytics.bhavjit.com/).
 
 ## License
 Distributed under the MIT License. See [LICENSE](https://github.com/bhavjitChauhan/khanalytics/blob/main/LICENSE) for more information.

@@ -60,8 +60,8 @@
                         <div class="w-32 transition-all shadow-xl md:w-64 card bg-base-100 hover:scale-105">
                             <figure>
                                 <img
-                                    :src="`https://www.khanacademy.org/cs/-/${program.id}/latest.png`"
-                                    alt="Shoes"
+                                    :src="`https://www.khanacademy.org/computer-programming/-/${program.id}/latest.png`"
+                                    :alt="program.title"
                                 >
                             </figure>
                             <div class="p-4 card-body">

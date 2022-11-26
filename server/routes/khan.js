@@ -1,6 +1,6 @@
 const { Router } = require('express');
 
-const { get } = require('../lib/api');
+const { get, post } = require('../lib/api');
 
 
 const router = Router({ strict: true });
@@ -14,5 +14,14 @@ router.get('/*', async (req, res) => {
     }
 });
 
+router.post('/*', async (req, res) => {
+    try {
+        const data = await post(req.url.slice(1), req.body);
+        res.send(data);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
 
 module.exports = router;

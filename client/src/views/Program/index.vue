@@ -82,6 +82,10 @@ import {
     beforeRecording,
     beforeDiscussionRecording
 } from '@/util/programCreation';
+import {
+    projectsAuthoredByUserBody,
+    feedbackQueryBody
+} from '@/util/graphql';
 
 import InfoButton from '@/components/InfoButton.vue';
 import MainChart from '@/views/Program/MainChart.vue';
@@ -153,32 +157,26 @@ export default {
 
             if (this.isPredatingProgram) return;
 
-            this.userTopProgramsData = (
-                await api.fetchKhanInternal(
-                    `user/scratchpads?kaid=${userData.kaid}&limit=10&projection={%22scratchpads%22:1}`
-                )
-            ).scratchpads.map(({ url, sumVotesIncremented, spinoffCount }) => ({
-                id: url.split('/')[5],
+            const projectsAuthoredByUserData = await api.postKhanGraphQL('projectsAuthoredByUser', projectsAuthoredByUserBody({ kaid: userData.kaid }));
+
+            this.userTopProgramsData = projectsAuthoredByUserData.data.user.programs.programs.map(({ id, sumVotesIncremented, displayableSpinoffCount }) => ({
+                id,
                 votes: sumVotesIncremented,
-                forks: spinoffCount
+                forks: displayableSpinoffCount
             }));
 
             const userTopProgramsDiscussions = [];
             for (const program of this.userTopProgramsData) {
-                const data = (
-                    await api.fetchKhanInternal(
-                        `discussions/scratchpad/${program.id}/comments?limit=1000&projection={"feedback":1,"isComplete":1}`
-                    )
-                ).feedback;
+                const feedbackQueryData = await api.postKhanGraphQL('feedbackQuery', feedbackQueryBody({ topicId: program.id }));
                 userTopProgramsDiscussions.push({
-                    comments: data.length,
-                    commentVotes: data.reduce(
+                    comments: feedbackQueryData.data.feedback.feedback.length,
+                    commentVotes: feedbackQueryData.data.feedback.feedback.reduce(
                         (acc, cur) => {
                             if (!cur) return acc;
                             return acc + cur.sumVotesIncremented
                         }, 0
                     ),
-                    replies: data.reduce((acc, cur) => {
+                    replies: feedbackQueryData.data.feedback.feedback.reduce((acc, cur) => {
                         if (!cur) return acc;
                         return acc + cur.replyCount
                     }, 0)

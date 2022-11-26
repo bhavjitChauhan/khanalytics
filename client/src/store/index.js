@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 
 import api from '@/services/api';
+import { hotlistBody } from '@/util/graphql';
 
 
 export default createStore({
@@ -46,17 +47,17 @@ export default createStore({
             commit('setStatisticsData', data);
         },
         async fetchHotlistSnapshot({ commit }) {
-            const data = await api.fetchKhanInternal('scratchpads/top?sort=3&limit=100&projection={"scratchpads":1}');
+            const hotlistData = await api.postKhanGraphQL('hotlist', hotlistBody());
+            const scratchpads = hotlistData.data.listTopPrograms.programs;
             const snapshot = {};
-            const scratchpads = data.scratchpads;
             for (const i in scratchpads) {
                 const scratchpad = scratchpads[i];
-                const id = scratchpad.url.split('/')[5];
+                const id = scratchpad.id;
                 snapshot[id] = {
-                    title: scratchpad.title || 'None',
+                    title: scratchpad.translatedTitle || 'None',
                     rank: parseInt(i, 10) + 1,
                     votes: scratchpad.sumVotesIncremented,
-                    forks: scratchpad.spinoffCount,
+                    forks: scratchpad.displayableSpinoffCount,
                     author: scratchpad.authorNickname,
                     authorID: scratchpad.authorKaid.slice(5)
                 };

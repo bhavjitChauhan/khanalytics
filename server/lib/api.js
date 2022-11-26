@@ -2,7 +2,7 @@ const axios = require('axios').default;
 
 
 const instance = axios.create({
-    baseURL: `http://khanacademy.org/api/`
+    baseURL: `https://www.khanacademy.org/api/`
 });
 
 /**
@@ -41,6 +41,18 @@ const get = async (path, params) => {
 };
 
 /**
+ * Sends a POST request to the Khan Academy API.
+ * 
+ * @param {string} path 
+ * @param {Object} data 
+ * @returns {Promise}
+ */
+const post = async (path, data) => {
+    const response = await instance.post(path, data)
+    return response.data;
+};
+
+/**
  * Gets hotlist scratchpads.
  * 
  * @param {number} [limit=100] 
@@ -56,6 +68,7 @@ const getHotlist = async (limit = 100) =>
 
 
 module.exports = {
-    get: get,
-    getHotlist: getHotlist
+    get,
+    post,
+    getHotlist
 };

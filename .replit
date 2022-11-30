@@ -1,1 +1,7 @@
 run="npm run serve --prefix server"
+
+[nix]
+channel = "stable-22_05"
+
+[env]
+NODE_ENV="production"

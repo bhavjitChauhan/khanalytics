@@ -28,26 +28,24 @@
                 data-tip="Color Hash"
                 :style="{ 'background-color': color }"
             ></div> -->
-            <div v-if="programData" class="ml-2"
-                :style="{ display: (programData.definitelyNotSpam || programData.isChallenge || programData.originScratchpadId || programData.byChild || programData.hideFromHotlist) ? 'inline' : 'none' }">
-                <div v-if="programData.definitelyNotSpam"
-                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-success">Approved</div>
-                <div v-if="programData.isChallenge"
-                    class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-info">Challenge</div>
-                <div v-if="programData.originScratchpadId != null"
+            <div v-if="programQueryData" class="ml-2"
+                :style="{ display: (programQueryData.originScratchpad || programQueryData.byChild || programQueryData.hideFromHotlist) ? 'inline' : 'none' }">
+                <div v-if="programQueryData.originScratchpad != null"
                     class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-info"><a
-                        :href="`https://khanacademy.org/cs/-/${programData.originScratchpadId}`"
+                        :href="`https://khanacademy.org/cs/-/${programQueryData.originScratchpad}`"
                         target="_blank">Spin-Off</a></div>
-                <div v-if="programData.byChild"
+                <div v-if="programQueryData.byChild"
                     class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-warning">Child Account</div>
-                <div v-if="programData.hideFromHotlist"
+                <div v-if="programQueryData.hideFromHotlist"
                     class="mb-2 font-semibold uppercase align-middle badge badge-lg badge-error">Hidden</div>
             </div>
         </h1>
         <span class="text-lg">This is an overview of <a :href="`https://khanacademy.org/cs/-/${id}`" target="_blank"
-                class="link">{{ title ? title : id }}</a> {{ userData && 'by' }} <a v-if="userData"
-                :href="`https://khanacademy.org/profile/${userData.username}/projects`" target="_blank" class="link">{{
-                        userData.nickname
+                class="link">{{ title ? title : id }}</a> {{ programQueryData && programQueryData.creatorProfile && 'by'
+                }} <a v-if="programQueryData && programQueryData.creatorProfile"
+                :href="`https://khanacademy.org${programQueryData.creatorProfile.profileRoot}projects`" target="_blank"
+                class="link">{{
+                        programQueryData.creatorProfile.nickname
                 }}</a>. Use the
             <InfoButton id="" :demo="true" /> buttons to see what information is displayed.
         </span>
@@ -84,7 +82,9 @@ import {
 } from '@/util/programCreation';
 import {
     projectsAuthoredByUserBody,
-    feedbackQueryBody
+    feedbackQueryBody,
+    programQueryBody,
+    avatarDataForProfileBody
 } from '@/util/graphql';
 
 import InfoButton from '@/components/InfoButton.vue';
@@ -108,27 +108,27 @@ export default {
     },
     data: () => ({
         id: null,
-        programData: null,
+        programQueryData: null,
+        avatarDataForProfileData: null,
         performance: null,
-        userData: null,
         userTopProgramsData: null,
         userTopProgramsDiscussions: null
     }),
     computed: {
         isPredatingProgram() {
-            const programData = this.programData;
-            if (!programData) return null;
+            const programQueryData = this.programQueryData;
+            if (!programQueryData) return null;
 
-            return beforeRecording(programData.created);
+            return beforeRecording(programQueryData.created);
         },
         isLegacyProgram() {
-            const programData = this.programData;
-            if (!programData) return null;
+            const programQueryData = this.programQueryData;
+            if (!programQueryData) return null;
 
-            return beforeDiscussionRecording(programData.created);
+            return beforeDiscussionRecording(programQueryData.created);
         },
         title() {
-            return this.programData && this.programData.title;
+            return this.programQueryData && this.programQueryData.title;
         },
         color() {
             const id = this.id;
@@ -148,16 +148,12 @@ export default {
                 : null;
             this.emitter.emit(`performance-program-data-${this.id}`);
 
-            const { scratchpad: programData, creatorProfile: userData } =
-                await api.fetchKhanInternal(
-                    `show_scratchpad?scratchpad_id=${this.id}&projection={"scratchpad":1,"creatorProfile":1}`
-                );
-            this.programData = programData;
-            this.userData = userData;
+            this.programQueryData = (await api.postKhanGraphQL('programQuery', programQueryBody({ programId: this.id }))).data.programById;
+            this.avatarDataForProfileData = (await api.postKhanGraphQL('avatarDataForProfile', avatarDataForProfileBody({ kaid: this.programQueryData.creatorProfile.kaid }))).data.user;
 
             if (this.isPredatingProgram) return;
 
-            const projectsAuthoredByUserData = await api.postKhanGraphQL('projectsAuthoredByUser', projectsAuthoredByUserBody({ kaid: userData.kaid }));
+            const projectsAuthoredByUserData = await api.postKhanGraphQL('projectsAuthoredByUser', projectsAuthoredByUserBody({ kaid: this.programQueryData.creatorProfile.kaid }));
 
             this.userTopProgramsData = projectsAuthoredByUserData.data.user.programs.programs.map(({ id, sumVotesIncremented, displayableSpinoffCount }) => ({
                 id,

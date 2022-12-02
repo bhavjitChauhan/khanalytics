@@ -4,11 +4,11 @@
         class="relative overflow-auto"
     >
         <div
-            v-if="programData || userData"
+            v-if="programQueryData"
             class="grid h-full grid-cols-2 grid-rows-auto"
         >
             <div
-                v-if="programData"
+                v-if="programQueryData"
                 class="col-span-1 row-span-1"
             >
                 <Container
@@ -17,14 +17,14 @@
                     class="p-2 mb-4 transition-all shadow-xl bg-base-100 hover:scale-105 hover:shadow-2xl"
                 >
                     <a
-                        v-if="programData"
+                        v-if="programQueryData"
                         :href="`https://khanacademy.org/cs/-/${id}`"
                         target="_blank"
-                    ><img :src="programData.imageUrl"></a>
+                    ><img :src="'https://khanacademy.org' + programQueryData.imagePath"></a>
                 </Container>
             </div>
             <div
-                v-if="userData"
+                v-if="(programQueryData && programQueryData.creatorProfile && avatarDataForProfileData)"
                 class="w-full col-span-1 row-span-1 px-1 text-center place-self-center"
             >
                 <div class="dropdown dropdown-end">
@@ -33,7 +33,7 @@
                         class="cursor-pointer text-info-content"
                     >
                         <img
-                            :src="userData.avatarSrc"
+                            :src="'https://khanacademy.org' + avatarDataForProfileData.avatar.imageSrc"
                             :width="100"
                             :height="100"
                             class="inline-block transition-all rounded-full shadow-xl bg-primary hover:shadow-2xl hover:scale-105"
@@ -45,22 +45,22 @@
                     >
                         <div class="card-body">
                             <a
-                                :href="`https://www.khanacademy.org/profile/${userData.username}/projects`"
+                                :href="`https://www.khanacademy.org${programQueryData.creatorProfile.profileRoot}projects`"
                                 target="_blank"
                                 class="card-title"
-                            >{{ userData.nickname }}&nbsp;<font-awesome-icon icon="external-link-alt"></font-awesome-icon></a>
-                            <p>{{ userData.bio }}</p>
+                            >{{ programQueryData.creatorProfile.nickname }}&nbsp;<font-awesome-icon icon="external-link-alt"></font-awesome-icon></a>
+                            <!-- <p>{{ userData.bio }}</p> -->
                         </div>
                     </div>
                 </div>
                 <span
                     class="block font-bold truncate"
-                    :title="userData.nickname"
-                >{{ userData.nickname }}</span>
+                    :title="programQueryData.creatorProfile.nickname"
+                >{{ programQueryData.creatorProfile.nickname }}</span>
                 <span
                     class="block text-xs text-gray-500 truncate"
-                    :title="'@' + userData.username"
-                >@{{ userData.username }}</span>
+                    :title="('@' + programQueryData.creatorProfile.profileRoot.slice(9, -1))"
+                >@{{ programQueryData.creatorProfile.profileRoot.slice(9, -1) }}</span>
             </div>
             <div
                 v-if="formattedData"
@@ -80,7 +80,7 @@
             </div>
         </div>
         <div
-            v-if="userData"
+            v-if="programQueryData && programQueryData.creatorProfile"
             class="sticky bottom-0 z-10 w-full col-span-2 row-span-1 gap-1 pt-4 mt-2 overflow-y-auto border-t-2 lg:btn-group place-content-center bg-base-200"
         >
             <a
@@ -89,15 +89,15 @@
                 class="btn btn-sm btn-outline"
             >Project</a>
             <a
-                :href="`https://www.khanacademy.org/profile/${userData.username}/projects`"
+                :href="`https://www.khanacademy.org${programQueryData.creatorProfile.profileRoot}projects`"
                 target="_blank"
                 class="btn btn-sm btn-outline"
             >Profile</a>
-            <a
+            <!-- <a
                 :href="`https://khanacademy.org/api/internal/show_scratchpad?scratchpad_id=${id}&format=pretty`"
                 target="_blank"
                 class="btn btn-sm btn-outline"
-            >Endpoint</a>
+            >Endpoint</a> -->
         </div>
     </Container>
 </template>
@@ -123,11 +123,11 @@ export default {
         performance: function () {
             return this.$parent.performance;
         },
-        programData() {
-            return this.$parent.programData;
+        programQueryData() {
+            return this.$parent.programQueryData;
         },
-        userData() {
-            return this.$parent.userData;
+        avatarDataForProfileData() {
+            return this.$parent.avatarDataForProfileData;
         },
         userTopPrograms() {
             return this.$parent.userTopPrograms;
@@ -135,29 +135,29 @@ export default {
         formattedData() {
             const hotlistSnapshot = this.hotlistSnapshot;
             const performance = this.performance;
-            const programData = this.programData;
-            if (!hotlistSnapshot || !programData) return null;
+            const programQueryData = this.programQueryData;
+            if (!hotlistSnapshot || !programQueryData) return null;
 
             let data = {
                 Rank:
                     (hotlistSnapshot[this.id] &&
                         hotlistSnapshot[this.id].rank) ||
                     '-',
-                Votes: programData.sumVotesIncremented,
-                Forks: programData.spinoffCount,
-                Flags: programData.flags.length,
+                Votes: programQueryData.sumVotesIncremented,
+                Forks: programQueryData.spinoffCount,
+                Flags: 0,
                 Type:
-                    programData.userAuthoredContentType == 'pjs'
+                    programQueryData.userAuthoredContentType == 'PJS'
                         ? 'Processing'
-                        : programData.userAuthoredContentType == 'webpage'
+                        : programQueryData.userAuthoredContentType == 'WEBPAGE'
                         ? 'HTML'
-                        : programData.userAuthoredContentType == 'sql'
+                        : programQueryData.userAuthoredContentType == 'SQL'
                         ? 'SQL'
-                        : 'Other',
-                Created: formatDate(programData.created, true),
+                        : programQueryData.userAuthoredContentType,
+                Created: formatDate(programQueryData.created, true),
                 Updated:
-                    programData.date != programData.created
-                        ? formatDate(programData.date, true)
+                programQueryData.revision.created != programQueryData.created
+                        ? formatDate(programQueryData.revision.created, true)
                         : '-'
             };
             if (performance) {
@@ -170,7 +170,7 @@ export default {
             }
             data = {
                 ...data,
-                Lines: programData.revision.code
+                Lines: programQueryData.revision.code
                     .split('\n')
                     .length.toLocaleString()
             };

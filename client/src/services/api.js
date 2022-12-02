@@ -12,10 +12,6 @@ export default {
         const response = await instance.get(url);
         return response.data;
     },
-    async fetchKhanInternal(params) {
-        const response = await instance.get(`/khan/internal/${params}`);
-        return response.data;
-    },
     async postKhanGraphQL(operation, body) {
         const response = await instance.post(`/khan/internal/graphql/${operation}`, body);
         return response.data;

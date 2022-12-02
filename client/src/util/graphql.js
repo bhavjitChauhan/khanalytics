@@ -277,9 +277,110 @@ function feedbackQueryBody({
   }
 }
 
+function programQueryBody({
+  programId,
+} = {}) {
+  return {
+    query: `query programQuery($programId: String!) {
+  programById(id: $programId) {
+    byChild
+    category
+    created
+    creatorProfile: author {
+      id
+      nickname
+      profileRoot
+      profile {
+        accessLevel
+        __typename
+      }
+      __typename
+    }
+    deleted
+    description
+    spinoffCount: displayableSpinoffCount
+    docsUrlPath
+    flags
+    flaggedBy: flaggedByKaids
+    flaggedByUser: isFlaggedByCurrentUser
+    height
+    hideFromHotlist
+    id
+    imagePath
+    isProjectOrFork: originIsProject
+    isOwner
+    kaid: authorKaid
+    key
+    newUrlPath
+    originScratchpad: originProgram {
+      deleted
+      translatedTitle
+      url
+      __typename
+    }
+    restrictPosting
+    revision: latestRevision {
+      id
+      code
+      configVersion
+      created
+      editorType
+      folds
+      __typename
+    }
+    slug
+    sumVotesIncremented
+    title
+    topic: parentCurationNode {
+      id
+      nodeSlug: slug
+      relativeUrl
+      slug
+      translatedTitle
+      __typename
+    }
+    translatedTitle
+    url
+    userAuthoredContentType
+    upVoted
+    width
+    __typename
+  }
+}
+`,
+    variables: {
+      programId
+    }
+  }
+}
+
+function avatarDataForProfileBody({
+  kaid
+} = {}) {
+  return {
+    query: `query avatarDataForProfile($kaid: String!) {
+  user(kaid: $kaid) {
+    id
+    avatar {
+      name
+      imageSrc
+      __typename
+    }
+    __typename
+  }
+}
+`,
+    variables: {
+      kaid
+    }
+  }
+}
+
 
 export {
   hotlistBody,
   projectsAuthoredByUserBody,
-  feedbackQueryBody
+  feedbackQueryBody,
+  programQueryBody,
+  avatarDataForProfileBody
 }

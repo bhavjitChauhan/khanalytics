@@ -245,7 +245,7 @@ export default {
                         opacity: 0.1,
                         fillColor: '#f00',
                         label: {
-                            text: 'Hidden',
+                            text: 'Missing',
                             borderWidth: 0,
                             style: {
                                 background: 'rgba(255, 0, 0, 0.1)'
@@ -396,7 +396,7 @@ export default {
                         opacity: 0.1,
                         fillColor: '#f00',
                         label: {
-                            text: 'Hidden'
+                            text: 'Missing'
                         }
                     }
                 );

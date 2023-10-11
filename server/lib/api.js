@@ -1,4 +1,6 @@
 const axios = require('axios').default;
+const { getLatestQuery, getLatestMutation } = require('@bhavjit/khan-api');
+const { AxiosError } = require('axios');
 
 
 const instance = axios.create({
@@ -48,8 +50,39 @@ const get = async (path, params) => {
  * @returns {Promise}
  */
 const post = async (path, data) => {
-    const response = await instance.post(path, data)
-    return response.data;
+    try {
+        const response = await instance.post(path, data)
+        return response.data;
+    } catch (err) {
+        if (err instanceof AxiosError && err.response.status === 403) {
+            const { query } = data;
+            const isQuery = query.startsWith('query'),
+                operationName = query.match(/^(?:query|mutation) (\w+)/)?.[1]
+
+            if (!operationName)
+                throw new Error(`An unknown query is no longer in the safelist`)
+
+            console.warn(
+                `The query for operation "${operationName}" is no longer in the safelist. Attempting to fetch the latest version from the safelist...`
+            )
+            const latestQuery = isQuery
+                ? await getLatestQuery(operationName)
+                : await getLatestMutation(operationName)
+
+            if (!latestQuery)
+                throw new Error(
+                    `The query for operation "${operationName}" was not found in the safelist`
+                )
+
+            const newData = {
+                ...data,
+                query: latestQuery,
+            }
+
+            const response = await instance.post(path, newData)
+            return response.data
+        } else throw err;
+    }
 };
 
 /**

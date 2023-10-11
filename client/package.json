@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "npx vue-cli-service serve",
+    "serve": "set NODE_OPTIONS=--openssl-legacy-provider && npx vue-cli-service serve",
     "build": "npx vue-cli-service build",
     "sitemap": "npx vue-cli-service sitemap"
   },

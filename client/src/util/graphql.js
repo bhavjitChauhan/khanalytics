@@ -7,7 +7,12 @@ function hotlistBody({
 } = {}) {
   return {
     query: `query hotlist($curationNodeId: String, $onlyOfficialProjectSpinoffs: Boolean!, $sort: ListProgramSortOrder, $pageInfo: ListProgramsPageInfo) {
-  listTopPrograms(curationNodeId: $curationNodeId, onlyOfficialProjectSpinoffs: $onlyOfficialProjectSpinoffs, sort: $sort, pageInfo: $pageInfo) {
+  listTopPrograms(
+    curationNodeId: $curationNodeId
+    onlyOfficialProjectSpinoffs: $onlyOfficialProjectSpinoffs
+    sort: $sort
+    pageInfo: $pageInfo
+  ) {
     complete
     cursor
     programs {
@@ -24,8 +29,7 @@ function hotlistBody({
     }
     __typename
   }
-}
-`,
+}`,
     variables: {
       curationNodeId,
       onlyOfficialProjectSpinoffs,
@@ -67,8 +71,7 @@ function projectsAuthoredByUserBody({
     }
     __typename
   }
-}
-`,
+}`,
     variables: {
       kaid,
       sort,
@@ -89,8 +92,19 @@ function feedbackQueryBody({
 } = {}) {
   return {
     query: `query feedbackQuery($topicId: String!, $focusKind: String!, $cursor: String, $limit: Int, $feedbackType: FeedbackType!, $currentSort: Int, $qaExpandKey: String) {
-  feedback(focusId: $topicId, cursor: $cursor, limit: $limit, feedbackType: $feedbackType, focusKind: $focusKind, sort: $currentSort, qaExpandKey: $qaExpandKey, answersLimit: 1) {
+  feedback(
+    focusId: $topicId
+    cursor: $cursor
+    limit: $limit
+    feedbackType: $feedbackType
+    focusKind: $focusKind
+    sort: $currentSort
+    qaExpandKey: $qaExpandKey
+    answersLimit: 1
+  ) {
     feedback {
+      isLocked
+      isPinned
       replyCount
       appearsAsDeleted
       author {
@@ -145,6 +159,8 @@ function feedbackQueryBody({
       ... on QuestionFeedback {
         hasAnswered
         answers {
+          isLocked
+          isPinned
           replyCount
           appearsAsDeleted
           author {
@@ -204,6 +220,8 @@ function feedbackQueryBody({
       }
       ... on AnswerFeedback {
         question {
+          isLocked
+          isPinned
           replyCount
           appearsAsDeleted
           author {
@@ -266,8 +284,7 @@ function feedbackQueryBody({
     sortedByDate
     __typename
   }
-}
-`,
+}`,
     variables: {
       topicId,
       focusKind,
@@ -347,8 +364,7 @@ function programQueryBody({
     width
     __typename
   }
-}
-`,
+}`,
     variables: {
       programId
     }
@@ -369,8 +385,7 @@ function avatarDataForProfileBody({
     }
     __typename
   }
-}
-`,
+}`,
     variables: {
       kaid
     }

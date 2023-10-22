@@ -164,6 +164,7 @@ export default {
             const userTopProgramsDiscussions = [];
             for (const program of this.userTopProgramsData) {
                 const feedbackQueryData = await api.postKhanGraphQL('feedbackQuery', feedbackQueryBody({ topicId: program.id }));
+                if (feedbackQueryData.data.feedback.feedback === null) continue;
                 userTopProgramsDiscussions.push({
                     comments: feedbackQueryData.data.feedback.feedback.length,
                     commentVotes: feedbackQueryData.data.feedback.feedback.reduce(

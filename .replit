@@ -5,3 +5,8 @@ channel = "stable-22_05"
 
 [env]
 NODE_ENV="production"
+
+[deployment]
+build = ["sh", "-c", "npm run build"]
+run = ["sh", "-c", "npm run serve --prefix server"]
+deploymentTarget = "cloudrun"

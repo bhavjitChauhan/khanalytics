@@ -19,7 +19,7 @@ See the [Wiki](https://github.com/bhavjitChauhan/khanalytics/wiki) for technical
 View the full list of dependencies in the [dependency graph](https://github.com/bhavjitChauhan/khanalytics/network/dependencies).
 
 ## Deployment
-The [production build](https://github.com/bhavjitChauhan/khanalytics/tree/production) is live on [~~Heroku~~](https://blog.heroku.com/next-chapter) [Replit](https://replit.com/@bhavjitChauhan/khanalytics).
+The [production build](https://github.com/bhavjitChauhan/khanalytics/tree/production) is live on [~~Heroku~~](https://blog.heroku.com/next-chapter) [~~Replit~~](https://news.ycombinator.com/item?id=41341304) a real VPS.
 
 ## License
 Distributed under the MIT License. See [LICENSE](https://github.com/bhavjitChauhan/khanalytics/blob/main/LICENSE) for more information.

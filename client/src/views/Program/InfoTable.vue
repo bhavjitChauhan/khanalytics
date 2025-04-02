@@ -20,7 +20,7 @@
                         v-if="programQueryData"
                         :href="`https://khanacademy.org/cs/-/${id}`"
                         target="_blank"
-                    ><img :src="'https://khanacademy.org' + programQueryData.imagePath"></a>
+                    ><img :src="'https://www.khanacademy.org' + programQueryData.imagePath"></a>
                 </Container>
             </div>
             <div

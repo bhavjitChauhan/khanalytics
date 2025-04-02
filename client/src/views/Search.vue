@@ -1,6 +1,6 @@
 <template>
     <div class="w-full min-h-screen pt-64 place-items-center">
-        <div>
+        <div class="w-full">
             <div class="flex items-center justify-center w-full text-center">
                 <div class="w-5/6 lg:w-1/2">
                     <router-link to="/search">

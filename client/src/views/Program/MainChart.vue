@@ -13,7 +13,7 @@
             @mounted="this.$window.ApexCharts.exec('program-main-chart', 'hideSeries', 'Rank')"
         ></apexchart>
 
-        <div
+        <!-- <div
             v-if="chartSeries"
             class="hidden float-right mt-2 mb-4 space-x-1 min-w-min md:block"
         >
@@ -41,7 +41,7 @@
             >
                 Reset
             </button>
-        </div>
+        </div> -->
 
         <InfoButton
             v-if="chartSeries"
